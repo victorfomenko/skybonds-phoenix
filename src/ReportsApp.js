@@ -12,7 +12,8 @@ class ReportsApp extends Component {
   render(){
 
     return (
-      <div>{this.props.reportName}
+      <div>
+        {this.props.reportName}
         <Chart />
       </div>
     );
