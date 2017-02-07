@@ -7,7 +7,7 @@ require('../node_modules/@skybonds/ui-styles/style.sass');
 const rootEl = document.getElementById('root');
 
 const props = {
-  reportName: "Reports"
+  reportName: 'Reports'
 };
 
 
