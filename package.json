@@ -1,7 +1,7 @@
 {
   "name": "@skybonds/phoenix",
   "version": "0.0.1",
-  "description": "Reports app",
+  "description": "Phoenix app",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src",
@@ -22,9 +22,11 @@
     "edit",
     "webpack"
   ],
-  "author": "Victor Fomenko <victorfomenko@me.com> (http://github.com/victorfomenko)",
+  "author": "Skybonds Team <support@skybonds.com> (https://github.com/Sovcombank/)",
   "devDependencies": {
-    "@skybonds/ui-styles": "^0.0.4",
+    "@skybonds/ui-styles": "^0.2.1",
+    "@skybonds/ui-filters": "1.0.3",
+    "@skybonds/ui-component-chart": "2.24.1",
     "babel-core": "^6.0.20",
     "babel-eslint": "^7.1.0",
     "babel-loader": "^6.0.1",

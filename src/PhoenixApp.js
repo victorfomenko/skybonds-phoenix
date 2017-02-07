@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Chart from './components/chart/Chart';
-import style from './reports.sass';
+import style from './phonix.sass';
 
-class ReportsApp extends Component {
+class PhoenixApp extends Component {
 
   constructor(props) {
     super(props);
@@ -20,8 +20,8 @@ class ReportsApp extends Component {
   }
 }
 
-ReportsApp.propTypes = {
+PhoenixApp.propTypes = {
   reportName: React.PropTypes.string.isRequired,
 };
 
-export default ReportsApp;
+export default PhoenixApp;

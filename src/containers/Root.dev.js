@@ -1,3 +1,3 @@
-import ReportsApp from '../ReportsApp'
+import PhoenixApp from '../PhoenixApp'
 
-export default ReportsApp;
+export default PhoenixApp;
