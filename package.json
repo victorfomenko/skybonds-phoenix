@@ -56,7 +56,8 @@
   },
   "dependencies": {
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "@skybonds/ui-filters": "1.0.3"
   },
   "bugs": {
     "url": "https://github.com/Sovcombank/skybonds-phoenix/issues"
