@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Filters from './components/filters/Filters';
-import Chart from './components/Chart/Chart';
+import Chart from './components/chart/Chart';
 import style from './phonix.sass';
 
 class PhoenixApp extends Component {
