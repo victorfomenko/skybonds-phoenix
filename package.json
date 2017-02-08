@@ -4,6 +4,7 @@
   "description": "Phoenix app",
   "scripts": {
     "start": "npm install && npm run components && node server.js",
+    "dev": "node server.js",
     "lint": "eslint src",
     "build": "npm run components && npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors",
     "components": "gulp build:components --gulpfile .dev_tools/gulpfile.coffee"
