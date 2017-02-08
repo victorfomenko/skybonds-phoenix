@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Chart from './components/chart/Chart';
+import Chart from './components/Chart/Chart';
 import style from './phonix.sass';
 
 class PhoenixApp extends Component {
