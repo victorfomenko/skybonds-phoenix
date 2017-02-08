@@ -3,7 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './containers/Root';
 require('../node_modules/@skybonds/ui-styles/style.sass');
-require('../vendor/test');
+require('../vendor/skybonds.components.js');
+
+console.log(window.SkybondsComponents);
 
 const rootEl = document.getElementById('root');
 

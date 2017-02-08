@@ -1,3 +1,3 @@
-import ReportsApp from '../ReportsApp'
+import PhoenixApp from '../PhoenixApp'
 
-module.exports = ReportsApp;
+module.exports = PhoenixApp;

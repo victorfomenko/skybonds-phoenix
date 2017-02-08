@@ -1,11 +1,12 @@
 {
   "name": "@skybonds/phoenix",
   "version": "0.0.1",
-  "description": "Reports app",
+  "description": "Phoenix app",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src",
-    "build": "npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors"
+    "build": "npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors",
+    "build:components": "gulp build:components --gulpfile .dev_tools/gulpfile.coffee"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,11 @@
     "edit",
     "webpack"
   ],
-  "author": "Victor Fomenko <victorfomenko@me.com> (http://github.com/victorfomenko)",
+  "author": "Skybonds Team <support@skybonds.com> (https://github.com/Sovcombank/)",
   "devDependencies": {
-    "@skybonds/ui-styles": "^0.0.4",
+    "@skybonds/ui-styles": "^0.2.1",
+    "@skybonds/ui-filters": "1.0.3",
+    "@skybonds/ui-component-chart": "2.24.1",
     "babel-core": "^6.0.20",
     "babel-eslint": "^7.1.0",
     "babel-loader": "^6.0.1",
@@ -43,12 +46,16 @@
     "webpack": "^1.12.2",
     "webpack-combine-loaders": "^2.0.3",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.10.0"
+    "webpack-hot-middleware": "^2.10.0",
+
+    "@skybonds/ui-build-tools": "1.5.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2"
   },
   "dependencies": {
     "react": "^15.3.2",
-    "react-dom": "^15.3.2",
-    "@skybonds/ui-component-chart": "2.19.3"
+    "react-dom": "^15.3.2"
   },
   "bugs": {
     "url": "https://github.com/Sovcombank/skybonds-phoenix/issues"
