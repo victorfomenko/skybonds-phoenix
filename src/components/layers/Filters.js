@@ -300,7 +300,7 @@ class Filters extends Component {
 
   handleFilterChange(filtersState) {
     let filters = this.transformFilters(filtersState.selected);
-    this.filtersProvider.getFilteredIsins(filters).then((data) =>
+    FiltersProvider.getFilteredIsins(filters).then((data) =>
       this.props.filteredDataHandler(data.result));
   }
 
