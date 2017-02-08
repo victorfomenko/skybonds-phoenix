@@ -22,7 +22,7 @@ class PhoenixApp extends Component {
     return (
       <div>
         {this.props.reportName}
-        <Layers filteredDataHandler={this.handleFilterChange} />
+        <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
         <Chart isins={this.state.isins} />
       </div>
     );
