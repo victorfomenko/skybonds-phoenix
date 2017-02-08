@@ -9,7 +9,7 @@ class FiltersProvider {
             'http://sit.skybonds.net/skybonds-data-api/api/v2/data/filters/apply?stats=true&details=true',
             filters
         ).then(function(response) {
-            if(response.statusText == "OK"){
+            if(response.statusText == 'OK'){
                 return response.body;
             }
         });

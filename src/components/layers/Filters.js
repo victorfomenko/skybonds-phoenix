@@ -284,9 +284,9 @@ class Filters extends Component {
   }
 
   transformFilters(selectedFilters) {
-    let filtersProviderParams = {"filters": []};
+    let filtersProviderParams = {'filters': []};
     const today = new Date().toJSON().slice(0,10).replace(/-/g,'');
-    filtersProviderParams["date"] = today;
+    filtersProviderParams['date'] = today;
     for (let key in selectedFilters) {
       let filterItem = {};
       filterItem.name = this.mapNames(key);
@@ -307,11 +307,11 @@ class Filters extends Component {
 
   render(){
     return (
-      <div>This is filter
-      <UIFilters
-        filters={this.state.filters}
-        onStateChange={this.handleFilterChange.bind(this)}
-      />
+      <div>
+        <UIFilters
+          filters={this.state.filters}
+          onStateChange={this.handleFilterChange.bind(this)}
+        />
       </div>
     )
   }

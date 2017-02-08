@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Filters from './components/filters/Filters';
+import Layers from './components/layers/Layers';
 import Chart from './components/Chart/Chart';
 import style from './phonix.sass';
 
@@ -22,7 +22,7 @@ class PhoenixApp extends Component {
     return (
       <div>
         {this.props.reportName}
-        <Filters filteredDataHandler={this.handleFilterChange} />
+        <Layers filteredDataHandler={this.handleFilterChange} />
         <Chart isins={this.state.isins} />
       </div>
     );
