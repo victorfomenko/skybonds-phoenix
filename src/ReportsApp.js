@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import Chart from './components/chart/Chart';
+import Filters from './components/filters/Filters';
 import style from './reports.sass';
 
 class ReportsApp extends Component {
 
   constructor(props) {
     super(props);
+  }
 
+  handleFilteredData(data) {
+    console.log(data);
   }
 
   render(){
@@ -14,6 +18,7 @@ class ReportsApp extends Component {
     return (
       <div>
         {this.props.reportName}
+        <Filters filteredDataHandler={this.handleFilteredData.bind(this)} />
         <Chart />
       </div>
     );
