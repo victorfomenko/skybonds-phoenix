@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
-import reportsStyle from '../../reports.sass';
+import reportsStyle from '../../phonix.sass';
 import FiltersProvider from '../../providers/FiltersProvider';
 
 class Filters extends Component {
@@ -254,6 +254,7 @@ class Filters extends Component {
     if(dictionary[value] != null) { return dictionary[value] }
     return value
   }
+
   mapValues(value) {
     const dictionary = {
       'corporations' : 'true',

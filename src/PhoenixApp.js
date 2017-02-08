@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Filters from './components/filters/Filters';
 import Chart from './components/Chart/Chart';
 import style from './phonix.sass';
 
@@ -6,7 +7,13 @@ class PhoenixApp extends Component {
 
   constructor(props) {
     super(props);
+    const isins = [];
+    this.state = { isins };
 
+  }
+
+  handleFilterChange(isins) {
+    this.setState({isins: isins});
   }
 
   render(){
@@ -14,7 +21,8 @@ class PhoenixApp extends Component {
     return (
       <div>
         {this.props.reportName}
-        <Chart />
+        <Filters filteredDataHandler={this.handleFilterChange} />
+        <Chart isins={this.state.isins} />
       </div>
     );
   }
