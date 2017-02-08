@@ -13,6 +13,7 @@ class PhoenixApp extends Component {
   }
 
   handleFilterChange(isins) {
+    console.log(isins);
     this.setState({isins: isins});
   }
 

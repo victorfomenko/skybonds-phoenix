@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
-import reportsStyle from '../../phonix.sass';
 import FiltersProvider from '../../providers/FiltersProvider';
 
 class Filters extends Component {
