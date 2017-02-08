@@ -14,11 +14,33 @@ class Filters extends Component {
     let filters = {
       industry:{
         values: [
+          {name: 'Agency'},
           {name: 'Mining/Diversified'},
           {name: 'Banks'},
           {name: 'Mortgage'},
           {name: 'Ferrous metals'},
-          {name: 'Light industry'}
+          {name: 'Light industry'},
+          {name: 'Other'},
+          {name: 'Supranational'},
+          {name: 'Communication'},
+          {name: 'Finance'},
+          {name: 'Non-ferrous metals'},
+          {name: 'Electric Power'},
+          {name: 'Information and High Technologies'},
+          {name: 'Transportation'},
+          {name: 'Health Care Centers'},
+          {name: 'Trade and retail'},
+          {name: 'Timber and paper&pulp industry'},
+          {name: 'Sovereign'},
+          {name: 'Agricultural'},
+          {name: 'Oil and Gas'},
+          {name: 'Chemicals'},
+          {name: 'Power'},
+          {name: 'Construction and development'},
+          {name: 'Food'},
+          {name: 'Auto/Truck mfrs'},
+          {name: 'Municipal'},
+          {name: 'Media and Entertainment'}
         ]
       },
       currency: {
@@ -66,46 +88,29 @@ class Filters extends Component {
       },
       rating: {
         values: [
-          {
-            name: 'CCC',
-            selected: false,
-            color: '#ffd400'
-          },
-          {
-            name: 'CCC+',
-            selected: false,
-            color: '#ffd400'
-          },
-          {
-            name: 'CCC-',
-            selected: false,
-            color: '#ffd400',
-            disabled: true
-          },
-          {
-            name: 'B+',
-            color: '#ff6e7e',
-            tag: '1235',
-            disabled: true
-          },
-          {
-            name: 'B-',
-            color: '#ff6e7e',
-            tag: '1123235',
-            disabled: true
-          },
-          {
-            name: 'A-',
-            color: '#a800cc'
-          },
-          {
-            name: 'A',
-            color: '#a800cc'
-          },
-          {
-            name: 'AA-',
-            color: '#ef7c00'
-          },
+          { name: 'AAA', color: '#72ceff' },
+          { name: 'AA+', color: '#ef7c00' },
+          { name: 'AA', color: '#ef7c00' },
+          { name: 'AA-', color: '#ef7c00' },
+          { name: 'A+', color: '#a800cc' },
+          { name: 'A', color: '#a800cc' },
+          { name: 'A-', color: '#a800cc' },
+          { name: 'BBB+', color: '#00963f' },
+          { name: 'BBB', color: '#00963f' },
+          { name: 'BBB-', color: '#00963f' },
+          { name: 'BB+', color: '#47599d' },
+          { name: 'BB', color: '#47599d' },
+          { name: 'BB-', color: '#47599d' },
+          { name: 'B+', color: '#ff6e7e' },
+          { name: 'B', color: '#ff6e7e' },
+          { name: 'B-', color: '#ff6e7e' },
+          { name: 'CCC+', color: '#ffd400' },
+          { name: 'CCC', color: '#ffd400' },
+          { name: 'CCC-', color: '#ffd400' },
+          { name: 'CC', color: '#af6725' },
+          { name: 'C', color: '#b04127' },
+          { name: 'D', color: '#808080' },
+          { name: 'NR', color: '#cbcbcb' }
         ],
         sortStrategy: function (a, b) {
           let ratings = {
@@ -236,19 +241,18 @@ class Filters extends Component {
           {name: 'floater'},
           {name: 'convertible'}
         ]
-      },
-      portfolio: {
-        values: [
-          {name: 'Portfolio', selected: false},
-        ]
       }
     };
+    for (let key in filters) {
+      filters[key].values.sort(this.sortStrategy);
+    }
     return filters
   }
 
   mapNames(value) {
     const dictionary = {
       'industry': 'sector',
+      'domInt': 'dom-int',
     };
     if(dictionary[value] != null) { return dictionary[value] }
     return value
@@ -257,11 +261,26 @@ class Filters extends Component {
   mapValues(value) {
     const dictionary = {
       'corporations' : 'true',
-      'financial' : 'true',
       'non-corporations': 'false',
+      'financial' : 'true',
+      'non-financial' : 'false',
+      'very high' : 'very_high',
     };
     if(dictionary[value] != null) { return dictionary[value] }
     return value
+  }
+
+  sortStrategy(a, b) {
+    var nameA, nameB;
+    nameA = (String(a.name)).toUpperCase();
+    nameB = (String(b.name)).toUpperCase();
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
   }
 
   transformFilters(selectedFilters) {
