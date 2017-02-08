@@ -29,8 +29,8 @@ class PhoenixApp extends Component {
     return (
       <div>
         {this.props.reportName}
-        <Layers key='reportLayers' filteredDataHandler={this.handleFilterChange.bind(this)} />
-        <Chart key='scatterPlotChart' isins={this.state.isins} />
+        <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
+        <Chart isins={this.state.isins} />
       </div>
     );
   }
