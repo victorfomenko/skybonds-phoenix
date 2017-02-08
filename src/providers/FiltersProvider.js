@@ -1,4 +1,4 @@
-import requestProvider from '../classes/Provider'
+import requestProvider from './classes/Provider'
 
 class FiltersProvider {
     constructor() {
