@@ -10,13 +10,10 @@ runSequence = require "run-sequence"
 
 skybondsBuildTools = require "@skybonds/ui-build-tools"
 
-
-
 NODE_ENV = process.env.NODE_ENV or 'production'
 
 R = path.join __dirname, ".."
-destJsPath = "#{R}/vendor/"
-
+destJsPath = "#{R}/vendors/"
 
 gulp.task "components:scripts", ->
   skybondsBuildTools

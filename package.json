@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "Phoenix app",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm install && npm run components && node server.js",
     "lint": "eslint src",
-    "build": "npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors",
-    "build:components": "gulp build:components --gulpfile .dev_tools/gulpfile.coffee"
+    "build": "npm run components && npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors",
+    "components": "gulp build:components --gulpfile .dev_tools/gulpfile.coffee"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "eslint": "^3.9.1",
     "eslint-plugin-react": "^6.5.0",
     "express": "^4.13.4",
+    "compression": "1.6.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "node-sass": "^3.13.0",
     "react-hot-loader": "^3.0.0-beta.6",
