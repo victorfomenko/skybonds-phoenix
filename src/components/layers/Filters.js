@@ -6,7 +6,6 @@ class Filters extends Component {
   constructor(props) {
     super(props);
     const filters = this.initFilters();
-    this.filtersProvider = new FiltersProvider();
     this.state = { filters };
   }
 
