@@ -1,12 +1,12 @@
 import requestProvider from './classes/Provider'
 
+const paths = require('./paths');
+
 class FiltersProvider {
-    constructor() {
-    }
 
     static getFilteredIsins(filters) {
         return requestProvider.post(
-            'http://sit.skybonds.net/skybonds-data-api/api/v2/data/filters/apply?stats=true&details=true',
+            paths.dataApiV2 + 'filters/apply?stats=true&details=true',
             filters
         ).then(function(response) {
             if(response.statusText == 'OK'){
