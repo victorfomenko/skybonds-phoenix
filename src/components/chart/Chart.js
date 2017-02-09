@@ -7,7 +7,7 @@ const defaultConfig = {
   labelStyle: {
     color: '#000',
     fontSize: '10px',
-    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
     textHeight: 11.5,
     textPadding: 4,
     opacity: 0.8
