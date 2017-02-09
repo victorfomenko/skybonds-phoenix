@@ -23,7 +23,7 @@ class Layer extends Component {
           <div className={layersStyle.reportLayersStrip_content}>
             <div onClick={this.onLayerClick.bind(this)}>{this.props.name}</div>
             <div className={layersStyle.reportLayersStrip_closeIcon} onClick={this.handleClose.bind(this)}></div>
-            <div className="reportLayersStrip_filters">
+            <div className='reportLayersStrip_filters'>
             </div>
           </div>
         </li>
