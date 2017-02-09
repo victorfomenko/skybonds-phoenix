@@ -29,6 +29,13 @@ const defaultConfig = {
     y: [-Infinity, Infinity]
   },
   maxZoom: 24,
+  zoom: {
+    scale: 1,
+    center: {
+      x: 0.5,
+      y: 0.5
+    }
+  },
   disableZoom: false
 };
 
@@ -37,27 +44,8 @@ const defaultDate = new Date('2017/02/06');
 
 class Chart extends Component {
 
-  constructor(props) {
-    super(props);
+  componentWillMount() {
     this.initChart();
-  }
-
-
-  initChart() {
-    this.dotsSetsPlugin = new SkybondsComponents.DotsSetsPlugin;
-    this.curvesPlugin = new SkybondsComponents.CurvesPlugin;
-    this.spreadsPlugin = new SkybondsComponents.SpreadsPlugin;
-    this.dotCurveSpreadsPlugin = new SkybondsComponents.DotCurveSpreadsPlugin;
-    this.valueScannerPlugin = new SkybondsComponents.ValueScannerPlugin;
-    let chartDocumentConfig = _.clone(defaultConfig);
-    chartDocumentConfig.plugins = [
-      this.dotsSetsPlugin,
-      this.curvesPlugin,
-      this.spreadsPlugin,
-      this.dotCurveSpreadsPlugin,
-      this.valueScannerPlugin
-    ];
-    this.chartDocument = new SkybondsComponents.ChartDocument(chartDocumentConfig);
   }
 
 
@@ -69,6 +57,25 @@ class Chart extends Component {
         this.refreshChart(bondsData);
       });
     }
+  }
+
+
+  initChart() {
+    this.dotsSetsPlugin = new SkybondsComponents.DotsSetsPlugin;
+    this.curvesPlugin = new SkybondsComponents.CurvesPlugin;
+    this.spreadsPlugin = new SkybondsComponents.SpreadsPlugin;
+    this.dotCurveSpreadsPlugin = new SkybondsComponents.DotCurveSpreadsPlugin;
+    this.valueScannerPlugin = new SkybondsComponents.ValueScannerPlugin;
+
+    let chartDocumentConfig = _.clone(defaultConfig);
+    chartDocumentConfig.plugins = [
+      this.dotsSetsPlugin,
+      this.curvesPlugin,
+      this.spreadsPlugin,
+      this.dotCurveSpreadsPlugin,
+      this.valueScannerPlugin
+    ];
+    this.chartDocument = new SkybondsComponents.ChartDocument(chartDocumentConfig);
   }
 
 
@@ -107,7 +114,6 @@ class Chart extends Component {
 
 
   refreshChart(bondsData) {
-    console.log('bondsData', bondsData);
     this.dotsSetsPlugin.update(
       { dotsSets: this.getDotsSets(bondsData, defaultDate) }
     );
@@ -118,20 +124,17 @@ class Chart extends Component {
 
 
   getDotsSets(bondsData = [], date) {
-    let dotsSets = [];
-    dotsSets.push({
+    return [{
       isins: _.map(bondsData).map((bond) => { return bond.isin; }),
       date: date
-    });
-    console.log('dotsSets', dotsSets);
-    return dotsSets;
+    }];
   }
 
 
   getChartDocumentConfig(bondsData) {
-    let chartDocumentConfig = _.clone(defaultConfig);
+    let result = _.clone(defaultConfig);
 
-    chartDocumentConfig.buildDailyData = (isin, date) => {
+    result.buildDailyData = (isin, date) => {
       let object = {
         isin: bondsData[ isin ],
         date: date
@@ -148,8 +151,7 @@ class Chart extends Component {
       return object;
     };
 
-    console.log('chartDocumentConfig', chartDocumentConfig);
-    return chartDocumentConfig;
+    return result;
   }
 
 
