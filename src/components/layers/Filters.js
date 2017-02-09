@@ -12,7 +12,7 @@ class Filters extends Component {
 
   componentWillReceiveProps(nextProps) {
     const filters = nextProps.filters;
-    event.emit("render", filters);
+    event.emit('render', filters);
     this.state = { filters, event };
   }
 

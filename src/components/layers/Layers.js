@@ -286,9 +286,9 @@ class Layers extends Component {
     const layerId = this._generateLayerId();
     const filters = this._initFilters();
     const newLayer = {
-      "id": layerId,
-      "name": "Empty Set",
-      "filters": filters
+      'id': layerId,
+      'name': 'Empty Set,
+      'filters': filters
     };
     layers.push(newLayer);
     this._setActiveLayer(layerId);
@@ -349,7 +349,7 @@ class Layers extends Component {
   render(){
     let layers = ((this.state.layers || []).map((layer, index) => {
       return <Layer
-                key={"layer_key_" + index}
+                key={'layer_key_' + index}
                 id={layer.id}
                 name={layer.name}
                 active={layer.active}
