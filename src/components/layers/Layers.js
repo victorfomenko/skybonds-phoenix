@@ -287,7 +287,7 @@ class Layers extends Component {
     const filters = this._initFilters();
     const newLayer = {
       'id': layerId,
-      'name': 'Empty Set,
+      'name': 'Empty Set',
       'filters': filters
     };
     layers.push(newLayer);
