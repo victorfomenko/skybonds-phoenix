@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import Layers from '../Layers/Layers';
-import Chart from '../Chart';
+import Layers from '../../components/Layers/Layers';
+import Chart from '../../components/Chart';
 const _ = require('lodash');
 
 class Maket extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props);
     const isins = [];
     this.state = {
       reportName: 'Reports',
-      isins
+      isins: isins,
+      reportID: props.match.params.reportID
     };
   }
 
@@ -26,10 +28,10 @@ class Maket extends Component {
   }
 
   render(){
-
     return (
       <div>
         {this.state.reportName}
+        <span>reportID: {this.state.reportID}</span>
         <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
         <Chart isins={this.state.isins} />
       </div>
