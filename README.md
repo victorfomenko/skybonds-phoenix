@@ -5,19 +5,14 @@ skybonds-ui-reports-nav
 
 #### Для разработки
 ```
-npm install
-npm start
+npm run start
 open http://localhost:3000
 ```
-Теперь можно начинать писать компонент в `src/App.js`.
 
 #### Для для билда
 ```
-npm install
 npm run build
-npm publish
 ```
-
 ### Linting
 
 В этой сборке есть React-friendly ESLint.
