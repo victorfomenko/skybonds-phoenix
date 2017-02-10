@@ -75,7 +75,7 @@ class Filters extends Component {
 
   render(){
     return (
-      <div>
+      <div className="uiFilters">
         <UIFilters
           ee = {event}
           filters={this.state.filters}
