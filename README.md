@@ -4,12 +4,23 @@ Skybonds Phoenix Project
 ### Использование
 
 #### Для разработки
+
+1. Получить доступ к приватным npm-пакетам домена @skybonds в npmjs (https://www.npmjs.com/org/skybonds) у администратора.
+2. Локально авторизоваться в npm (https://docs.npmjs.com/cli/adduser):
+```
+npm adduser
+```
+3. Клонировать репозиторий:
+```
+git@github.com:Sovcombank/skybonds-phoenix.git
+```
+4. В директории с проектом запустить:
 ```
 npm run start
-open http://localhost:3000
 ```
+5. Открыть в браузере http://localhost:3000
 
-#### Для сборки
+#### Для билда
 ```
 npm run build
 ```
