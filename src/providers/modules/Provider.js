@@ -1,7 +1,7 @@
 import {Promise} from 'rsvp'
 import http from 'browser-request'
 
-module.exports = {
+export default {
   get: function(url, params) {
     return new Promise(function(resolve, reject) {
       return http.get({

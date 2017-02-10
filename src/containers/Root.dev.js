@@ -1,3 +1,3 @@
-import PhoenixApp from '../PhoenixApp'
+import App from '../components/App'
 
-export default PhoenixApp;
+export default App;
