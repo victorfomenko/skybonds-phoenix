@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Layers from './components/layers/Layers';
 import Chart from './components/chart/Chart';
-import style from './phonix.sass';
+import style from './phoenix.sass';
 const _ = require('lodash');
 
 class PhoenixApp extends Component {
