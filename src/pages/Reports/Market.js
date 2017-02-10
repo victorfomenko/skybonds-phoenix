@@ -33,7 +33,7 @@ class Maket extends Component {
         {this.state.reportName}
         <span>reportID: {this.state.reportID}</span>
         <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
-        <Chart isins={this.state.isins} />
+        {/*<Chart isins={this.state.isins} />*/}
       </div>
     );
   }
