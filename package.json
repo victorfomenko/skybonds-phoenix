@@ -26,7 +26,7 @@
   ],
   "author": "Skybonds Team <support@skybonds.com> (https://github.com/Sovcombank/)",
   "devDependencies": {
-    "@skybonds/ui-build-tools": "1.5.1",
+    "@skybonds/ui-build-tools": "1.7.1",
     "@skybonds/ui-component-chart": "2.24.1",
     "@skybonds/ui-filters": "1.0.3",
     "@skybonds/ui-styles": "^0.2.1",

@@ -15,9 +15,16 @@ NODE_ENV = process.env.NODE_ENV or 'production'
 R = path.join __dirname, ".."
 destJsPath = "#{R}/vendors/"
 
+buildConfig =
+  watch: false
+  externals:
+    "react": "React"
+    "react-dom": "ReactDom"
+    "lodash": "_"
+
 gulp.task "components:scripts", ->
   skybondsBuildTools
-  .buildScripts R
+  .buildScripts R, buildConfig
   .pipe rename "skybonds.components.js"
   .pipe gulp.dest destJsPath
 
