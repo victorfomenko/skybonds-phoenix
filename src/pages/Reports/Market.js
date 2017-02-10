@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import Layers from './components/layers/Layers';
-import Chart from './components/chart/Chart';
-import style from './phoenix.sass';
+import Layers from '../../components/Layers/Layers';
+import Chart from '../../components/Chart';
 const _ = require('lodash');
 
-class PhoenixApp extends Component {
+class Maket extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props);
     const isins = [];
-    this.state = {isins};
-
+    this.state = {
+      reportName: 'Reports',
+      isins: isins,
+      reportID: props.match.params.reportID
+    };
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -21,14 +24,14 @@ class PhoenixApp extends Component {
   }
 
   handleFilterChange(isins) {
-    this.setState({isins: isins});
+    this.setState({ isins });
   }
 
   render(){
-
     return (
       <div>
-        {this.props.reportName}
+        {this.state.reportName}
+        <span>reportID: {this.state.reportID}</span>
         <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
         <Chart isins={this.state.isins} />
       </div>
@@ -36,8 +39,5 @@ class PhoenixApp extends Component {
   }
 }
 
-PhoenixApp.propTypes = {
-  reportName: React.PropTypes.string.isRequired,
-};
 
-export default PhoenixApp;
+export default Maket;

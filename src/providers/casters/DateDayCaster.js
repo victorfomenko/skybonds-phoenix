@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
   format: function(value) {
     if(value == null) {
