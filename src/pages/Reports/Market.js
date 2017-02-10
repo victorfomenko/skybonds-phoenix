@@ -40,4 +40,6 @@ class Maket extends Component {
 }
 
 
+// console.log(new dataApi());
+
 export default Maket;
