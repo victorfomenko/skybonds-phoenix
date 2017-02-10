@@ -9,7 +9,7 @@ npm run start
 open http://localhost:3000
 ```
 
-#### Для для билда
+#### Для сборки
 ```
 npm run build
 ```
