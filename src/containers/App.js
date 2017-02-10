@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Login from '../pages/Login';
+import Logout from '../pages/Logout';
 import Header from '../components/Header';
 import Reports from '../pages/Reports';
 import Home from '../pages/Home'
@@ -16,15 +17,16 @@ const App = ({ user }) => (
     <Header />
     <Switch>
 	    <Route path="/" exact={true} component={Home}/>
-	    <Route path="/reports" component={Reports} />
+	     {user.id ? <Route path="/reports" component={Reports} /> : null} 
 	    <Route path="/login" component={Login} />
+	    <Route path="/logout" component={Logout} />
 	    <Redirect to="/" />
     </Switch>
   </div>
 )
 
-// App.propTypes = {
-//   user: React.PropTypes.shape({}).isRequired,
-// }
+App.propTypes = {
+  user: React.PropTypes.shape({}).isRequired,
+}
 
-export default connect(state => ({ user: {} }))(App)
+export default connect(state => ({ user: state.user }))(App)

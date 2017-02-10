@@ -9,10 +9,12 @@ var hotMiddleware = require('webpack-hot-middleware');
 var config = require('./webpack.config');
 
 var app = express();
+var dev = process.env.NODE_ENV !== 'production';
 var compiler = webpack(config);
 
 app.use(devMiddleware(compiler, {
   publicPath: config.output.publicPath,
+  stats: { colors: true },
   historyApiFallback: true,
 }));
 
@@ -30,6 +32,24 @@ app.use(hotMiddleware(compiler));
 //   }
 //   // return next();
 // });
+
+if (dev) {
+  const httpProxy = require('http-proxy');
+  const proxy = httpProxy.createProxyServer({
+    secure: false,
+    xfwd: false,
+    changeOrigin: true,
+    hostRewrite: true,
+    autoRewrite: true,
+    protocolRewrite: true,
+    cookieDomainRewrite: '*'
+  });
+  const apiHost = process.env.DEV_API_HOST || 'http://sit.skybonds.net';
+  app.use('/api/', (req, res)=> {
+    proxy.web(req, res, {target: apiHost + '/api/'});
+  });
+}
+
 
 app.get('**/skybonds.components.js', function (req, res) {
   res.sendFile(path.join(__dirname, 'vendors/skybonds.components.js'));
