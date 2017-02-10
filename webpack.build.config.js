@@ -5,12 +5,11 @@ var combineLoaders = require('webpack-combine-loaders');
 
 module.exports = {
   devtool: 'cheap-module-source-map',
-  entry: './src/containers/Root',
+  entry: './src/index',
   output: {
-    path: __dirname,
-    filename: 'index.js',
-    library: '',
-    libraryTarget: 'commonjs2'
+    path: path.join(__dirname, 'static'),
+    filename: 'bundle.js',
+    publicPath: '/static/'
   },
   // externals: {
   //   "react": "React",

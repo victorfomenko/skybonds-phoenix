@@ -29,13 +29,13 @@ const defaultConfig = {
     y: [-Infinity, Infinity]
   },
   maxZoom: 24,
-  zoom: {
-    scale: 1,
-    center: {
-      x: 0.5,
-      y: 0.5
-    }
-  },
+  // zoom: {
+  //   scale: 1,
+  //   center: {
+  //     x: 0.5,
+  //     y: 0.5
+  //   }
+  // },
   disableZoom: false
 };
 
