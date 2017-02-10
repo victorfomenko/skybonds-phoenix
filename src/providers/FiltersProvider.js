@@ -1,12 +1,12 @@
-import requestProvider from './classes/Provider'
+import requestProvider from './modules/Provider'
 
-const paths = require('./paths');
+const config = require('./config');
 
 class FiltersProvider {
 
     static getFilteredIsins(filters) {
         return requestProvider.post(
-            paths.dataApiV2 + 'filters/apply?stats=true&details=true',
+            config.dataApiV2 + 'filters/apply?stats=true&details=true',
             filters
         ).then(function(response) {
             if(response.statusText == 'OK'){

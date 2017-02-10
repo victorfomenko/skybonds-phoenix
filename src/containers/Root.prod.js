@@ -1,3 +1,3 @@
-import PhoenixApp from '../PhoenixApp'
+import App from '../components/App'
 
-module.exports = PhoenixApp;
+module.exports = App;

@@ -1,21 +1,23 @@
 import { AppContainer } from 'react-hot-loader';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
+import { render } from 'react-dom';
+import { BrowserRouter } from 'react-router-dom'
+
+
+import { store } from './store'
 import Root from './containers/Root';
-require('../node_modules/@skybonds/ui-styles/style.sass');
 
 const rootEl = document.getElementById('root');
 
-const props = {
-  reportName: 'Reports'
-};
 
-
-ReactDOM.render(
+render(
   <AppContainer>
-    <Root
-      reportName={props.reportName}
-    />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Root/>
+      </BrowserRouter>
+    </Provider>
   </AppContainer>,
   rootEl
 );
@@ -25,11 +27,13 @@ if (module.hot) {
     // If you use Webpack 2 in ES modules mode, you can
     // use <App /> here rather than require() a <NextApp />.
     const NextRoot = require('./containers/Root').default;
-    ReactDOM.render(
+    render(
       <AppContainer>
-        <NextRoot
-          reportName={props.reportName}
-        />
+        <Provider store={store}>
+          <BrowserRouter>
+            <NextRoot />
+          </BrowserRouter>
+        </Provider>
       </AppContainer>,
       rootEl
     );
