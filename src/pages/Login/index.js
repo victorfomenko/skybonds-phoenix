@@ -6,11 +6,12 @@ import { Redirect } from 'react-router-dom'
 import { login } from '../../actions'
 
 
-const Login = ({ user, login }) => {
-  const handleSubmit = (e) => {
+const Login = ({ user, login, push }) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const { email: { value: email }, password: { value: password } } = e.target
-    login({ email, password })
+    await login({ email, password })
+    if(user.token) push('/')
   }
 
   return (
@@ -34,13 +35,14 @@ const Login = ({ user, login }) => {
       </form>
       
       {JSON.stringify(user)}
+      {user.token ? <Redirect to="/" /> : null}
     </div>
   )
 }
 
 Login.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
-  login: React.PropTypes.func.isRequired,
+  login: React.PropTypes.func.isRequired
 }
 
 

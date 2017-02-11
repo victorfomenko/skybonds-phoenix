@@ -17,7 +17,7 @@ const App = ({ user }) => (
     <Header />
     <Switch>
 	    <Route path="/" exact={true} component={Home}/>
-	     {user.token || user.id ? <Route path="/reports" component={Reports} /> : null} 
+	     {user.token ? <Route path="/reports" component={Reports} /> : null} 
 	    <Route path="/login" component={Login} />
 	    <Route path="/logout" component={Logout} />
 	    <Redirect to="/" />

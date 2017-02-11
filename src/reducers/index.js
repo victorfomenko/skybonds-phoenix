@@ -6,6 +6,6 @@ import user from './user'
 const rootReducer = combineReducers({
   user,
   market,
-})
+});
 
 export default rootReducer
