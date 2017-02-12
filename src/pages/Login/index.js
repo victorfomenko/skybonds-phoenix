@@ -34,7 +34,7 @@ const Login = ({ user, login, push }) => {
         <input type="submit" value="Войти" />
       </form>
       
-      {JSON.stringify(user)}
+      {user.error ? JSON.stringify(user) : null}
       {user.token ? <Redirect to="/" /> : null}
     </div>
   )

@@ -10,7 +10,7 @@ const user = (state = {}, action) => {
 				token: action.token
 			}
     	case types.LOGIN_FAILURE:
-  			return state
+  			return action.data
     	case types.LOGOUT_SUCCESS:
   			return {}
 		default:

@@ -5,7 +5,7 @@ export const login = ({ email, password }) => async (dispatch, getState) => {
   
   dispatch({ type: types.LOGIN_REQUEST })
 
-  const { token } = await post({
+  const resp = await post({
     url: urls.LOGIN,
     body: { email, pwd: password },
     success: types.LOGIN_REQUEST,
@@ -13,8 +13,8 @@ export const login = ({ email, password }) => async (dispatch, getState) => {
     dispatch,
   })
 
-  if(typeof token === 'undefined') {
-    dispatch({ type: types.LOGIN_FAILURE })
+  if(typeof resp.token === 'undefined') {
+    dispatch({ type: types.LOGIN_FAILURE, data: resp })
     return
   }
 
@@ -22,7 +22,7 @@ export const login = ({ email, password }) => async (dispatch, getState) => {
     url: urls.LOGIN_WITH_TOKEN,
     success: types.LOGIN_SUCCESS,
     failure: types.LOGIN_FAILURE,
-    token: token,
+    token: resp.token,
     dispatch,
   })
 }
