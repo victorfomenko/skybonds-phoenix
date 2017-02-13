@@ -28,22 +28,22 @@ class Layer extends Component {
   }
 
   render(){
+    let readonly = (this.state.renameMode) ? false : true;
     return (
         <li className={layersStyle.reportLayersStrip_item + ' ' +(this.props.active ? layersStyle.__active : '')}>
           <div className={layersStyle.reportLayersStrip_content}>
+
             <div onClick={this.onLayerClick.bind(this)} onDoubleClick={this.onLayerDblClick.bind(this)}>
-              <div className={(this.state.renameMode) ? layersStyle.layerNameHidden : layersStyle.layerNameVisisble}>
-                {this.props.name}
-              </div>
-              <div className={(this.state.renameMode) ? layersStyle.layerNameVisible : layersStyle.layerNameHidden}>
+              <div className={layersStyle.reportLayersStrip_name}>
                 <input
                   type='text'
                   defaultValue={this.props.name}
-                  className={layersStyle.reportLayersStrip_content_input}
+                  className={layersStyle.reportLayersStrip_name}
                   onKeyUp={this.onLayerRename.bind(this)}
+                  readOnly={readonly}
                 />
-              </div>
 
+              </div>
             </div>
             <div className={layersStyle.reportLayersStrip_closeIcon} onClick={this.onLayerClose.bind(this)}></div>
             <div className='reportLayersStrip_filters'>

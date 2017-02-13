@@ -46,9 +46,6 @@
       position: relative
       padding: 3px 10px 2px
       cursor: pointer
-      width: 120px
-      &_input
-        width: 80px
 
     &_item.__set.__hidden
       &_name
@@ -85,12 +82,69 @@
       &:before
         content: "+"
 
+  .reportLayersView
+    position: relative
+    z-index: 1
+    display: inline-block
+    color: $colorMuted
+  .reportLayersStrip_item:hover,
+  .reportLayersStrip_item.__active
+    .reportLayersView
+      color: $colorText
+  .reportLayersView_icon
+    margin: 0 4px 0 0
+    cursor: pointer
+  .reportLayersView_wrap
+    position: absolute
+    padding: 5px 0 0
+    top: 100%
+    left: -5px
+    min-width: 100%
+    display: none
+  .reportLayersView_wrap.__active
+    display: block
+  .reportLayersView_list
+    position: relative
+    padding: 10px 0
+    border: 1px solid $colorBorder
+    border-radius: 3px
+    background-color: $colorWhite
+    &:before
+      content: ""
+      position: absolute
+      top: -6px
+      left: 6px
+      width: 10px
+      height: 10px
+      border-style: solid
+      border-color: $colorBorder
+      border-width: 1px 0 0 1px
+      border-radius: 3px 0 0 0
+      background-color: $colorWhite
+      transform: rotate(45deg)
+  .reportLayersView_link
+    display: block
+    padding: 6px 10px
+    color: $colorText
+    cursor: pointer
+    &:hover
+      background-color: $colorLinkHoverBackground
+  .reportLayersView_item.__active
+    .reportLayersView_link
+      color: inherit !important
+      cursor: default
+      &:hover
+        color: inherit !important
+        background-color: transparent
+
+  .reportLayersStrip_item.__set.__hidden
+  report-layer-set-view
+    .reportLayersView > .reportLayersView_icon
+      opacity: .5
+
+
   .reportLayerSettings
     display: flex
     flex-direction: row
     clear: both
     position: relative
-  .layerNameHidden
-    display: none
-  .layerNameVisible
-    display: block

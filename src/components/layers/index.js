@@ -39,9 +39,9 @@ class Layers extends Component {
     this.props.renameLayer(layerId, layerName);
   }
 
-  handleFilterChange(filtersState) {
+  handleFilterChange(isins, filtersState) {
     this.props.changeFilter(filtersState.all);
-    // this.props.filteredDataHandler(isins);
+    this.props.filteredDataHandler(isins);
   }
 
   render(){

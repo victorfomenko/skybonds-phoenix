@@ -67,9 +67,9 @@ class Filters extends Component {
   }
 
   handleFilterChange(filtersState) {
-    // let filters = this.transformFilters(filtersState.selected);
-    // FiltersProvider.getFilteredIsins(filters).then((data) =>
-      this.props.filteredDataHandler(filtersState);
+    let filters = this.transformFilters(filtersState.selected);
+    FiltersProvider.getFilteredIsins(filters).then((data) =>
+      this.props.filteredDataHandler(data.result, filtersState));
   }
 
 

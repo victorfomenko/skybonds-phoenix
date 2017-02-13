@@ -235,6 +235,7 @@ const filters = {
     ]
   }
 };
+
 const initialState = {
   layers: [1],
   layersById: {
