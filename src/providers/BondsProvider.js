@@ -1,6 +1,6 @@
 import requestProvider from './modules/Provider'
 import config from './config';
-import DateDayCaster from './casters/DateDayCaster';
+import DateDayCaster from '../data/casters/DateDayCaster';
 
 class BondsProvider {
 
