@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "description": "Phoenix app",
   "scripts": {
-    "start": "npm install && npm run components && node server.js",
-    "build": "npm install && npm run components && npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors",
+    "start": "npm install && node server.js",
+    "build": "npm install && npm run lint && NODE_ENV=production webpack --config=webpack.build.config.js --progress --profile --colors",
     "dev": "node server.js",
     "lint": "eslint src",
-    "test": "mocha -w test/helpers/browser.js test/*.spec.js",
-    "components": "gulp build:components --gulpfile .dev_tools/gulpfile.coffee"
+    "test": "mocha -w test/helpers/browser.js test/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -27,10 +26,6 @@
   ],
   "author": "Skybonds Team <support@skybonds.com> (https://github.com/Sovcombank/)",
   "devDependencies": {
-    "@skybonds/ui-build-tools": "1.7.1",
-    "@skybonds/ui-component-chart": "2.24.1",
-    "@skybonds/ui-filters": "1.0.3",
-    "@skybonds/ui-styles": "^0.2.1",
     "babel-core": "^6.0.20",
     "babel-eslint": "^7.1.0",
     "babel-loader": "^6.0.1",
@@ -40,15 +35,15 @@
     "babel-preset-stage-0": "^6.0.15",
     "chai": "^3.5.0",
     "compression": "1.6.1",
+    "cjsx-loader": "^3.0.0",
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.12.3",
     "css-loader": "^0.26.0",
     "enzyme": "^2.7.1",
     "eslint": "^3.9.1",
     "eslint-plugin-react": "^6.5.0",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-rename": "^1.2.2",
     "http-proxy": "^1.16.2",
     "jsdom": "^9.10.0",
     "mocha": "^3.2.0",
@@ -63,7 +58,9 @@
     "webpack-hot-middleware": "^2.10.0"
   },
   "dependencies": {
+    "@skybonds/ui-component-chart": "2.24.1",
     "@skybonds/ui-filters": "1.0.3",
+    "@skybonds/ui-styles": "^0.2.1",
     "babel-runtime": "^6.22.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",

@@ -21,6 +21,9 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin("styles.css")
   ],
+  resolve: {
+    extensions: ['', '.js', '.jsx', '.cjsx', '.coffee']
+  },
   externals: {
     'cheerio': 'window',
     'react/lib/ExecutionEnvironment': true,
@@ -30,7 +33,14 @@ module.exports = {
     loaders: [{
       test: /\.jsx?$|/,
       loaders: ['babel'],
+      exclude: /(node_modules|bower_components)/,
       include: path.join(__dirname, 'src')
+    }, {
+      test: /\.cjsx$/,
+      loaders: ['coffee', 'cjsx']
+    }, {
+      test: /\.coffee$/,
+      loader: 'coffee'
     },
     {
       test: /(\.sass|\.css)/,
