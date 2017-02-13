@@ -45,7 +45,18 @@ const defaultDate = new Date('2017/02/05');
 
 class ScatterPlot extends Component {
 
+
   componentWillMount() {
+    this.initChart();
+  }
+
+
+  componentWillReceiveProps(props) {
+    this.updateChart(props.isins);
+  }
+
+
+  initChart() {
     this.dotsSetsPlugin = new ChartPlugins.DotsSetsPlugin;
     this.dotsSetsPlugin.update({ dotsSets: [] });
 
@@ -57,103 +68,82 @@ class ScatterPlot extends Component {
   }
 
 
-  componentWillReceiveProps(props) {
-    let date = defaultDate;
-    let attrs = [defaultConfig.axes.x, defaultConfig.axes.y, 'liquidity'];
-    if(props.isins.length) {
-      this.getBondsData(props.isins, date, attrs).then((bondsData) => {
-        this.refreshChart(bondsData);
+  updateChart(isins = []) {
+    isins = isins.slice(0, 200);
+    let config = {
+      date: defaultDate,
+      axes: {
+        x: defaultConfig.axes.x,
+        y: defaultConfig.axes.y
+      },
+      data: {
+        info: {},
+        daily: {}
+      }
+    };
+
+    if(isins.length) {
+      let attrs = [config.axes.x, config.axes.y, 'liquidity'];
+      Promise.all([
+        BondsProvider.getInfo(isins),
+        BondsProvider.getDaily(isins, config.date, attrs)
+      ]).then((response) => {
+        config.data = {
+          info: this.transformArrayToMap(response[0]),
+          daily: this.transformArrayToMap(response[1])
+        };
+        this.refreshChart(isins, config);
       });
+    } else {
+      this.refreshChart(isins, config);
     }
   }
 
 
-  getBondsData(isins, dailyDate, dailyAttrs) {
-    let promises = [
-      BondsProvider.getInfo(isins),
-      BondsProvider.getDaily(isins, dailyDate, dailyAttrs)
-    ];
-    return Promise.all(promises).then((response) => {
-      let infoData = response[0] || [];
-      let dailyData = response[1] || [];
-      return this.mergeBondsData(infoData, dailyData, dailyDate);
-    });
-  }
-
-
-  mergeBondsData(infoData, dailyData, dailyDate) {
-    infoData = infoData.map(function(bond){
-      bond.info = bond.data;
-      delete bond.data;
-      return bond;
-    });
-    infoData = _.keyBy(infoData, 'isin');
-
-    dailyData = dailyData.map(function(bond){
-      bond.daily = {
-        [ dailyDate ]: bond.data
-      };
-      delete bond.data;
-      return bond;
-    });
-    dailyData = _.keyBy(dailyData, 'isin');
-
-    return _.merge({}, infoData, dailyData);
-  }
-
-
-  refreshChart(bondsData) {
-    let dotsSets = { dotsSets: this.getDotsSets(bondsData, defaultDate) };
-    let chartDocumentConfig = this.getChartDocumentConfig(bondsData);
-    this.dotsSetsPlugin.update(dotsSets);
-    this.chartDocument.update(chartDocumentConfig);
-  }
-
-
-  getDotsSets(bondsData = [], date) {
-    let isins = _.map(bondsData).map((bond) => { return bond.isin; });
-    return [{
-      isins: isins,
-      date: date,
-      opacity: 1
-    }];
-  }
-
-
-  getChartDocumentConfig(bondsData) {
-    let result = _.clone(defaultConfig.axes);
-
-    result.buildDailyData = (isin, date) => {
-      let object = {
-        isin,
-        date
-      };
-
-      let axes = {
-        x: defaultConfig.axes.x,
-        y: defaultConfig.axes.y
-      };
-
-      // copyInfoValues = (target, source, fields) => {
-      //   for(field of fields) {
-      //     let value = source.info[ field ];
-      //     return
-      //   }
-      // };
-      // copyDailyValues = (target, source, fields) => {
-      // };
-
-      let bondInfoData = bondsData[ isin ].info;
-      let bondDailyData = bondsData[ isin ].daily[ date ];
-      object[ 'name' ] = bondInfoData.standardName;
-      object[ 'ratingGroup' ] = bondInfoData.ratingGroup;
-      object[ 'liquidity' ] = bondDailyData ? bondDailyData[ 'liquidity' ] : null;
-      object[ axes.x ] = bondDailyData ? bondDailyData[ axes.x ] : null;
-      object[ axes.y ] = bondDailyData ? bondDailyData[ axes.y ] : null;
-      return object;
-    };
-
+  transformArrayToMap(data) {
+    let result = {};
+    for(let item of data) {
+      result[ item.isin ] = item.data
+    }
     return result;
+  }
+
+
+  refreshChart(isins, config) {
+    this.dotsSetsPlugin.update( this.getDotsSetsConfig(isins, config.date) );
+    this.chartDocument.update( this.getChartConfig(config.data, config.axes) );
+  }
+
+
+  getDotsSetsConfig(isins, date) {
+    return {
+      dotsSets: [{
+        isins: isins,
+        date: date,
+        opacity: 1
+      }]
+    };
+  }
+
+
+  getChartConfig(data, axes) {
+    return {
+      axes: {
+        x: axes.x,
+        y: axes.y
+      },
+      buildDailyData: (isin, date) => {
+        return {
+          'isin': isin,
+          'date': date,
+          'name': data.info[ isin ][ 'standardName' ],
+          'ratingGroup': data.info[ isin ][ 'ratingGroup' ],
+          'liquidity': data.daily[ isin ] ? data.daily[ isin ][ 'liquidity' ] : null,
+          [ axes.x ]: data.daily[ isin ] ? data.daily[ isin ][ axes.x ] : null,
+          [ axes.y ]: data.daily[ isin ] ? data.daily[ isin ][ axes.y ] : null
+        };
+      }
+    }
   }
 
 
