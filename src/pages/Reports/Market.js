@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Layers from '../../components/Layers/Layers';
+import Layers from '../../components/Layers';
 import Chart from '../../components/Chart';
 const _ = require('lodash');
 

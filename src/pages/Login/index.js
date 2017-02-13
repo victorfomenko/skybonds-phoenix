@@ -8,6 +8,7 @@ import { login } from '../../actions'
 
 const Login = ({ user, login }) => {
   const handleSubmit = (e) => {
+    console.log(login);
     e.preventDefault()
     const { email: { value: email }, password: { value: password } } = e.target
     login({ email, password })
@@ -23,7 +24,7 @@ const Login = ({ user, login }) => {
           autoFocus
           required
         />
-      	<input 
+      	<input
           type='password'
           name="password"
           placeholder="Пароль"
@@ -32,7 +33,7 @@ const Login = ({ user, login }) => {
         <br/>
         <input type="submit" value="Войти" />
       </form>
-      
+
       {JSON.stringify(user)}
     </div>
   )
