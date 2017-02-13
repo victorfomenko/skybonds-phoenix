@@ -6,12 +6,12 @@ import { Redirect } from 'react-router-dom'
 import { login } from '../../actions'
 
 
-const Login = ({ user, login }) => {
-  const handleSubmit = (e) => {
-    console.log(login);
+const Login = ({ user, login, push }) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const { email: { value: email }, password: { value: password } } = e.target
-    login({ email, password })
+    await login({ email, password })
+    if(user.token) push('/')
   }
 
   return (
@@ -24,7 +24,7 @@ const Login = ({ user, login }) => {
           autoFocus
           required
         />
-      	<input
+      	<input 
           type='password'
           name="password"
           placeholder="Пароль"
@@ -33,15 +33,16 @@ const Login = ({ user, login }) => {
         <br/>
         <input type="submit" value="Войти" />
       </form>
-
-      {JSON.stringify(user)}
+      
+      {user.error ? JSON.stringify(user) : null}
+      {user.token ? <Redirect to="/" /> : null}
     </div>
   )
 }
 
 Login.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
-  login: React.PropTypes.func.isRequired,
+  login: React.PropTypes.func.isRequired
 }
 
 
