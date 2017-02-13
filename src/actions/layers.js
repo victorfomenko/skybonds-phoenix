@@ -16,6 +16,10 @@ export const renameLayer = (id, name) => (dispatch, getState) => {
   dispatch({ type: types.RENAME_LAYER, id, name})
 }
 
+export const changeLayerView = (id, viewMode) => (dispatch, getState) => {
+  dispatch({ type: types.CHANGE_LAYER_VIEW, id, viewMode})
+}
+
 export const changeFilter = (filters) => (dispatch, getState) => {
   dispatch({ type: types.CHANGE_FILTER, filters})
 }

@@ -16,6 +16,7 @@
         background-color: rgba(0,0,0,.07)
 
     &_name
+      display: inline-block
       line-height: 1
       height: 24px
       padding: 0 3px
@@ -82,11 +83,15 @@
       &:before
         content: "+"
 
+  .reportLayersView:hover .reportLayersView_wrap
+      display: block
   .reportLayersView
     position: relative
     z-index: 1
     display: inline-block
     color: $colorMuted
+    margin-right: 5px
+    font-weight: bold
   .reportLayersStrip_item:hover,
   .reportLayersStrip_item.__active
     .reportLayersView

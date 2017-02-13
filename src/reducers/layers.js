@@ -243,6 +243,7 @@ const initialState = {
       id : 1,
       name : 'Empty set',
       filters : filters,
+      'viewMode' : 'bonds',
     }
   },
   activeLayer: 1,
@@ -261,6 +262,7 @@ const layers = (state = initialState, action) => {
             id: newId,
             name: 'Empty set',
             filters : filters,
+            'viewMode' : 'bonds',
           }
         },
         activeLayer: newId,
@@ -283,6 +285,16 @@ const layers = (state = initialState, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             assign({}, layer, { name: action.name }) :
+            layer
+        })
+      }
+
+    case types.CHANGE_LAYER_VIEW:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            assign({}, layer, { viewMode: action.viewMode }) :
             layer
         })
       }
