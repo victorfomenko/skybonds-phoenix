@@ -24,6 +24,11 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx', '.cjsx', '.coffee']
   },
+  externals: {
+    'cheerio': 'window',
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+  },
   module: {
     loaders: [{
       test: /\.jsx?$|/,

@@ -7,7 +7,7 @@ class Filters extends Component {
   constructor(props) {
     super(props);
     const filters = props.filters;
-    this.state = { filters };
+    this.state = {filters};
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,15 +67,15 @@ class Filters extends Component {
   }
 
   handleFilterChange(filtersState) {
-    let filters = this.transformFilters(filtersState.selected);
-    FiltersProvider.getFilteredIsins(filters).then((data) =>
-      this.props.filteredDataHandler(data.result, filtersState));
+    // let filters = this.transformFilters(filtersState.selected);
+    // FiltersProvider.getFilteredIsins(filters).then((data) =>
+      this.props.filteredDataHandler(filtersState);
   }
 
 
   render(){
     return (
-      <div>
+      <div className="uiFilters">
         <UIFilters
           ee = {event}
           filters={this.state.filters}

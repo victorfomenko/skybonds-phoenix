@@ -1,21 +1,50 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 
 
-const Login = ({ user, login }) => {
-  const handleSubmit = (e) => {
+import { login } from '../../actions'
+
+
+const Login = ({ user, login, push }) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const { email: { value: email }, password: { value: password } } = e.target
+    await login({ email, password })
+    if(user.token) push('/')
   }
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-      	<input type='text'/>
-      	<input type='password'/>
+      	<input
+          type='email'
+          name='email'
+          placeholder='Email'
+          autoFocus
+          required
+        />
+      	<input 
+          type='password'
+          name="password"
+          placeholder="Пароль"
+          required
+        />
+        <br/>
+        <input type="submit" value="Войти" />
       </form>
+      
+      {user.error ? JSON.stringify(user) : null}
+      {user.token ? <Redirect to="/" /> : null}
     </div>
   )
 }
 
-export default Login
+Login.propTypes = {
+  user: React.PropTypes.shape({}).isRequired,
+  login: React.PropTypes.func.isRequired
+}
+
+
+const mapStateToProps = state => ({ user: state.user })
+export default connect(mapStateToProps, { login })(Login)

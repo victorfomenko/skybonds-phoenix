@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Layers from '../../components/Layers/Layers';
+import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 const _ = require('lodash');
 
