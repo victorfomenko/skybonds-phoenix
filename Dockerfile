@@ -1,6 +1,4 @@
-FROM node:6.9.5-alpine
+FROM reg.skybonds.net/nginx
 
-WORKDIR /app
-COPY . /app
-
-ENTRYPOINT ["npm", "run", "start"]
+COPY nginx/ /etc/nginx/conf.d/
+COPY artifacts/ /var/www/
