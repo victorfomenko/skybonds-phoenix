@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
-import FiltersProvider from '../../providers/FiltersProvider';
+import * as Data from '../../data/providers/Data';
 let event = new (require('events').EventEmitter);
 
 class Filters extends Component {
@@ -68,7 +68,7 @@ class Filters extends Component {
 
   handleFilterChange(filtersState) {
     let filters = this.transformFilters(filtersState.selected);
-    FiltersProvider.getFilteredIsins(filters).then((data) =>
+    Data.filtersApply(filters, true).then((data) =>
       this.props.filteredDataHandler(data.result, filtersState));
   }
 
