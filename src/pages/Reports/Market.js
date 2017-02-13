@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Layers from '../../components/Layers/Layers';
-import Chart from '../../components/Chart';
+import ScatterPlot from '../../components/ScatterPlot';
 const _ = require('lodash');
 
 class Maket extends Component {
@@ -33,7 +33,7 @@ class Maket extends Component {
         {this.state.reportName}
         <span>reportID: {this.state.reportID}</span>
         <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
-        <Chart isins={this.state.isins} />
+        <ScatterPlot isins={this.state.isins} />
       </div>
     );
   }

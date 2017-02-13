@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Promise from 'rsvp'
 import BondsProvider from '../../providers/BondsProvider';
+import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
 
 const defaultConfig = {
   backgroundColor: '#fff',
@@ -21,61 +22,49 @@ const defaultConfig = {
     bottom: 0
   },
   axes: {
-    x: 'yield',
-    y: 'duration'
+    x: 'duration',
+    y: 'yield'
   },
   axesLimits: {
     x: [0, Infinity],
     y: [-Infinity, Infinity]
   },
   maxZoom: 24,
-  // zoom: {
-  //   scale: 1,
-  //   center: {
-  //     x: 0.5,
-  //     y: 0.5
-  //   }
-  // },
+  zoom: {
+    scale: 1,
+    center: {
+      x: 0.5,
+      y: 0.5
+    }
+  },
   disableZoom: false
 };
 
-const defaultDate = new Date('2017/02/06');
+const defaultDate = new Date('2017/02/05');
 
 
-class Chart extends Component {
+class ScatterPlot extends Component {
 
   componentWillMount() {
-    this.initChart();
+    this.dotsSetsPlugin = new ChartPlugins.DotsSetsPlugin;
+    this.dotsSetsPlugin.update({ dotsSets: [] });
+
+    let chartDocumentConfig = _.clone(defaultConfig);
+    chartDocumentConfig.plugins = [
+      this.dotsSetsPlugin
+    ];
+    this.chartDocument = new ChartDocument(chartDocumentConfig);
   }
 
 
   componentWillReceiveProps(props) {
     let date = defaultDate;
-    let attrs = [defaultConfig.axes.x, defaultConfig.axes.y];
+    let attrs = [defaultConfig.axes.x, defaultConfig.axes.y, 'liquidity'];
     if(props.isins.length) {
       this.getBondsData(props.isins, date, attrs).then((bondsData) => {
         this.refreshChart(bondsData);
       });
     }
-  }
-
-
-  initChart() {
-    this.dotsSetsPlugin = new SkybondsComponents.DotsSetsPlugin;
-    this.curvesPlugin = new SkybondsComponents.CurvesPlugin;
-    this.spreadsPlugin = new SkybondsComponents.SpreadsPlugin;
-    this.dotCurveSpreadsPlugin = new SkybondsComponents.DotCurveSpreadsPlugin;
-    this.valueScannerPlugin = new SkybondsComponents.ValueScannerPlugin;
-
-    let chartDocumentConfig = _.clone(defaultConfig);
-    chartDocumentConfig.plugins = [
-      this.dotsSetsPlugin,
-      this.curvesPlugin,
-      this.spreadsPlugin,
-      this.dotCurveSpreadsPlugin,
-      this.valueScannerPlugin
-    ];
-    this.chartDocument = new SkybondsComponents.ChartDocument(chartDocumentConfig);
   }
 
 
@@ -114,30 +103,30 @@ class Chart extends Component {
 
 
   refreshChart(bondsData) {
-    this.dotsSetsPlugin.update(
-      { dotsSets: this.getDotsSets(bondsData, defaultDate) }
-    );
-    this.chartDocument.update(
-      this.getChartDocumentConfig(bondsData)
-    );
+    let dotsSets = { dotsSets: this.getDotsSets(bondsData, defaultDate) };
+    let chartDocumentConfig = this.getChartDocumentConfig(bondsData);
+    this.dotsSetsPlugin.update(dotsSets);
+    this.chartDocument.update(chartDocumentConfig);
   }
 
 
   getDotsSets(bondsData = [], date) {
+    let isins = _.map(bondsData).map((bond) => { return bond.isin; });
     return [{
-      isins: _.map(bondsData).map((bond) => { return bond.isin; }),
-      date: date
+      isins: isins,
+      date: date,
+      opacity: 1
     }];
   }
 
 
   getChartDocumentConfig(bondsData) {
-    let result = _.clone(defaultConfig);
+    let result = _.clone(defaultConfig.axes);
 
     result.buildDailyData = (isin, date) => {
       let object = {
-        isin: bondsData[ isin ],
-        date: date
+        isin,
+        date
       };
 
       let axes = {
@@ -145,9 +134,22 @@ class Chart extends Component {
         y: defaultConfig.axes.y
       };
 
-      object[ axes.x ] = bondsData[ isin ][ daily ][ date ][ axes.x ];
-      object[ axes.y ] = bondsData[ isin ][ daily ][ date ][ axes.y ];
+      // copyInfoValues = (target, source, fields) => {
+      //   for(field of fields) {
+      //     let value = source.info[ field ];
+      //     return
+      //   }
+      // };
+      // copyDailyValues = (target, source, fields) => {
+      // };
 
+      let bondInfoData = bondsData[ isin ].info;
+      let bondDailyData = bondsData[ isin ].daily[ date ];
+      object[ 'name' ] = bondInfoData.standardName;
+      object[ 'ratingGroup' ] = bondInfoData.ratingGroup;
+      object[ 'liquidity' ] = bondDailyData ? bondDailyData[ 'liquidity' ] : null;
+      object[ axes.x ] = bondDailyData ? bondDailyData[ axes.x ] : null;
+      object[ axes.y ] = bondDailyData ? bondDailyData[ axes.y ] : null;
       return object;
     };
 
@@ -157,13 +159,13 @@ class Chart extends Component {
 
   render() {
     return (
-      <SkybondsComponents.Chart document={this.chartDocument} />
+      <Chart document={this.chartDocument} />
     )
   }
 
 }
 
-Chart.propTypes = {
+ScatterPlot.propTypes = {
 };
 
-export default Chart
+export default ScatterPlot

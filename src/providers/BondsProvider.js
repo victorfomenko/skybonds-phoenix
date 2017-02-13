@@ -1,7 +1,6 @@
 import requestProvider from './modules/Provider'
-
-const config = require('./config');
-const DateDayCaster = require('./casters/DateDayCaster');
+import config from './config';
+import DateDayCaster from './casters/DateDayCaster';
 
 class BondsProvider {
 
