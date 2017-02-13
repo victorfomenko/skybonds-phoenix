@@ -6,7 +6,14 @@ import Layer from './Layer';
 import Filters from './Filters';
 import layersStyle from './layers.sass';
 
-import { addLayer, deleteLayer, activateLayer, renameLayer, changeFilter } from '../../actions'
+import {
+        addLayer,
+        deleteLayer,
+        activateLayer,
+        renameLayer,
+        changeFilter,
+        changeLayerView
+      } from '../../actions'
 
 
 class Layers extends Component {
@@ -44,6 +51,10 @@ class Layers extends Component {
     this.props.filteredDataHandler(isins);
   }
 
+  handleLayerViewChange(layerId, viewMode) {
+    this.props.changeLayerView(layerId, viewMode);
+  }
+
   render(){
     let layersState = this.props.layers;
     let layers = ((layersState.layers || []).map((layer, index) => {
@@ -56,6 +67,7 @@ class Layers extends Component {
                 onLayerClose={this.handleClose.bind(this)}
                 onLayerClick={this.handleLayerClick.bind(this)}
                 onLayerRename={this.handleLayerRename.bind(this)}
+                onLayerViewChange={this.handleLayerViewChange.bind(this)}
             />
     }));
 
@@ -91,10 +103,11 @@ Layers.propTypes = {
   addLayer: React.PropTypes.func.isRequired,
   deleteLayer: React.PropTypes.func.isRequired,
   renameLayer: React.PropTypes.func.isRequired,
-  changeFilter: React.PropTypes.func.isRequired
+  changeFilter: React.PropTypes.func.isRequired,
+  changeLayerView: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.layers });
 export default connect(mapStateToProps, {
-    addLayer, deleteLayer, activateLayer, renameLayer, changeFilter
+    addLayer, deleteLayer, activateLayer, renameLayer, changeFilter, changeLayerView
   })(Layers);
