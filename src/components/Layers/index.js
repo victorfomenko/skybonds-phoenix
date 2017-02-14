@@ -73,6 +73,7 @@ class Layers extends Component {
     }));
 
     if(this.state.loaded){
+      console.log('true')
       return (
         <div className={layersStyle.reportLayers}>
           <div className={layersStyle.reportLayersStrip}>
@@ -86,6 +87,7 @@ class Layers extends Component {
             </div>
           </div>
           <div className={layersStyle.reportLayerSettings}>
+            <div>{layersState.activeLayer}</div>
             <Search layerId={layersState.activeLayer} />
             <Filters
               filteredDataHandler={this.handleFilterChange.bind(this)}
