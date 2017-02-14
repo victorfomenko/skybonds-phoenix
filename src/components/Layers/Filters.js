@@ -82,6 +82,36 @@ class Filters extends Component {
     let viewModel = Object.assign({}, filters)
 
     stats.forEach(item => {
+      switch(item.name){
+        case 'sector':
+          item.name = 'industry';
+          break;
+        case 'dom-int':
+          item.name = 'domInt';
+          break;
+        case 'convertible':
+          item.name = 'convertibles';
+          break;
+        case 'floater':
+          item.name = 'floaters';
+          break;
+        case 'financial':
+          if(item.values['true']){ item.values['financial'] = item.values['true']}
+          if(item.values['false']){ item.values['non-financial'] = item.values['false']}
+           
+          delete item.values['true']
+          delete item.values['false']
+          break;
+        case 'corporations':
+          if(item.values['true']){ item.values['corporations'] = item.values['true']}
+          if(item.values['false']){ item.values['non-corporations'] = item.values['false']}
+           
+          delete item.values['true']
+          delete item.values['false']
+          break;
+        default:
+          return item.name
+      }
       if(filters[item.name]){
         let values = filters[item.name].values;
 
