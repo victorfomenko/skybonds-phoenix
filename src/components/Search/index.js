@@ -8,7 +8,13 @@ class Search extends Component {
 
   constructor(props) {
     super(props);
-    //this.state = {}
+    const search = props.layers.layersById[props.layerId];
+    this.state = {search}
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const search = nextProps.layers.layersById[nextProps.layerId];
+    this.setState({search});
   }
 
 
@@ -17,6 +23,7 @@ class Search extends Component {
   }
 
   onSearchClick() {
+    console.log(this.state.search);
     this.props.searchBond(this.props.layerId);
     console.log('search', this.props.layerId);
   }
@@ -33,5 +40,5 @@ Search.propTypes = {
   searchBond: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({ search: state.reports.market.search });
+const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, { searchBond })(Search);
