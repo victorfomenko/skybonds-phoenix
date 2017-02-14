@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { searchBond } from '../../actions';
-import style from './styles.sass';
+import { Icon, GLYPHS } from '../../components/Icon';
+import styles from './styles.sass';
 
 class Search extends Component {
 
 
   constructor(props) {
     super(props);
-    //this.state = {}
+    const search = props.layers.layersById[props.layerId];
+    this.state = {search}
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const search = nextProps.layers.layersById[nextProps.layerId];
+    this.setState({search});
   }
 
 
@@ -17,6 +24,7 @@ class Search extends Component {
   }
 
   onSearchClick() {
+    console.log(this.state.search);
     this.props.searchBond(this.props.layerId);
     console.log('search', this.props.layerId);
   }
@@ -24,7 +32,10 @@ class Search extends Component {
 
   render() {
     return (
-      <div onClick={this.onSearchClick.bind(this)}>search</div>
+      <div className={styles.reportsMarketSearch}>
+        Test!
+        <Icon glyph={GLYPHS.SEARCH} width="20" height="20" onClick={this.onSearchClick.bind(this)} />
+      </div>
     );
   }
 }
@@ -33,5 +44,5 @@ Search.propTypes = {
   searchBond: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({ search: state.reports.market.search });
+const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, { searchBond })(Search);

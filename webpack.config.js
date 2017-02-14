@@ -41,9 +41,8 @@ module.exports = {
     }, {
       test: /\.coffee$/,
       loader: 'coffee'
-    },
-    {
-      test: /(\.sass|\.css)/,
+    }, {
+      test: /(\.sass|\.css)$/,
       loader: ExtractTextPlugin.extract(
         combineLoaders([
           {
@@ -56,6 +55,12 @@ module.exports = {
           {loader: 'sass'}
         ])
       )
+    }, {
+      test: /\.svg$/,
+      loader: 'svg-sprite?' + JSON.stringify({
+        name: '[name]_[hash]',
+        prefixize: false
+      })
     }]
   }
 };
