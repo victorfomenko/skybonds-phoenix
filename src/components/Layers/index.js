@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {assign} from 'lodash';
 
 import Layer from './Layer';
+import Search from '../Search';
 import Filters from './Filters';
 import layersStyle from './layers.sass';
 
@@ -85,6 +86,7 @@ class Layers extends Component {
             </div>
           </div>
           <div className={layersStyle.reportLayerSettings}>
+            <Search layerId={layersState.activeLayer} />
             <Filters
               filteredDataHandler={this.handleFilterChange.bind(this)}
               filters={layersState.layersById[layersState.activeLayer].filters}
@@ -111,7 +113,7 @@ Layers.propTypes = {
   changeLayerView: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.layers });
+const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
     addLayer, deleteLayer, activateLayer, renameLayer, changeFilter, changeLayerView
   })(Layers);

@@ -1,13 +1,10 @@
 import { load } from './localStorage'
+import { ACCESS_TOKEN } from '../constants'
 
-const ACCESS_TOKEN = 'accessToken'
-const token = load(ACCESS_TOKEN)
 const headers = {
   'Content-Type': 'application/json;charset=UTF-8',
   'X-REQUEST-CLIENT-TYPE': 'web',
   'X-REQUEST-CLIENT-VERSION': '1.0',
-  'X-REQUEST-ID': Date.now(),
-  'X-Access-Token': token,
 }
 const getQS = (params) => {
     const esc = encodeURIComponent;
@@ -22,7 +19,11 @@ export const post = async ({ url, body, qs={} }) => {
 
     const res = await fetch(url, {
       method: 'POST',
-      headers: headers,
+      headers: {
+        ...headers,
+        'X-REQUEST-ID': Date.now(),
+        'X-Access-Token': load(ACCESS_TOKEN),
+      },
       body: JSON.stringify(body),
     })
     const data = await res.json()
@@ -35,7 +36,11 @@ export const get = async ({ url, qs={} }) => {
 
   const res = await fetch(url, {
     method: 'GET',
-    headers: headers,
+    headers: {
+      ...headers,
+      'X-REQUEST-ID': Date.now(),
+      'X-Access-Token': load(ACCESS_TOKEN),
+    },
   })
   const data = await res.json()
   return data

@@ -1,57 +1,47 @@
 import { actionTypes as types, urls } from '../constants'
-import { get, post } from '../helpers'
+import * as Auth from '../data/providers/Auth'
+import { localStorageProvider } from '../data/helpers';
+import { ACCESS_TOKEN } from '../data/constants'
 
-export const login = ({ email, password }) => async (dispatch, getState) => {
+export const login = ({ email, password }) => async (dispatch) => {
 
   dispatch({ type: types.LOGIN_REQUEST })
 
-  const resp = await post({
-    url: urls.LOGIN,
-    body: { email, pwd: password },
-    success: types.LOGIN_REQUEST,
-    failure: types.LOGIN_FAILURE,
-    dispatch,
-  })
-
-  if(typeof resp.token === 'undefined') {
-    dispatch({ type: types.LOGIN_FAILURE, data: resp })
-    return
+  try {
+    const data = await Auth.login(email, password)
+    console.log(data);
+    dispatch({type: types.LOGIN_SUCCESS, data})
   }
-
-  return get({
-    url: urls.LOGIN_WITH_TOKEN,
-    success: types.LOGIN_SUCCESS,
-    failure: types.LOGIN_FAILURE,
-    token: resp.token,
-    dispatch,
-  })
+  catch(error) {
+    dispatch({ type: types.LOGIN_FAILURE, data: error })
+  }
 }
 
-export const loginWithToken = () => (dispatch, getState) => {
-  const token = getState().user.token
+export const loginWithToken = () => async (dispatch) => {
+  const token = localStorageProvider.load(ACCESS_TOKEN)
 
   if (typeof token === 'undefined') return
 
   dispatch({ type: types.LOGIN_REQUEST })
-  return get({
-    url: urls.LOGIN_WITH_TOKEN,
-    success: types.LOGIN_SUCCESS,
-    failure: types.LOGIN_FAILURE,
-    token: token,
-    dispatch,
-  })
+
+  try {
+    const data = await Auth.loginWithToken()
+    console.log(data);
+    dispatch({ type: types.LOGIN_SUCCESS, data })
+  }
+  catch (resp) {
+    dispatch({ type: types.LOGIN_FAILURE, data: resp })
+  }
 }
 
-export const logout = () => (dispatch, getState) => {
-  const token = getState().user.token
+export const logout = () => async (dispatch) => {
 
   dispatch({ type: types.LOGOUT_REQUEST })
-  return post({
-    url: urls.LOGOUT,
-    body: {},
-    success: types.LOGOUT_SUCCESS,
-    failure: types.LOGOUT_FAILURE,
-    token: token,
-    dispatch,
-  })
+  try {
+    await Auth.logout()
+    dispatch({ type: types.LOGOUT_SUCCESS })
+  }
+  catch (error){
+    dispatch({ type: types.LOGOUT_FAILURE, data: error })
+  }
 }

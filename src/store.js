@@ -5,15 +5,15 @@ import throttle from 'lodash/throttle'
 
 import rootReducer from './reducers'
 import { loginWithToken } from './actions'
-import { saveState, loadState } from './helpers'
+import { localStorageProvider } from './data/helpers'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const store = createStore(rootReducer, loadState(),
+export const store = createStore(rootReducer, localStorageProvider.load('state'),
   composeEnhancers(
     applyMiddleware(thunk),
   ),
 )
 
-store.subscribe(throttle(() => saveState(store.getState()), 1000))
+store.subscribe(throttle(() => localStorageProvider.save('state', store.getState()), 1000))
 store.dispatch(loginWithToken())

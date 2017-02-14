@@ -1,6 +1,6 @@
-import { actionTypes as types } from '../constants'
-import {omit, mapValues, assign} from 'lodash';
-
+import { actionTypes as types } from '../../../constants'
+import { omit, mapValues, assign } from 'lodash';
+import search from './search';
 
 
 const filters = {
@@ -242,8 +242,9 @@ const initialState = {
     1: {
       id : 1,
       name : 'Empty set',
+      search: search,
       filters : filters,
-      'viewMode' : 'bonds',
+      'viewMode' : 'bonds'
     }
   },
   activeLayer: 1,
@@ -261,12 +262,13 @@ const layers = (state = initialState, action) => {
           [newId]: {
             id: newId,
             name: 'Empty set',
-            filters : filters,
+            search: search,
+            filters: filters,
             'viewMode' : 'bonds',
           }
         },
         activeLayer: newId,
-      }
+      };
 
     case types.DELETE_LAYER:
       if(state.layers.length == 1) {
