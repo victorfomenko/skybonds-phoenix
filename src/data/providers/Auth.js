@@ -18,7 +18,7 @@ export const login = (email, password) => {
 		}
 	})
 	.catch(error => {
-		localStorageProvider.save(ACCESS_TOKEN, '')
+		localStorageProvider.remove(ACCESS_TOKEN)
 		return Promise.reject(error)
 	})
 }
@@ -33,7 +33,7 @@ export const loginWithToken = async () => {
 		}
 	})
   	.catch(error => {
-		localStorageProvider.save(ACCESS_TOKEN, '')
+		localStorageProvider.remove(ACCESS_TOKEN)
 		return Promise.reject(error)
 	})
 }
@@ -42,7 +42,7 @@ export const logout = () => {
 	return UserApi.logout()
 	.then(resp => {
 		if(resp.status) {
-			localStorageProvider.save(ACCESS_TOKEN, '')
+			localStorageProvider.remove(ACCESS_TOKEN)
 		}
 		return resp
 	}).catch(error => {

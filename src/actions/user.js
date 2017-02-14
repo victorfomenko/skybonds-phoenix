@@ -9,7 +9,6 @@ export const login = ({ email, password }) => async (dispatch) => {
 
   try {
     const data = await Auth.login(email, password)
-    console.log(data);
     dispatch({type: types.LOGIN_SUCCESS, data})
   }
   catch(error) {
@@ -19,14 +18,13 @@ export const login = ({ email, password }) => async (dispatch) => {
 
 export const loginWithToken = () => async (dispatch) => {
   const token = localStorageProvider.load(ACCESS_TOKEN)
-
+  console.log(token)
   if (typeof token === 'undefined') return
 
   dispatch({ type: types.LOGIN_REQUEST })
 
   try {
     const data = await Auth.loginWithToken()
-    console.log(data);
     dispatch({ type: types.LOGIN_SUCCESS, data })
   }
   catch (resp) {
