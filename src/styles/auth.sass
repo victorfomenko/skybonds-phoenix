@@ -1,0 +1,270 @@
+@import "~@skybonds/ui-styles/styles/variables/_variables"
+$labelSize: 70px
+$labelSizeRegister: 100px
+
+.auth
+  height: 100%
+
+.formInput
+  width: 100%
+  line-height: 27px
+  float: left
+  margin: 0
+  padding: 0 10px
+  border: 1px solid #ccc
+  border-radius: 2px
+  vertical-align: middle
+  width: 308px
+  margin-left: 70px
+
+.auth.auth_reset .auth_box
+  position: absolute
+  top: calc(50% - 150px)
+  left: calc(50% - 250px)
+
+.auth.auth_login .auth_box
+  position: absolute
+  top: calc(50% - 150px)
+  left: calc(50% - 250px)
+
+.auth.auth_register .auth_box
+  position: absolute
+  top: calc(50% - 227px)
+  left: calc(50% - 250px)
+
+//.auth.auth_settings
+  width: 100%
+  height: 100%
+  position: fixed
+
+.auth.auth_settings .auth_box
+  position: absolute
+  top: calc(50% - 240px)
+  left: calc(50% - 250px)
+
+.auth.auth_set
+  width: 100%
+  height: 100%
+  background: rgba(153, 153, 153, 0.5)
+  position: fixed
+
+.auth.auth_set .auth_box
+  position: absolute
+  top: calc(50% - 140px)
+  left: calc(50% - 178px)
+  width: 356px
+
+.auth.auth_remove
+  width: 100%
+  height: 100%
+  background: rgba(153, 153, 153, 0.5)
+  position: fixed
+
+.auth.auth_remove .auth_box
+  position: absolute
+  top: calc(50% - 98px)
+  left: calc(50% - 250px)
+
+.auth_box
+  background: $colorWhite
+  width: 500px
+  max-width: 100%
+  margin: 0 auto
+  padding: 20px 60px 50px
+  border-radius: 4px
+  border: 1px solid $colorMuted
+  overflow: hidden
+
+.authHeader
+  margin: 20px 0
+
+.authHeader_item
+  display: inline-block
+  margin-left: 20px
+
+.authHeader_item:first-child
+  margin-left: 0
+
+.authHeader_link
+  display: block
+  min-height: 22px
+  padding: 4px 0
+  font-size: 35px
+
+.auth_logo
+  margin: 0 0 34px 0
+  font-weight: lighter
+
+.auth_row
+  display: block
+  margin: 10px 0
+  font-weight: normal
+  overflow: hidden
+  position: relative
+
+.auth_submit
+  border-radius: 2px !important
+  font-size: 13px !important
+  padding: 4px 21px !important
+
+.auth_submit__error
+  position: relative !important
+  animation: sway 200ms !important
+
+.auth_form p:first-child
+  margin-top: 10px
+
+.auth_row__submit
+  margin: 16px 0 0
+
+.auth_row__remove
+  margin: 16px 0 0
+
+.auth_row__change
+  margin: 16px 0 0
+
+.auth_row__remove > a
+  color: $colorRed
+
+.auth_row__password
+  position: relative
+
+.auth_row__password .form-input
+  padding-right: 70px
+
+.auth_label
+  position: relative
+
+.auth_label > span:first-child
+  float: left
+  width: $labelSize
+  margin-right: -$labelSize
+  line-height: 27px
+
+.auth_label .form-input
+  width: 378px - $labelSize
+  margin-left: $labelSize
+
+.auth_register .auth_label > span:first-child
+  float: left
+  width: $labelSizeRegister
+  margin-right: -$labelSizeRegister
+  line-height: 27px
+
+.auth_register .auth_label .form-input
+  float: left
+  width: 378px - $labelSizeRegister
+  margin-left: $labelSizeRegister
+
+.auth_forgot
+  margin-left: $labelSize
+  border-bottom: 1px dotted $colorLink
+  cursor: pointer
+
+.auth_label select.form-input
+  height: 29px
+  background: white
+  width: auto
+
+.authErrors
+  margin-top: 10px
+  min-height: 14px
+  color: $colorRed
+
+.authErrors > div
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  transition: 200ms linear all
+  line-height: 27px
+
+.authErrors > div.ng-enter,
+.authErrors > div.ng-leave.ng-leave-active
+  opacity: 0
+
+.authErrors > div.ng-leave,
+.authErrors > div.ng-enter.ng-enter-active
+  opacity: 1
+
+.auth_cancel
+  float: right
+  line-height: 27px
+
+.auth_cancel a
+  color: $colorLink
+  border-bottom: 1px dotted $colorLink
+  cursor: pointer
+
+.auth_link
+  color: $colorLink
+  border-bottom: 1px dotted $colorLink
+  cursor: pointer
+
+.auth_text_row
+  line-height: 29px
+
+.auth .auth_suggest .password_strong
+  color: $colorGreen
+
+.auth .auth_suggest .password_weak
+  color: $colorRed
+
+.auth .auth_suggest .password_medium
+  color: $colorYellow
+
+.auth .auth_suggest
+  position: absolute
+  width: auto
+  right: 8px
+  margin-right: 0
+  color: #999
+  line-height: 29px
+
+@keyframes sway
+  0%
+    left: -10px
+
+  50%
+    left: 10px
+
+  100%
+    left: 0
+
+.auth_waiting .spinner
+  margin: 0 -15px
+
+.auth_waiting .spinner > span
+  width: 10px
+  height: 10px
+  margin: 0 3px
+  background-color: $colorWhite
+  border-radius: 100%
+  display: inline-block
+  -webkit-animation: bouncedelay 1.4s infinite ease-in-out
+  animation: bouncedelay 1.4s infinite ease-in-out
+  -webkit-animation-fill-mode: both
+  animation-fill-mode: both
+
+.auth_waiting .spinner .bounce1
+  -webkit-animation-delay: -0.32s
+  animation-delay: -0.32s
+
+.auth_waiting .spinner .bounce2
+  -webkit-animation-delay: -0.16s
+  animation-delay: -0.16s
+
+@-webkit-keyframes bouncedelay
+  0%, 80%, 100%
+    -webkit-transform: scale(0)
+
+  40%
+    -webkit-transform: scale(1)
+
+@keyframes bouncedelay
+  0%, 80%, 100%
+    transform: scale(0)
+    -webkit-transform: scale(0)
+
+  40%
+    transform: scale(1)
+    -webkit-transform: scale(1)

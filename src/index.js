@@ -8,8 +8,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { store } from './store'
 import App from './containers/App';
 
-const rootEl = document.getElementById('root');
-
+const rootEl = document.getElementById('root')
+rootEl.style.height = '100%'
 
 render(
   <AppContainer>

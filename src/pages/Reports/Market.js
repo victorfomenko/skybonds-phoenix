@@ -3,6 +3,9 @@ import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 const _ = require('lodash');
 
+import pageStyle from '../../styles/page.sass';
+import reportStyle from './style.sass';
+
 class Maket extends Component {
 
   constructor(props) {
@@ -29,11 +32,22 @@ class Maket extends Component {
 
   render(){
     return (
-      <div>
-        {this.state.reportName}
-        <span>reportID: {this.state.reportID}</span>
-        <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
-        <ScatterPlot isins={this.state.isins} />
+      <div className={pageStyle.skybondsWrap}>
+        <div className={reportStyle.reportWrap}>
+          <div className={reportStyle.reportHeader}>
+            <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
+          </div>
+          <div className={reportStyle.reportView}>
+            <div className={reportStyle.reportViewScatterPlot}>
+              <div className={reportStyle.reportView_content}>
+                <div className={reportStyle.reportViewScatterPlotDiagram}>
+                  <ScatterPlot isins={this.state.isins} />
+                </div>
+              </div>
+              <div className={reportStyle.reportView_aside}></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

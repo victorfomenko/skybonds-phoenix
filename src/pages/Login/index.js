@@ -1,7 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
+
+import pageStyle from '../../styles/page.sass';
+import authStyle from '../../styles/auth.sass';
 
 import { login } from '../../actions'
 
@@ -14,28 +17,55 @@ const Login = ({ user, login, push }) => {
     if(user.token) push('/')
   }
 
+  console.log('pageStyle', pageStyle.skybondsWrap)
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-      	<input
-          type='email'
-          name='email'
-          placeholder='Email'
-          autoFocus
-          required
-        />
-      	<input 
-          type='password'
-          name="password"
-          placeholder="Пароль"
-          required
-        />
-        <br/>
-        <input type="submit" value="Войти" />
-      </form>
-      
-      {user.error ? JSON.stringify(user) : null}
-      {user.token ? <Redirect to="/" /> : null}
+    <div className={pageStyle.skybondsWrap}>
+      <div className={authStyle.auth + ' ' + authStyle.auth_login}>
+        <div className={authStyle.auth_box}>
+          <ul className={authStyle.authHeader}>
+            <li className={authStyle.authHeader_item}>
+              <Link to={'/'} className={authStyle.authHeader_link}>SkyBonds</Link>
+            </li>
+          </ul>
+          <form onSubmit={handleSubmit}>
+            <div className={authStyle.auth_row}>
+              <label className={authStyle.auth_label}>
+                <span>E-mail</span>
+                <input
+                  type='email'
+                  name='email'
+                  placeholder='Email'
+                  className={authStyle.formInput}
+                  autoFocus
+                  required
+                />
+              </label>
+            </div>
+            <div className={authStyle.auth_row + ' ' + authStyle.auth_row__password}>
+              <label className={authStyle.auth_label}>
+                <span>Password</span>
+                <input
+                  type='password'
+                  name="password"
+                  placeholder="Password"
+                  className={authStyle.formInput}
+                  required
+                />
+              </label>
+              <a className={authStyle.auth_forgot}>Forgot?</a>
+            </div>
+            <div className={authStyle.auth_row + ' ' + authStyle.auth_row__submit}>
+              <button className={' btn btn-primary ' + authStyle.auth_submit} type="submit">
+                <span>Login</span>
+              </button>
+            </div>
+            <div className={ authStyle.authErrors }>
+              {user.error ? JSON.stringify(user) : ''}
+              {user.token ? <Link to="/" /> : null}
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   )
 }
