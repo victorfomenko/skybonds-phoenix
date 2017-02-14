@@ -5,10 +5,7 @@ const user = (state = {}, action) => {
 		case types.SIGNUP_SUCCESS:
 		case types.LOGIN_SUCCESS:
 			if(!action.data.id) return {}
-			return {
-				...action.data,
-				token: action.token
-			}
+			return action.data
     	case types.LOGIN_FAILURE:
   			return action.data
     	case types.LOGOUT_SUCCESS:
