@@ -74,18 +74,22 @@ class Layers extends Component {
     if(this.state.loaded){
       return (
         <div className={layersStyle.reportLayers}>
-          <ul className={layersStyle.reportLayersStrip_list}>
-            {layers}
-          </ul>
-          <div className={layersStyle.reportLayersStrip_buttons}>
-            <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.handleNewSet.bind(this)}>
-              set
-            </span>
+          <div className={layersStyle.reportLayersStrip}>
+            <ul className={layersStyle.reportLayersStrip_list}>
+              {layers}
+            </ul>
+            <div className={layersStyle.reportLayersStrip_buttons}>
+              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.handleNewSet.bind(this)}>
+                set
+              </span>
+            </div>
           </div>
-          <Filters
-            filteredDataHandler={this.handleFilterChange.bind(this)}
-            filters={layersState.layersById[layersState.activeLayer].filters}
-          />
+          <div className={layersStyle.reportLayerSettings}>
+            <Filters
+              filteredDataHandler={this.handleFilterChange.bind(this)}
+              filters={layersState.layersById[layersState.activeLayer].filters}
+            />
+          </div>
         </div>
       );
     }
