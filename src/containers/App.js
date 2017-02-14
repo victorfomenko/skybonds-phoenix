@@ -8,12 +8,12 @@ import Header from '../components/Header';
 import Reports from '../pages/Reports';
 import Home from '../pages/Home'
 
-import style from '../phoenix.sass';
+import style from './styles/phoenix.sass';
 
 // const Home = () => <Async load={import('./Home')} />
 
 const App = ({ user }) => (
-  <div className={style.skybonds}>
+  <div className='skybonds'>
     <Header />
     <Switch>
 	    <Route path="/" exact={true} component={Home}/>
