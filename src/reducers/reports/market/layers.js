@@ -1,6 +1,5 @@
 import { actionTypes as types } from '../../../constants'
 import { omit, mapValues, assign } from 'lodash';
-import search from './search';
 
 
 const filters = {
@@ -242,7 +241,7 @@ const initialState = {
     1: {
       id : 1,
       name : 'Empty set',
-      search: search,
+      search: {},
       filters : filters,
       'viewMode' : 'bonds'
     }
@@ -262,7 +261,7 @@ const layers = (state = initialState, action) => {
           [newId]: {
             id: newId,
             name: 'Empty set',
-            search: search,
+            search: {},
             filters: filters,
             'viewMode' : 'bonds',
           }
@@ -316,6 +315,10 @@ const layers = (state = initialState, action) => {
             layer
         })
       }
+
+    case types.SEARCH_BOND:
+      return state;
+
 
     default:
       return state
