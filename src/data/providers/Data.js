@@ -10,5 +10,5 @@ export const getBondsInfo = (isins) => {
 }
 
 export const getBondsDaily = (isins, date, attrs) => {
-	return DataApi.getBondsInfo(isins, date, attrs)
+	return DataApi.getBondsDaily(isins, date, attrs)
 }

@@ -13,11 +13,11 @@ import style from '../phoenix.sass';
 // const Home = () => <Async load={import('./Home')} />
 
 const App = ({ user }) => (
-  <div>
+  <div className={style.skybonds}>
     <Header />
     <Switch>
 	    <Route path="/" exact={true} component={Home}/>
-	     {user.token ? <Route path="/reports" component={Reports} /> : null} 
+	     {user.token ? <Route path="/reports" component={Reports} /> : null}
 	    <Route path="/login" component={Login} />
 	    <Route path="/logout" component={Logout} />
 	    <Redirect to="/" />

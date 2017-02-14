@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {assign} from 'lodash';
 
 import Layer from './Layer';
+import Search from '../Search';
 import Filters from './Filters';
 import layersStyle from './layers.sass';
 
@@ -74,18 +75,23 @@ class Layers extends Component {
     if(this.state.loaded){
       return (
         <div className={layersStyle.reportLayers}>
-          <ul className={layersStyle.reportLayersStrip_list}>
-            {layers}
-          </ul>
-          <div className={layersStyle.reportLayersStrip_buttons}>
-            <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.handleNewSet.bind(this)}>
-              set
-            </span>
+          <div className={layersStyle.reportLayersStrip}>
+            <ul className={layersStyle.reportLayersStrip_list}>
+              {layers}
+            </ul>
+            <div className={layersStyle.reportLayersStrip_buttons}>
+              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.handleNewSet.bind(this)}>
+                set
+              </span>
+            </div>
           </div>
-          <Filters
-            filteredDataHandler={this.handleFilterChange.bind(this)}
-            filters={layersState.layersById[layersState.activeLayer].filters}
-          />
+          <div className={layersStyle.reportLayerSettings}>
+            <Search layerId={layersState.activeLayer} />
+            <Filters
+              filteredDataHandler={this.handleFilterChange.bind(this)}
+              filters={layersState.layersById[layersState.activeLayer].filters}
+            />
+          </div>
         </div>
       );
     }
@@ -107,7 +113,7 @@ Layers.propTypes = {
   changeLayerView: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.layers });
+const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
     addLayer, deleteLayer, activateLayer, renameLayer, changeFilter, changeLayerView
   })(Layers);
