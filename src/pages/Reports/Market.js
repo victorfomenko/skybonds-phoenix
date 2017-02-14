@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
-const _ = require('lodash');
+import _ from 'lodash';
 
 import reportStyle from './style.sass';
 

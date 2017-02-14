@@ -6,33 +6,6 @@ import style from './style.sass';
 import { filtersApply, getBondsInfo, getBondsDaily } from '../../data/providers/Data'
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  async componentWillMount() {
-    try {
-      const resp = await filtersApply({
-            filters:[
-              {name:'country',value:['RUS']},
-              {name:'actual',value:['true']}
-            ],
-            date: '20161226'
-          }
-        )
-      console.log(resp)
-    }
-    catch (e) {
-      console.warn(e)
-    }
-    const bondsInfo = await getBondsInfo(['RU000A0JUGC6'])
-    const bondsDaily = await getBondsDaily(['XS0088543193', 'ERROR'])
-
-    console.log(bondsInfo)
-    console.log(bondsDaily)
-  }
-
-
   render () {
     const { user } = this.props
     return (
