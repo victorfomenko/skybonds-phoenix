@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 
 import pageStyle from '../../styles/page.sass';
@@ -61,7 +61,7 @@ const Login = ({ user, login, push }) => {
             </div>
             <div className={ authStyle.authErrors }>
               {user.error ? JSON.stringify(user) : ''}
-              {user.token ? <Link to="/" /> : null}
+              {user.token ? <Redirect to="/" /> : null}
             </div>
           </form>
         </div>
