@@ -4,7 +4,6 @@ import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 const _ = require('lodash');
 
-import pageStyle from '../../styles/page.sass';
 import reportStyle from './style.sass';
 
 class Market extends Component {
@@ -33,7 +32,7 @@ class Market extends Component {
 
   render(){
     return (
-      <div className={pageStyle.skybondsWrap}>
+      <div className='skybondsWrap'>
         <div className={reportStyle.reportWrap}>
           <div className={reportStyle.reportHeader}>
             <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />

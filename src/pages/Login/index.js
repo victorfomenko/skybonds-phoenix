@@ -1,11 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-
-
-import pageStyle from '../../styles/page.sass';
 import authStyle from '../../styles/auth.sass';
-
 import { login } from '../../actions'
 
 
@@ -17,10 +13,11 @@ const Login = ({ user, login, push }) => {
     if(user.token) push('/')
   }
 
-  console.log('pageStyle', pageStyle.skybondsWrap)
   return (
-    <div className={pageStyle.skybondsWrap}>
+    <div className='skybondsWrap'>
+
       {user.token ? <Redirect to="/" /> : null}
+
       <div className={authStyle.auth + ' ' + authStyle.auth_login}>
         <div className={authStyle.auth_box}>
           <ul className={authStyle.authHeader}>
