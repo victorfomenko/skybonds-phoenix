@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 
 import pageStyle from '../../styles/page.sass';
@@ -20,6 +20,7 @@ const Login = ({ user, login, push }) => {
   console.log('pageStyle', pageStyle.skybondsWrap)
   return (
     <div className={pageStyle.skybondsWrap}>
+      {user.token ? <Redirect to="/" /> : null}
       <div className={authStyle.auth + ' ' + authStyle.auth_login}>
         <div className={authStyle.auth_box}>
           <ul className={authStyle.authHeader}>
@@ -61,7 +62,6 @@ const Login = ({ user, login, push }) => {
             </div>
             <div className={ authStyle.authErrors }>
               {user.error ? JSON.stringify(user) : ''}
-              {user.token ? <Link to="/" /> : null}
             </div>
           </form>
         </div>
