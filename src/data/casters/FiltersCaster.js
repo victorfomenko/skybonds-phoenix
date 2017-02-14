@@ -44,7 +44,7 @@ export default {
 		      }
 		      if (name === 'yield') {
 		        values = values.map(function(val) {
-		          if (String(val).indexOf("Infinity") === -1) {
+		          if (String(val).indexOf('Infinity') === -1) {
 		            return val / 100;
 		          }
 		          return val;
@@ -53,7 +53,7 @@ export default {
 		      if (values.length > 1) {
 		        filterArray.push({
 		          name: name,
-		          value: values[0] + ":" + values[1]
+		          value: values[0] + ':' + values[1]
 		        });
 		      }
 		      break;
