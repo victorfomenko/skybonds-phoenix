@@ -17,3 +17,11 @@ export const load = (key) => {
     return undefined
   }
 }
+
+export const remove = (key) => {
+  try {
+    localStorage.removeItem(key)
+  } catch (err) {
+    return undefined
+  }
+}
