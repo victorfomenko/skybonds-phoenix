@@ -107,7 +107,7 @@ Layers.propTypes = {
   changeLayerView: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.layers });
+const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
     addLayer, deleteLayer, activateLayer, renameLayer, changeFilter, changeLayerView
   })(Layers);

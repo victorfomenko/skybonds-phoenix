@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 const _ = require('lodash');
@@ -6,7 +7,7 @@ const _ = require('lodash');
 import pageStyle from '../../styles/page.sass';
 import reportStyle from './style.sass';
 
-class Maket extends Component {
+class Market extends Component {
 
   constructor(props) {
     super(props);
@@ -54,4 +55,5 @@ class Maket extends Component {
 }
 
 
-export default Maket;
+const mapStateToProps = state => ({ market: state.reports.market });
+export default connect(mapStateToProps)(Market);

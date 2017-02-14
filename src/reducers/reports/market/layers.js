@@ -1,6 +1,5 @@
-import { actionTypes as types } from '../constants'
-import {omit, mapValues, assign} from 'lodash';
-
+import { actionTypes as types } from '../../../constants'
+import { omit, mapValues, assign } from 'lodash';
 
 
 const filters = {
