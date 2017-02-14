@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { searchBond } from '../../actions';
-import style from './styles.sass';
+import { Icon, GLYPHS } from '../../components/Icon';
+import styles from './styles.sass';
 
 class Search extends Component {
 
@@ -24,7 +25,10 @@ class Search extends Component {
 
   render() {
     return (
-      <div onClick={this.onSearchClick.bind(this)}>search</div>
+      <div className={styles.reportsMarketSearch}>
+        Test!
+        <Icon glyph={GLYPHS.SEARCH} width="20" height="20" onClick={this.onSearchClick.bind(this)} />
+      </div>
     );
   }
 }
