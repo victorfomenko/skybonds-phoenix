@@ -242,7 +242,11 @@ const initialState = {
       id : 1,
       name : 'Empty set',
       search: {
-        query: ''
+        query: '',
+        results: {
+          bonds: [],
+          issuers: []
+        }
       },
       filters : filters,
       'viewMode' : 'bonds'
@@ -264,7 +268,11 @@ const layers = (state = initialState, action) => {
             id: newId,
             name: 'Empty set',
             search: {
-              query: ''
+              query: '',
+              results: {
+                bonds: [],
+                issuers: []
+              }
             },
             filters: filters,
             'viewMode' : 'bonds',
@@ -340,7 +348,7 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, search: {...layer.search, query: action.query, result: action.data }} :
+            {...layer, search: {...layer.search, results: action.data }} :
             layer
         })
       };

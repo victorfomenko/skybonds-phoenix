@@ -11,10 +11,9 @@ class Search extends Component {
   constructor(props) {
     super(props);
     // if(this.props.layer)
-    console.log('p', props);
     this.state = {
       query: props.layer.search.query,
-      results: { bonds: [], issuers: [] },
+      results: props.layer.search.results,
       dropdownActive: true
     };
   }
@@ -22,10 +21,9 @@ class Search extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log('np', nextProps);
-    // this.setState({
-    //   query: nextProps.layer.search.query,
-    //   results: { bonds: [], issuers: [] }
-    // });
+    this.setState({
+      results: nextProps.layer.search.results
+    });
   }
 
 
@@ -35,7 +33,6 @@ class Search extends Component {
 
 
   sendSearchRequest = _.debounce((query) => {
-    console.log('deb')
     this.props.searchRequest(this.props.layer.id, query);
   }, DEBOUNCE_DELAY);
 
@@ -91,7 +88,7 @@ class Search extends Component {
       </div>
     });
 
-    console.log('render', this.state.query);
+    console.log('render', this.state);
     return (
       <div className={styles.bondsSearch}>
         <input className={styles.bondsSearch_input}
