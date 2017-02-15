@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import * as DataProvider from '../../data/providers/Data';
+import { isEqual } from 'lodash';
 let event = new (require('events').EventEmitter);
 
 class Filters extends Component {
@@ -16,7 +17,9 @@ class Filters extends Component {
 
   componentWillReceiveProps(nextProps) {
     const filters = nextProps.filters;
-    this.setState({ filters });
+    if(!isEqual(filters, this.state.filters)) {
+      this.setState({ filters });
+    }
   }
 
   getYesterday(){

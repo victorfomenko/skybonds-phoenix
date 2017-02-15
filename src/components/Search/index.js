@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { searchChange } from '../../actions';
-import * as SearchProvider from '../../data/providers/Search';
+import { searchRequest, searchResponse } from '../../actions';
 import { Icon, GLYPHS } from '../../components/Icon';
 import styles from './styles.sass';
 
 const DEBOUNCE_DELAY = 250;
-const SEARCH_LIMIT = 200;
 
 class Search extends Component {
 
@@ -24,24 +22,21 @@ class Search extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log('np', nextProps);
-    this.setState({
-      query: nextProps.layer.search.query,
-      results: { bonds: [], issuers: [] }
-    });
+    // this.setState({
+    //   query: nextProps.layer.search.query,
+    //   results: { bonds: [], issuers: [] }
+    // });
   }
 
 
   componentWillUnmount() {
-    this.getSearchResults.cancel()
+    this.sendSearchRequest.cancel()
   }
 
 
-  getSearchResults = _.debounce((query) => {
-    // if(this.props.layer)
-    SearchProvider.search(query, SEARCH_LIMIT, ['maturityDate', 'finalDate', 'issueDate', 'status']).then((results)=>{
-      this.props.searchChange(this.props.layer.id, query);
-      this.setState({ results: results });
-    });
+  sendSearchRequest = _.debounce((query) => {
+    console.log('deb')
+    this.props.searchRequest(this.props.layer.id, query);
   }, DEBOUNCE_DELAY);
 
 
@@ -56,8 +51,9 @@ class Search extends Component {
 
   onInputChange(event) {
     console.log('change', event.target.value);
-    this.getSearchResults(event.target.value);
-    this.setState({query: event.target.value})
+    let query = event.target.value;
+    this.setState({query: query});
+    this.sendSearchRequest(query);
   }
 
   onInputKeyPress() {console.log('press');}
@@ -133,4 +129,4 @@ Search.propTypes = {
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
-export default connect(mapStateToProps, { searchChange })(Search);
+export default connect(mapStateToProps, { searchRequest, searchResponse })(Search);

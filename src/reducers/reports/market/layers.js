@@ -320,17 +320,30 @@ const layers = (state = initialState, action) => {
         })
       };
 
-    case actionTypes.SEARCH_BOND:
-      if(!action.id) { return state }
+    case actionTypes.SEARCH_REQUEST:
+      console.log('action request', action);
+      // should change state.query
+      return state;
+      // return {
+      //   ...state,
+      //   layersById: mapValues(state.layersById, (layer) => {
+      //     return layer.id === action.id ?
+      //       {...layer, search: {...layer.search, query: action.query}} :
+      //       layer
+      //   })
+      // };
+
+    case actionTypes.SEARCH_RESPONSE:
+      console.log('action response', action.id, action.data);
+      // should change state.result
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, search: {...layer.search, query: action.query}} :
+            {...layer, search: {...layer.search, query: action.query, result: action.data }} :
             layer
         })
-      }
-
+      };
 
     default:
       return state
