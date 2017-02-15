@@ -225,6 +225,16 @@ const filters = {
       {name: 'very high'}
     ]
   },
+  range: {
+    values: [
+        {name: 'price', values:[], defaultValues:[]},
+        {name: 'spread', values:[], defaultValues:[]},
+        {name: 'yield', values:[], defaultValues:[]},
+        {name: 'duration', values:[], defaultValues:[]},
+        {name: 'maturity', values:[], defaultValues:[]},
+        {name: 'discount', values:[], defaultValues:[]}
+      ],
+  },
   type: {
     values: [
       {name: 'regular'},
@@ -245,6 +255,8 @@ const initialState = {
         query: ''
       },
       filters : filters,
+      filtersIsins: [],
+      totalIsins: [],
       'viewMode' : 'bonds'
     }
   },
@@ -267,6 +279,8 @@ const layers = (state = initialState, action) => {
               query: ''
             },
             filters: filters,
+            filtersIsins: [],
+            totalIsins: [],
             'viewMode' : 'bonds',
           }
         },
@@ -310,16 +324,6 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
-    case actionTypes.CHANGE_FILTER:
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === state.activeLayer ?
-            assign({}, layer, { filters: action.filters }) :
-            layer
-        })
-      };
-
     case actionTypes.SEARCH_BOND:
       if(!action.id) { return state }
       return {
@@ -327,6 +331,30 @@ const layers = (state = initialState, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer, search: {...layer.search, query: action.query}} :
+            layer
+        })
+      }
+
+    case actionTypes.FILTERS_CHANGE:
+      if(!action.id) { return state }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, filters: action.filters} :
+            layer
+        })
+      }
+
+    case actionTypes.FILTERS_ISINS_CHANGE:
+      if(!action.id) { return state }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, filtersIsins: action.isins} :
             layer
         })
       }

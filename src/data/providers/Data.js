@@ -12,6 +12,15 @@ export const filtersApply = (filters, stats, details) => {
 		})
 	}
 	return DataApi.filtersApply(filters, stats, details)
+	.then(resp => {
+		if(resp.stats) {
+			return {
+				...resp,
+				stats: FiltersCaster.cast(resp.stats)
+			}
+		}
+		return resp
+	})
 }
 
 export const getBondsInfo = (isins) => {

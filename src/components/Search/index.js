@@ -13,7 +13,6 @@ class Search extends Component {
   constructor(props) {
     super(props);
     // if(this.props.layer)
-    console.log('p', props);
     this.state = {
       query: props.layer.search.query,
       results: { bonds: [], issuers: [] },
@@ -23,7 +22,6 @@ class Search extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    console.log('np', nextProps);
     this.setState({
       query: nextProps.layer.search.query,
       results: { bonds: [], issuers: [] }
@@ -47,7 +45,6 @@ class Search extends Component {
 
   onSearchClick() {
     // console.log(this.state.search);
-    console.log('search', this.props.layerId);
   }
 
   onSearchClear() {console.log('close');}
@@ -103,7 +100,7 @@ class Search extends Component {
                onBlur={this.onInputBlur.bind(this)}
                onChange={this.onInputChange.bind(this)}
                onKeyPress={this.onInputKeyPress.bind(this)}
-               value={this.state.query}
+               value={this.state.query || ''}
               />
 
         <Icon className={styles.bondsSearch_icon}

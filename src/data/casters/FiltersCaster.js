@@ -107,5 +107,86 @@ export default {
 		  }
 		}
 		return filterArray
+	},
+	cast: (stats) => {
+		let typeValues = {}
+		stats.forEach(function(arg, index) {
+		  var name, values;
+		  name = arg.name, values = arg.values;
+		  if (name === 'floater' || name === 'convertible' || name === 'regular' || name === 'subord') {
+		    if (values["true"] != null) {
+		      typeValues[name] = values["true"];
+		    }
+		  }
+		  if (name === 'yield' || name === 'price' || name === 'duration' || name === 'haircut' || name === 'spreadToBMK' || name === 'yearsToPutCallMaturity') {
+		    if (name === 'haircut') {
+		      name = 'discount';
+		    }
+		    if (name === 'spreadToBMK') {
+		      name = 'spread';
+		    }
+		    if (name === 'yearsToPutCallMaturity') {
+		      name = 'maturity';
+		    }
+		    if (name === 'yield') {
+		      values = values.map(function(val) {
+		        return val * 100;
+		      });
+		    }
+		    stats[index] = {
+		      name: name,
+		      values: values
+		    };
+		  }
+		  if (name === 'financial') {
+		    if (values['true']) {
+		      values['financial'] = values['true'];
+		    }
+		    if (values['false']) {
+		      values['non-financial'] = values['false'];
+		    }
+		    delete values['true'];
+		    delete values['false'];
+		    stats[index] = {
+		      name: name,
+		      values: values
+		    };
+		  }
+		  if (name === 'corporations') {
+		    if (values['true']) {
+		      values['corporations'] = values['true'];
+		    }
+		    if (values['false']) {
+		      values['non-corporations'] = values['false'];
+		    }
+		    delete values['true'];
+		    delete values['false'];
+		    stats[index] = {
+		      name: name,
+		      values: values
+		    };
+		  }
+		  if (name === 'sector' || name === 'dom-int') {
+		    if (name === 'sector') {
+		      name = 'industry';
+		    }
+		    if (name === 'dom-int') {
+		      name = 'domInt';
+		    }
+		    return stats[index] = {
+		      name: name,
+		      values: values
+		    };
+		  }
+		});
+
+		if (Object.keys(typeValues).length) {
+		  stats.push({
+		    name: 'type',
+		    values: typeValues
+		  });
+		}
+
+		return stats;
 	}
 }
