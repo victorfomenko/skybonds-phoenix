@@ -1,4 +1,4 @@
-import { actionTypes as types } from '../../../constants'
+import { actionTypes } from '../../../actions/actionTypes'
 import { omit, mapValues, assign } from 'lodash';
 
 
@@ -135,9 +135,9 @@ const filters = {
       };
 
       let result = getOrder(a.name);
-      if (result == null) {result = 0};
+      if (result == null) {result = 0}
       let result1 = getOrder(b.name);
-      if (result1 == null) {result1 = 0};
+      if (result1 == null) {result1 = 0}
       return result1 - result;
     }
   },
@@ -254,7 +254,7 @@ const initialState = {
 const layers = (state = initialState, action) => {
   switch (action.type) {
 
-    case types.ADD_LAYER:
+    case actionTypes.ADD_LAYER:
       let newId = state.layers[state.layers.length-1] + 1;
       return {
         layers: state.layers.concat(newId),
@@ -271,7 +271,7 @@ const layers = (state = initialState, action) => {
         activeLayer: newId,
       };
 
-    case types.DELETE_LAYER:
+    case actionTypes.DELETE_LAYER:
       if(state.layers.length == 1) {
         return initialState;
       }
@@ -280,9 +280,9 @@ const layers = (state = initialState, action) => {
         layers: state.layers.filter(id => id !== action.id),
         layersById: omit(state.layersById, action.id),
         activeLayer: (action.id == state.activeLayer) ? state.layers[0] : state.activeLayer,
-      }
+      };
 
-    case types.RENAME_LAYER:
+    case actionTypes.RENAME_LAYER:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -292,7 +292,7 @@ const layers = (state = initialState, action) => {
         })
       }
 
-    case types.CHANGE_LAYER_VIEW:
+    case actionTypes.CHANGE_LAYER_VIEW:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -300,15 +300,15 @@ const layers = (state = initialState, action) => {
             assign({}, layer, { viewMode: action.viewMode }) :
             layer
         })
-      }
+      };
 
-    case types.ACTIVATE_LAYER:
+    case actionTypes.ACTIVATE_LAYER:
       return {
         ...state,
         activeLayer: action.id,
-      }
+      };
 
-    case types.CHANGE_FILTER:
+    case actionTypes.CHANGE_FILTER:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -316,15 +316,15 @@ const layers = (state = initialState, action) => {
             assign({}, layer, { filters: action.filters }) :
             layer
         })
-      }
+      };
 
-    case types.SEARCH_BOND:
+    case actionTypes.SEARCH_BOND:
       return state;
 
 
     default:
       return state
   }
-}
+};
 
 export default layers
