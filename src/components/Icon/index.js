@@ -10,7 +10,7 @@ export class Icon extends Component {
   render() {
     let glyph = this.props.glyph;
     return (
-      <svg className="svgIcon"
+      <svg className={this.props.className ? this.props.className + ' svgIcon' : 'svgIcon'}
            onClick={this.props.onClick}
            width={this.props.width}
            height={this.props.height}
