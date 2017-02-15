@@ -58,7 +58,7 @@ class Filters extends Component {
     // TODO !!Client date can be wrong!! 
     // Better is get date from server
     let date = new Date();
-    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 2);
     return date.toJSON().slice(0,10).replace(/-/g,'')
   }
 
@@ -80,6 +80,7 @@ class Filters extends Component {
 
   makeViewModel(stats, filters) {
     let viewModel = Object.assign({}, filters)
+    let typeValues = {}
 
     stats.forEach(item => {
       switch(item.name){
@@ -88,12 +89,6 @@ class Filters extends Component {
           break;
         case 'dom-int':
           item.name = 'domInt';
-          break;
-        case 'convertible':
-          item.name = 'convertibles';
-          break;
-        case 'floater':
-          item.name = 'floaters';
           break;
         case 'financial':
           if(item.values['true']){ item.values['financial'] = item.values['true']}
@@ -109,12 +104,26 @@ class Filters extends Component {
           delete item.values['true']
           delete item.values['false']
           break;
-        default:
-          return item.name
+        case 'floater':
+        case 'convertible':
+        case 'regular':
+        case 'subord':
+          if(item.values.true !== null) {
+            typeValues[item.name] = item.values.true
+          }
+          break;
       }
+    })
+    if(Object.keys(typeValues).length){
+      stats.push({
+        name: 'type',
+        values: typeValues
+      })
+    }
+
+    stats.forEach(item => {
       if(filters[item.name]){
         let values = filters[item.name].values;
-
         if(!values.length) return
         values.forEach(value=>{
           value.tag = null
@@ -134,6 +143,7 @@ class Filters extends Component {
         viewModel[item.name] = { values }
       }
     })
+    
     return viewModel
   }
 
