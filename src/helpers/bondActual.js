@@ -1,21 +1,21 @@
 const ACTUAL_BONDS_STATUSES = ['outstanding', 'being placed', 'suspended'];
 
-const isBondActual = (bondInfo, date) => {
-  now = date.getTime();
+export const isBondActual = (bondData, date) => {
+  let now = date.getTime();
 
-  if(bondInfo.maturityDate != null && bondInfo.maturityDate.getTime() < now) {
+  if(bondData.maturityDate != null && bondData.maturityDate.getTime() < now) {
     return false;
   }
 
-  if(bondInfo.finalDate != null && bondInfo.finalDate.getTime() < now) {
+  if(bondData.finalDate != null && bondData.finalDate.getTime() < now) {
     return false;
   }
 
-  if(bondInfo.issueDate != null && bondInfo.issueDate.getTime() < now) {
+  if(bondData.issueDate != null && bondData.issueDate.getTime() < now) {
     return true;
   }
 
-  if(bondInfo.status != null && ACTUAL_BONDS_STATUSES.indexOf(bondInfo.status) != -1) {
+  if(bondData.status != null && ACTUAL_BONDS_STATUSES.indexOf(bondData.status) != -1) {
     return true;
   }
 
