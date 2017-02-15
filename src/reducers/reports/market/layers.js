@@ -263,7 +263,9 @@ const layers = (state = initialState, action) => {
           [newId]: {
             id: newId,
             name: 'Empty set',
-            search: {},
+            search: {
+              query: ''
+            },
             filters: filters,
             'viewMode' : 'bonds',
           }
@@ -319,7 +321,15 @@ const layers = (state = initialState, action) => {
       };
 
     case actionTypes.SEARCH_BOND:
-      return state;
+      if(!action.id) { return state }
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, search: {...layer.search, query: action.query}} :
+            layer
+        })
+      }
 
 
     default:
