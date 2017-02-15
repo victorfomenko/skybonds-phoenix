@@ -39,8 +39,8 @@ class Search extends Component {
   getSearchResults = _.debounce((query) => {
     // if(this.props.layer)
     SearchProvider.search(query, SEARCH_LIMIT, ['maturityDate', 'finalDate', 'issueDate', 'status']).then((results)=>{
-      this.props.searchChange(this.props.layerId);
-      this.setState({ query: query, results: results });
+      this.props.searchChange(this.props.layer.id, query);
+      this.setState({ results: results });
     });
   }, DEBOUNCE_DELAY);
 
@@ -57,6 +57,7 @@ class Search extends Component {
   onInputChange(event) {
     console.log('change', event.target.value);
     this.getSearchResults(event.target.value);
+    this.setState({query: event.target.value})
   }
 
   onInputKeyPress() {console.log('press');}
@@ -94,14 +95,16 @@ class Search extends Component {
       </div>
     });
 
-
+    console.log('render', this.state.query);
     return (
       <div className={styles.bondsSearch}>
         <input className={styles.bondsSearch_input}
                placeholder="Name, Issuer, ISIN or Rating"
                onBlur={this.onInputBlur.bind(this)}
                onChange={this.onInputChange.bind(this)}
-               onKeyPress={this.onInputKeyPress.bind(this)} />
+               onKeyPress={this.onInputKeyPress.bind(this)}
+               value={this.state.query}
+              />
 
         <Icon className={styles.bondsSearch_icon}
               glyph={GLYPHS.SEARCH}
