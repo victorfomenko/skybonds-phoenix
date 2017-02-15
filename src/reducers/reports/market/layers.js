@@ -241,7 +241,9 @@ const initialState = {
     1: {
       id : 1,
       name : 'Empty set',
-      search: {},
+      search: {
+        query: ''
+      },
       filters : filters,
       'viewMode' : 'bonds'
     }
