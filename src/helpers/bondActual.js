@@ -1,4 +1,4 @@
-const ACTUAL_BONDS_STATUSES = ["outstanding", "being placed", "suspended"];
+const ACTUAL_BONDS_STATUSES = ['outstanding', 'being placed', 'suspended'];
 
 const isBondActual = (bondInfo, date) => {
   now = date.getTime();
