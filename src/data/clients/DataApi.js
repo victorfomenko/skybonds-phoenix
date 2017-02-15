@@ -4,7 +4,7 @@ import DateDayCaster from '../casters/DateDayCaster';
 const API_V1 = '/api/v1/data/';
 const API_V2 = '/api/v2/data/';
 
-export const filtersApply = (filters, stats=false, details=false) => {
+export const filtersApply = (filters={}, stats=false, details=false) => {
   return requestProvider.post({
     url: API_V2 + 'filters/apply',
     body: filters,
