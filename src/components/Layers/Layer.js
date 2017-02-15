@@ -68,8 +68,6 @@ class Layer extends Component {
 
             </div>
             <span className={layersStyle.reportLayersStrip_closeIcon} onClick={this.onLayerClose.bind(this)}></span>
-            <div className='reportLayersStrip_filters'>
-            </div>
           </div>
         </li>
     )

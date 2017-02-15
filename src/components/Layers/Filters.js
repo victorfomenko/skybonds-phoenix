@@ -6,7 +6,7 @@ let event = new (require('events').EventEmitter);
 class Filters extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       filters: props.filters,
       silent: false
     };
@@ -54,8 +54,8 @@ class Filters extends Component {
   //   return 0;
   // }
 
-  getYesterday(){ 
-    // TODO !!Client date can be wrong!! 
+  getYesterday(){
+    // TODO !!Client date can be wrong!!
     // Better is get date from server
     let date = new Date();
     date.setDate(date.getDate() - 2);
@@ -93,14 +93,14 @@ class Filters extends Component {
         case 'financial':
           if(item.values['true']){ item.values['financial'] = item.values['true']}
           if(item.values['false']){ item.values['non-financial'] = item.values['false']}
-           
+
           delete item.values['true']
           delete item.values['false']
           break;
         case 'corporations':
           if(item.values['true']){ item.values['corporations'] = item.values['true']}
           if(item.values['false']){ item.values['non-corporations'] = item.values['false']}
-           
+
           delete item.values['true']
           delete item.values['false']
           break;
@@ -143,19 +143,17 @@ class Filters extends Component {
         viewModel[item.name] = { values }
       }
     })
-    
+
     return viewModel
   }
 
   render(){
     return (
-      <div className="uiFilters">
-        <UIFilters
-          ee={event}
-          filters={this.state.filters}
-          onStateChange={this.handleFilterChange}
-        />
-      </div>
+      <UIFilters
+        ee={event}
+        filters={this.state.filters}
+        onStateChange={this.handleFilterChange}
+      />
     )
   }
 }

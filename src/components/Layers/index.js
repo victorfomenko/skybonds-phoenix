@@ -86,11 +86,15 @@ class Layers extends Component {
             </div>
           </div>
           <div className={layersStyle.reportLayerSettings}>
-            <Search layerId={layersState.activeLayer} />
-            <Filters
-              filteredDataHandler={this.handleFilterChange.bind(this)}
-              filters={layersState.layersById[layersState.activeLayer].filters}
-            />
+            <div className={layersStyle.reportLayerSettings_search}>
+              <Search layer={layersState.layersById[layersState.activeLayer]} />
+            </div>
+            <div className={layersStyle.reportLayerSettings_filters}>
+              <Filters
+                filteredDataHandler={this.handleFilterChange.bind(this)}
+                filters={layersState.layersById[layersState.activeLayer].filters}
+              />
+            </div>
           </div>
         </div>
       );
