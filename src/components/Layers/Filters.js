@@ -8,57 +8,22 @@ class Filters extends Component {
     super(props);
     this.state = { 
       filters: props.filters,
-      silent: false
     };
-
-    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.handleFiltersChange = this.handleFiltersChange.bind(this)
+    console.log('propsFilters: ', props.filters);
+    //this.handleFiltersChange({selected: props.filters, all: props.filters})
   }
 
   componentWillReceiveProps(nextProps) {
     const filters = nextProps.filters;
-    event.emit('render', filters);
     this.setState({ filters });
   }
-
-  // mapNames(value) {
-  //   const dictionary = {
-  //     'industry': 'sector',
-  //     'domInt': 'dom-int',
-  //   };
-  //   if(dictionary[value] != null) { return dictionary[value] }
-  //   return value
-  // }
-
-  // mapValues(value) {
-  //   const dictionary = {
-  //     'corporations' : 'true',
-  //     'non-corporations': 'false',
-  //     'financial' : 'true',
-  //     'non-financial' : 'false',
-  //     'very high' : 'very_high',
-  //   };
-  //   if(dictionary[value] != null) { return dictionary[value] }
-  //   return value
-  // }
-
-  // sortStrategy(a, b) {
-  //   var nameA, nameB;
-  //   nameA = (String(a.name)).toUpperCase();
-  //   nameB = (String(b.name)).toUpperCase();
-  //   if (nameA < nameB) {
-  //     return -1;
-  //   }
-  //   if (nameA > nameB) {
-  //     return 1;
-  //   }
-  //   return 0;
-  // }
 
   getYesterday(){ 
     // TODO !!Client date can be wrong!! 
     // Better is get date from server
     let date = new Date();
-    date.setDate(date.getDate() - 2);
+    date.setDate(date.getDate() - 1);
     return date.toJSON().slice(0,10).replace(/-/g,'')
   }
 
@@ -69,12 +34,12 @@ class Filters extends Component {
     return filtersProviderParams;
   }
 
-  async handleFilterChange(filtersState) {
-    const filters = this.formatFilters(filtersState.selected);
+  async handleFiltersChange({ selected, all }) {
+    console.log('selectedFilters: ', selected);
+    const filters = this.formatFilters(selected);
     const { result, stats } = await DataProvider.filtersApply(filters, true);
-    const newFilters = this.makeViewModel(stats, filtersState.all)
-    event.emit('render', newFilters);
-    this.props.filteredDataHandler(result, filtersState)
+    const newFilters = this.makeViewModel(stats, all)
+    this.setState({ filters: newFilters });
   }
 
 
@@ -143,7 +108,7 @@ class Filters extends Component {
         viewModel[item.name] = { values }
       }
     })
-    
+
     return viewModel
   }
 
@@ -151,9 +116,10 @@ class Filters extends Component {
     return (
       <div className="uiFilters">
         <UIFilters
-          ee={event}
           filters={this.state.filters}
-          onStateChange={this.handleFilterChange}
+          onStateChange={state=>{
+            this.handleFiltersChange({selected: state.selected, all: state.all})
+          }}
         />
       </div>
     )
@@ -163,8 +129,7 @@ class Filters extends Component {
 
 
 Filters.propTypes = {
-    filteredDataHandler: React.PropTypes.func.isRequired,
-    filters: React.PropTypes.object.isRequired
+  filters: React.PropTypes.object.isRequired
 };
 
 export default Filters
