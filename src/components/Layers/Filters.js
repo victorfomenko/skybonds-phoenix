@@ -3,21 +3,31 @@ import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
 import * as DataProvider from '../../data/providers/Data';
 import { changeFilters, changeFiltersIsins } from '../../actions';
+import { isPortfolioScb } from '../../helpers/portfolio';
 
 
 class Filters extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      filters: props.layer.filters
-    };
+    let filters = this.formatPortfolio(props.layer.filters, props.user)
+    this.state = { filters };
     this.handleFiltersChange = this.handleFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
+    let filters = this.formatPortfolio(nextProps.layer.filters, this.props.user)
     this.setState({
-      filters: JSON.parse(JSON.stringify(nextProps.layer.filters))
+      filters: JSON.parse(JSON.stringify(filters))
     });
+  }
+
+  formatPortfolio(filters, user) {
+    if(isPortfolioScb(user)) {
+      filters['portfolio'] = {
+        values: [{name: 'Portfolio'}]
+      }
+    }
+    return filters
   }
 
   getYesterday(){
@@ -30,6 +40,7 @@ class Filters extends Component {
 
   formatFilters(selectedFilters) {
     for (const key in selectedFilters) {
+      //TODO Remove when it will optimise. Or move to filterFormatters
       if(key === 'range') {
         const values = selectedFilters[key]
         values.forEach(filter=>{
@@ -128,5 +139,5 @@ Filters.propTypes = {
   changeFiltersIsins: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers });
-export default connect(mapStateToProps, { changeFilters, changeFiltersIsins })(Filters);
+const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
+export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, })(Filters);
