@@ -14,14 +14,12 @@ class Search extends Component {
 
   constructor(props) {
     super(props);
-    // if(this.props.layer)
     this.state = {
       query: props.layer.search.query,
       results: props.layer.search.results,
       dropdownActive: false
     };
   }
-
 
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -30,11 +28,9 @@ class Search extends Component {
     });
   }
 
-
   componentWillUnmount() {
     this.sendSearchRequest.cancel();
   }
-
 
   sendSearchRequest = _.debounce((query, date) => {
     this.props.searchRequest(this.props.layer.id, query, date);
@@ -66,14 +62,12 @@ class Search extends Component {
     let searchDropdown;
 
     if(this.state.query.length < MIN_QUERY_LENGTH) {
-      console.log ('lt');
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;
     }
 
     else if(this.state.results.length == 0) {
-      console.log ('empty');
       searchDropdown = <div className={styles.bondsSearch_status}>
         No bonds found.
       </div>;
@@ -218,10 +212,6 @@ class Search extends Component {
     );
   }
 }
-
-Search.propTypes = {
-  // layer: React.PropTypes.object.isRequired,
-};
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, { searchRequest, searchResponse })(Search);
