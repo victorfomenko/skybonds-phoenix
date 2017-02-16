@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Promise from 'rsvp'
 import * as DataProvider from '../../data/providers/Data';
 import Picker from '../Picker'
+import ChartZoom from '../ChartZoom'
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
 
 const defaultConfig = {
@@ -59,7 +60,7 @@ class ScatterPlot extends Component {
                       {label: 'Maturity', value: 'maturity'},
                       {label: 'Months to Recovery', value: 'mtr'},
                       {label: 'Months to Recovery (TR)', value: 'mtrFromTr'}];
-    this.state = { yAxisPicker, xAxisPicker, activeYAxisPicker: 'yield', activeXAxisPicker: 'duration' };
+    this.state = { yAxisPicker, xAxisPicker, activeYAxisPicker: 'yield', activeXAxisPicker: 'duration', scale: 1 };
   }
 
   componentWillMount() {
@@ -170,6 +171,9 @@ class ScatterPlot extends Component {
     this.setState({ activeXAxisPicker: pickerValue });
   }
 
+  handleZoomChange(scale) {
+    this.setState({ scale });
+  }
 
   render() {
     return (
@@ -177,6 +181,7 @@ class ScatterPlot extends Component {
         <Picker pickerList={this.state.yAxisPicker} selectedPicker={this.state.activeYAxisPicker} onPickerChange={this.handleYAxisPickerChange.bind(this)} />
         <Chart document={this.chartDocument} />
         <Picker pickerList={this.state.xAxisPicker} selectedPicker={this.state.activeXAxisPicker} onPickerChange={this.handleXAxisPickerChange.bind(this)} />
+        <ChartZoom currentScale={this.state.scale} scaleStep={1} onZoomChange={this.handleZoomChange.bind(this)} />
       </div>
     )
   }
