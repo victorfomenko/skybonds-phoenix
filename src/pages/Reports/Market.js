@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
@@ -50,6 +51,7 @@ class Market extends Component {
   render(){
     return (
       <div className='skybondsWrap'>
+        <Header />
         <div className={reportStyle.reportWrap}>
           <div className={reportStyle.reportHeader}>
             <Layers />

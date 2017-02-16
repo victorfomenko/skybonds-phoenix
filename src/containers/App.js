@@ -15,7 +15,6 @@ import styles from './styles.sass';
 
 const App = ({ user }) => (
   <div className='skybonds'>
-    <Header />
     <Switch>
 	    <Route path="/" exact={true} component={Home}/>
 	     {user.token ? <Route path="/reports" component={Reports} /> : null}
