@@ -9,7 +9,7 @@ import Reports from '../pages/Reports';
 import Home from '../pages/Home';
 import Bond from '../pages/Bond';
 
-import style from './styles/phoenix.sass';
+import styles from './styles.sass';
 
 // const Home = () => <Async load={import('./Home')} />
 
