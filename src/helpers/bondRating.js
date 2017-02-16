@@ -1,6 +1,6 @@
 import { countBy } from 'lodash'
 
-const DEFAULT_COLOR = "#999999";
+const DEFAULT_COLOR = '#999999';
 
 const RATINGS = {
   'AAA':  { color: '#72ceff', group: 'AAA', synonym: 'Aaa',  order: 100 },
