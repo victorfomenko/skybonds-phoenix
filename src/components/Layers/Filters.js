@@ -12,12 +12,9 @@ class Filters extends Component {
       filters: props.layer.filters
     };
     this.handleFiltersChange = this.handleFiltersChange.bind(this)
-    console.log('propsFilters: ', props.layer.filters);
-    //this.handleFiltersChange({selected: props.filters, all: props.filters})
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.layer.filters)
     this.setState({ 
       filters: nextProps.layer.filters
     });
@@ -27,11 +24,19 @@ class Filters extends Component {
     // TODO !!Client date can be wrong!!
     // Better is get date from server
     let date = new Date();
-    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() - 2);
     return date.toJSON().slice(0,10).replace(/-/g,'')
   }
 
   formatFilters(selectedFilters) {
+    for (const key in selectedFilters) {
+      if(key === 'range') {
+        const values = selectedFilters[key]
+        const name = values[0].name;
+        const val = values[0].values;
+        selectedFilters[name] = val
+      }
+    }
     let filtersProviderParams = {'filters': selectedFilters};
     filtersProviderParams['date'] = this.getYesterday();;
 
@@ -50,6 +55,7 @@ class Filters extends Component {
 
   makeViewModel(stats, filters) {
     let viewModel = Object.assign({}, filters)
+    delete viewModel['range']
     let typeValues = {}
 
     stats.forEach(item => {
@@ -65,8 +71,8 @@ class Filters extends Component {
           const selected = item.values.length ? true : false
           const filter = {
             name: item.name,
-            values: values || [],
-            defaultValues: stats[item.name] || [],
+            values: stats[item.name] || [],
+            defaultValues: values || [],
             selected: selected
           }
           viewModel['range'].values.push(filter)

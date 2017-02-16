@@ -8,7 +8,7 @@ class ChartZoom extends Component {
   }
 
   validateScale(scale) {
-    if ((typeof scale === "undefined" || scale === null) || isNaN(scale)) {
+    if ((typeof scale === 'undefined' || scale === null) || isNaN(scale)) {
       scale = 1;
     }
     return scale
