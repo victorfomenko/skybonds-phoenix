@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
-import {isEqual} from 'lodash';
+import { isEqual, intersection } from 'lodash';
 
 import reportStyle from './style.sass';
 
@@ -33,7 +33,16 @@ class Market extends Component {
   calcTotalIsins(layers){
     const isins = [];
     for(const key in layers) {
-      isins.push(layers[key].filtersIsins);
+      if(layers[key].searchIsins && layers[key].filtersIsins.length) {
+        isins.push(intersection(
+          layers[key].filtersIsins,
+          layers[key].searchIsins)
+        );
+      } else if (layers[key].searchIsins) {
+        isins.push(layers[key].searchIsins);
+      } else if (layers[key].filtersIsins) {
+        isins.push(layers[key].searchIsins);
+      }
     }
     return _.union(...isins);
   }

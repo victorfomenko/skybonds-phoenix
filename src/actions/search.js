@@ -2,7 +2,7 @@ import { actionTypes } from './actionTypes';
 import * as SearchProvider from '../data/providers/Search';
 import * as DataProvider from '../data/providers/Data';
 import { isBondActual } from '../helpers/BondActual';
-import { keyBy } from 'lodash';
+import { keyBy, map } from 'lodash';
 
 const SEARCH_LIMIT = 200;
 const SEARCH_FIELDS = ['maturityDate', 'finalDate', 'issueDate', 'status', 'ccy', 'ratingGroup'];
@@ -12,11 +12,16 @@ export const searchRequest = (id, query, date) => async (dispatch) => {
   dispatch({ type: actionTypes.SEARCH_REQUEST });
   // TODO { data: [] } (((
   if(query.length < MIN_QUERY_LENGTH) {
-    dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data: [] });
+    dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data: [], isins: [] });
   } else {
     try {
 
+      // const filtersIsins = await DataProvider.filtersApply(filters);
       const response = await SearchProvider.search(query, SEARCH_LIMIT, SEARCH_FIELDS);
+      const actualBonds = response.bonds.filter((bond)=>{
+        return isBondActual(bond, date);
+      });
+      const actualIsins = map(actualBonds, 'isin');
       const data = [];
 
       // TODO rewrite with maps
@@ -35,15 +40,10 @@ export const searchRequest = (id, query, date) => async (dispatch) => {
         data.push(group);
       }
 
-      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data });
+      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data, isins: actualIsins });
 
       const attrs = ['yield', 'duration'];
-      const isins = response.bonds.filter((bond)=>{
-        return bond.isActual;
-      }).map((bond)=>{
-        return bond.isin;
-      });
-      const dailyData = await DataProvider.getBondsDaily(isins, date, attrs);
+      const dailyData = await DataProvider.getBondsDaily(actualIsins, date, attrs);
       let dailyDataMap = keyBy(dailyData, 'isin');
       for(let group of data) {
         for(let bond of group.bonds) {
@@ -53,7 +53,7 @@ export const searchRequest = (id, query, date) => async (dispatch) => {
           }
         }
       }
-      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data });
+      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data, isins: actualIsins });
     }
     catch (response) {
       dispatch({ type: actionTypes.SEARCH_RESPONSE, id, response });
