@@ -1,11 +1,11 @@
-import { actionTypes } from '../../../actions/actionTypes'
+import { actionTypes } from '../../../actions/actionTypes';
 import NumberCaster from '../../../data/casters/NumberCaster';
 
 const initialState = {
   selectedPeriod: '7D',
   selectedUnit: 'price',
   bonds: {}
-}
+};
 
 const movers = (state = initialState, action) => {
 	switch (action.type) {
@@ -15,13 +15,13 @@ const movers = (state = initialState, action) => {
         selectedPeriod: action.selectedPeriod,
         selectedUnit: action.selectedUnit,
         bonds: action.data
-      }
+      };
 
     case actionTypes.LOAD_MOVERS_FAILURE:
-  		return state
+  		return state;
     default:
-			return state
+			return state;
   }
-}
+};
 
-export default movers
+export default movers;

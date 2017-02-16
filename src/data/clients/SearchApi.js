@@ -17,7 +17,7 @@ export const search = (query, limit, attrs) => {
       for(let a = 0; a < DATES_TO_CAST.length; a++) {
         let field = DATES_TO_CAST[a];
         if(response.bonds[i][field] != null) {
-          response.bonds[i][field] = DateDayCaster.cast(response.bonds[i][field])
+          response.bonds[i][field] = DateDayCaster.cast(response.bonds[i][field]);
         }
       }
     }

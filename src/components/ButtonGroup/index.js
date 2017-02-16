@@ -5,7 +5,7 @@ class ButtonGroup extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {buttons: props.buttons, selectedButton: props.selectedButton}
+    this.state = {buttons: props.buttons, selectedButton: props.selectedButton};
   }
 
   componentWillReceiveProps(nextProps) {

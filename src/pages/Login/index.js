@@ -1,17 +1,17 @@
-import React from 'react'
+import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import authStyle from '../../styles/auth.sass';
-import { login } from '../../actions'
+import { login } from '../../actions';
 
 
 const Login = ({ user, login, push }) => {
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const { email: { value: email }, password: { value: password } } = e.target
-    await login({ email, password })
-    if(user.token) push('/')
-  }
+    e.preventDefault();
+    const { email: { value: email }, password: { value: password } } = e.target;
+    await login({ email, password });
+    if(user.token) push('/');
+  };
 
   return (
     <div className='skybondsWrap'>
@@ -64,14 +64,14 @@ const Login = ({ user, login, push }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 Login.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
   login: React.PropTypes.func.isRequired
-}
+};
 
 
-const mapStateToProps = state => ({ user: state.user })
-export default connect(mapStateToProps, { login })(Login)
+const mapStateToProps = state => ({ user: state.user });
+export default connect(mapStateToProps, { login })(Login);

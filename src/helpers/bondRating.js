@@ -1,4 +1,4 @@
-import { countBy } from 'lodash'
+import { countBy } from 'lodash';
 
 const DEFAULT_COLOR = '#999999';
 

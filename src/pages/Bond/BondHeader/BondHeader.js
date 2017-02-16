@@ -90,7 +90,7 @@ class BondHeader extends Component {
         </ul>
         <span className={style.bondHeaderInfo_line}></span>
       </div>
-    )
+    );
   }
 }
 
@@ -98,4 +98,4 @@ BondHeader.propTypes = {
   bond: React.PropTypes.object.isRequired
 };
 
-export default BondHeader
+export default BondHeader;

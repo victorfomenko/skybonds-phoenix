@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as Data from '../../data/providers/Data';
-import Promise from 'rsvp'
+import Promise from 'rsvp';
 import BondHeader from './BondHeader/BondHeader';
 import BondGeneral from './BondGeneral/BondGeneral';
 import ScatterPlot from '../../components/ScatterPlot';
@@ -44,7 +44,7 @@ class Bond extends Component {
 
   render(){
 
-    const bond = this.state
+    const bond = this.state;
 
     if(this.state.loaded){
       return (

@@ -13,37 +13,37 @@ export const filtersApply = (filters={}, stats=false, details=false) => {
       details
     }
   });
-}
+};
 
 export const getBondsInfo = (isins) => {
   return requestProvider.post({
     url: API_V1 + 'bonds/info',
     body: isins
-  })
-}
+  });
+};
 
 export const getBondsDaily = (isins, date, attrs = []) => {
   return requestProvider.post({
     url: API_V1 + 'bonds/daily/' + DateDayCaster.format(date),
     body: isins,
     qs: { attrs }
-  })
-}
+  });
+};
 
 export const getIssuersInfo = (issuerIds, attrs = []) => {
   return requestProvider.post({
     url: API_V1 + 'issuers/info',
     body: issuerIds,
     qs: { attrs }
-  })
-}
+  });
+};
 
 export const getMovers = (isins, startDate, endDate, paramName) => {
   return requestProvider.post({
     url: API_V1 + 'movers/' + paramName + '?endDate=' + DateDayCaster.format(endDate) + '&startDate=' + DateDayCaster.format(startDate),
     body: isins
-  })
-}
+  });
+};
 
 
 // TODO: handle errors on base _request layer

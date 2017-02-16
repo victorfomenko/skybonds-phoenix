@@ -6,8 +6,8 @@ import Login from '../pages/Login';
 import Logout from '../pages/Logout';
 import Header from '../components/Header';
 import Reports from '../pages/Reports';
-import Home from '../pages/Home'
-import Bond from '../pages/Bond'
+import Home from '../pages/Home';
+import Bond from '../pages/Bond';
 
 import style from './styles/phoenix.sass';
 
@@ -25,10 +25,10 @@ const App = ({ user }) => (
 	    <Redirect to="/" />
     </Switch>
   </div>
-)
+);
 
 App.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
-}
+};
 
-export default connect(state => ({ user: state.user }))(App)
+export default connect(state => ({ user: state.user }))(App);

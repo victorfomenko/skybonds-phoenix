@@ -4,12 +4,12 @@ import _ from 'lodash';
 
 
 export const filtersApply = (filters, stats, details) => {
-	filters.filters = FiltersCaster.format(filters.filters)
+	filters.filters = FiltersCaster.format(filters.filters);
 	if(_.isArray(filters.filters)){
 		filters.filters.push({
 			name: 'actual',
 			value: [true]
-		})
+		});
 	}
 	return DataApi.filtersApply(filters, stats, details)
 	.then(resp => {
@@ -17,20 +17,20 @@ export const filtersApply = (filters, stats, details) => {
 			return {
 				...resp,
 				stats: FiltersCaster.cast(resp.stats)
-			}
+			};
 		}
-		return resp
-	})
-}
+		return resp;
+	});
+};
 
 export const getBondsInfo = (isins) => {
-	return DataApi.getBondsInfo(isins)
-}
+	return DataApi.getBondsInfo(isins);
+};
 
 export const getBondsDaily = (isins, date, attrs) => {
-	return DataApi.getBondsDaily(isins, date, attrs)
-}
+	return DataApi.getBondsDaily(isins, date, attrs);
+};
 
 export const getIssuersInfo = (ids, attrs) => {
-  return DataApi.getIssuersInfo(ids, attrs)
-}
+  return DataApi.getIssuersInfo(ids, attrs);
+};

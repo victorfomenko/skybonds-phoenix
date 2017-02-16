@@ -1,15 +1,15 @@
 import { AppContainer } from 'react-hot-loader';
 import React from 'react';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import { render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom';
 
 
-import { store } from './store'
+import { store } from './store';
 import App from './containers/App';
 
-const rootEl = document.getElementById('root')
-rootEl.style.height = '100%'
+const rootEl = document.getElementById('root');
+rootEl.style.height = '100%';
 
 store.then(store=>{
   render(
@@ -41,4 +41,4 @@ if (module.hot) {
   });
 }
 
-})
+});

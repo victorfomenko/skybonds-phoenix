@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ButtonGroup from '../ButtonGroup'
-import {isEqual, mapValues} from 'lodash'
+import ButtonGroup from '../ButtonGroup';
+import {isEqual, mapValues} from 'lodash';
 import style from './styles.sass';
 
-import { loadMovers } from '../../actions'
+import { loadMovers } from '../../actions';
 
 class Movers extends Component {
 

@@ -16,6 +16,6 @@ export class Icon extends Component {
            width={this.props.width}
            height={this.props.height}
            dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
-    )
+    );
   }
 }

@@ -70,7 +70,7 @@ class Layer extends Component {
             <span className={layersStyle.reportLayersStrip_closeIcon} onClick={this.onLayerClose.bind(this)}></span>
           </div>
         </li>
-    )
+    );
   }
 }
 
@@ -86,4 +86,4 @@ Layer.propTypes = {
   onLayerViewChange: React.PropTypes.func.isRequired
 };
 
-export default Layer
+export default Layer;

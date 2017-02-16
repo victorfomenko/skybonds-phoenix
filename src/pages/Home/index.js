@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import style from './style.sass';
 
-import { filtersApply, getBondsInfo, getBondsDaily } from '../../data/providers/Data'
+import { filtersApply, getBondsInfo, getBondsDaily } from '../../data/providers/Data';
 
 class Home extends Component {
   render () {
-    const { user } = this.props
+    const { user } = this.props;
     return (
       <div className={style.home}>
         <div>First name: {JSON.stringify(user.firstName)}</div>
@@ -24,13 +24,13 @@ class Home extends Component {
         </div>
 
       </div>
-    )
+    );
   }
 }
 
 
 Home.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
-}
+};
 
-export default connect(state => ({ user: state.user }))(Home)
+export default connect(state => ({ user: state.user }))(Home);

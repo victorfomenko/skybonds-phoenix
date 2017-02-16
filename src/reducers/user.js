@@ -1,4 +1,4 @@
-import { actionTypes } from '../actions/actionTypes'
+import { actionTypes } from '../actions/actionTypes';
 
 const user = (state = {}, action) => {
 	switch (action.type) {
@@ -11,8 +11,8 @@ const user = (state = {}, action) => {
     	case actionTypes.LOGOUT_SUCCESS:
   			return {};
 		default:
-			return state
+			return state;
   }
 };
 
-export default user
+export default user;

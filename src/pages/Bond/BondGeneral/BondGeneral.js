@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as Data from '../../../data/providers/Data';
-import Promise from 'rsvp'
+import Promise from 'rsvp';
 import style from './style.sass';
 
 class BondGeneral extends Component {
@@ -9,8 +9,8 @@ class BondGeneral extends Component {
     this.state = {
       'loaded': false,
       'issuer': null
-    }
-    this.localCurrency = 'RUB'
+    };
+    this.localCurrency = 'RUB';
 
   }
 
@@ -32,7 +32,7 @@ class BondGeneral extends Component {
 
   getOutlookLabel(outlook) {
     if (outlook == null)
-      return null
+      return null;
     switch (outlook.toLowerCase()) {
       case 'positive':
         return 'Positive ↑';
@@ -49,10 +49,10 @@ class BondGeneral extends Component {
 
   getDateFormat(date) {
     if (date instanceof Date){
-      let dateFormatted = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear()
-      return dateFormatted
+      let dateFormatted = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+      return dateFormatted;
     } else {
-      return null
+      return null;
     }
 
   }
@@ -290,11 +290,11 @@ class BondGeneral extends Component {
             </li>
           </ul>
         </div>
-      )
+      );
     } else {
       return (
         <span>Loading...</span>
-      )
+      );
     }
 
   }
@@ -304,4 +304,4 @@ BondGeneral.propTypes = {
   bond: React.PropTypes.object.isRequired
 };
 
-export default BondGeneral
+export default BondGeneral;

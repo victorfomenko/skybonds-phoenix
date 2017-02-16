@@ -7,11 +7,11 @@ export const add = (id, data={}) => {
     url: `${API_V1}/${id}/add`,
     body: data
   });
-}
+};
 
 export const update = (id, data={}) => {
   return requestProvider.post({
     url: `${API_V1}/${id}/update`,
     body: data
   });
-}
+};

@@ -11,7 +11,7 @@ class Filters extends Component {
     this.state = {
       filters: props.layer.filters
     };
-    this.handleFiltersChange = this.handleFiltersChange.bind(this)
+    this.handleFiltersChange = this.handleFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -25,16 +25,16 @@ class Filters extends Component {
     // Better is get date from server
     let date = new Date();
     date.setDate(date.getDate() - 2);
-    return date.toJSON().slice(0,10).replace(/-/g,'')
+    return date.toJSON().slice(0,10).replace(/-/g,'');
   }
 
   formatFilters(selectedFilters) {
     for (const key in selectedFilters) {
       if(key === 'range') {
-        const values = selectedFilters[key]
+        const values = selectedFilters[key];
         const name = values[0].name;
         const val = values[0].values;
-        selectedFilters[name] = val
+        selectedFilters[name] = val;
       }
     }
     let filtersProviderParams = {'filters': selectedFilters};
@@ -47,15 +47,15 @@ class Filters extends Component {
     console.log('selectedFilters: ', selected);
     const filters = this.formatFilters(selected);
     const { result, stats } = await DataProvider.filtersApply(filters, true);
-    const newFilters = this.makeViewModel(stats, all)
-    this.props.changeFilters(this.props.layer.id, newFilters)
-    this.props.changeFiltersIsins(this.props.layer.id, result)
+    const newFilters = this.makeViewModel(stats, all);
+    this.props.changeFilters(this.props.layer.id, newFilters);
+    this.props.changeFiltersIsins(this.props.layer.id, result);
   }
 
 
   makeViewModel(stats, filters) {
-    let viewModel = Object.assign({}, filters)
-    let typeValues = {}
+    let viewModel = Object.assign({}, filters);
+    let typeValues = {};
 
     stats.forEach(item => {
       switch(item.name){
@@ -65,55 +65,55 @@ class Filters extends Component {
         case 'duration':
         case 'maturity':
         case 'discount':
-          viewModel['range'] = viewModel['range'] || { values: [] }
-          const values = item.values.length ? item.values : void 0
-          const selected = item.values.length ? true : false
+          viewModel['range'] = viewModel['range'] || { values: [] };
+          const values = item.values.length ? item.values : void 0;
+          const selected = item.values.length ? true : false;
           const filter = {
             name: item.name,
             values: stats[item.name] || [],
             defaultValues: values || [],
             selected: selected
-          }
+          };
           viewModel['range'].values.map(filter=> {
             if(item.name === filter.name) {
-              console.log(stats[item.name])
+              console.log(stats[item.name]);
               return {
                 name: item.name,
                 values: stats[item.name] || [],
                 defaultValues: values || [],
                 selected: selected
-              }
+              };
             }
-            return filter
-          })
-          console.log(viewModel['range'])
+            return filter;
+          });
+          console.log(viewModel['range']);
           break;
       }
-    })
+    });
     stats.forEach(item => {
       if(filters[item.name]){
         let values = filters[item.name].values;
-        if(!values.length) return
+        if(!values.length) return;
         values.forEach(value=>{
-          value.tag = null
+          value.tag = null;
           if(Object.keys(item.values).length) {
-            value.disabled = true
+            value.disabled = true;
           }
           if(Object.keys(item.values).length === 0){
-            value.disabled = false
+            value.disabled = false;
           }
           Object.keys(item.values).forEach(_value=>{
             if(value.name == _value){
-              value.disabled = !Number(item.values[_value])
-              value.tag = item.values[_value]
+              value.disabled = !Number(item.values[_value]);
+              value.tag = item.values[_value];
             }
-          })
-        })
-        viewModel[item.name] = { values }
+          });
+        });
+        viewModel[item.name] = { values };
       }
-    })
+    });
 
-    return viewModel
+    return viewModel;
   }
 
   render(){
@@ -121,10 +121,10 @@ class Filters extends Component {
       <UIFilters
         filters={this.state.filters}
         onStateChange={state=>{
-          this.handleFiltersChange({selected: state.selected, all: state.all})
+          this.handleFiltersChange({selected: state.selected, all: state.all});
         }}
       />
-    )
+    );
   }
 }
 
