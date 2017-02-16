@@ -71,7 +71,6 @@ class Layers extends Component {
     }));
 
     if(this.state.loaded){
-      console.log('true')
       return (
         <div className={layersStyle.reportLayers}>
           <div className={layersStyle.reportLayersStrip}>
