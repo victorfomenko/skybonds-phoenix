@@ -24,6 +24,11 @@
   text-align: right
 
 .diagramScatterPlot
+  svg
+    width: calc(100% + 30px) !important
+    margin-left: -30px
   :global(.axis)
+    text
+      fill: $colorMuted
     line
-      stroke: #EEE
+      stroke: $colorLightContrast

@@ -19,7 +19,7 @@ const defaultConfig = {
   paddingCoefficient: 0.15,
   localRegressionBandwidth: 0.9,
   margin: {
-    left: 0,
+    left: 30,
     top: 0,
     right: 0,
     bottom: 38
