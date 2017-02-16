@@ -1,6 +1,7 @@
 @import "~@skybonds/ui-styles/vars"
 
 .bondsSearch
+  position: relative
   :global(.svgIcon)
     color: $colorLink
     &:hover
@@ -63,6 +64,10 @@
   overflow-y: scroll
 
 .bondsSearch_item
+  display: flex
+  align-items: baseline
+  padding: 5px 10px
+  height: 24px
   &.__header
     color: $colorMuted
   &.__body,
@@ -80,12 +85,6 @@
 .bondsSearch_list.__hide
   .bondsSearch_item.__expired
     display: none
-
-bondsSearch-row
-  display: flex
-  align-items: baseline
-  padding: 5px 10px
-  height: 24px
 
 .bondsSearch_cell
   &.__hidden
@@ -180,6 +179,7 @@ bondsSearch-row
     padding: 0 5px
 
 .bondsSearch_cell.__expired
+  flex: 1 1
   font-size: 10px
   padding-right: 10px
   cursor: pointer
@@ -227,6 +227,9 @@ bondsSearch-row
 .bondsSearch_info
   display: inline-block
   text-align: right
+  :global(.svgIcon)
+    vertical-align: middle
+    margin-top: -2px
 
 .bondsSearch_content
   @include scrollShadows

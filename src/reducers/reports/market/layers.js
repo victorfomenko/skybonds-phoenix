@@ -252,7 +252,8 @@ const initialState = {
       id : 1,
       name : 'Empty set',
       search: {
-        query: ''
+        query: '',
+        results: []
       },
       filters : filters,
       filtersIsins: [],
@@ -276,7 +277,8 @@ const layers = (state = initialState, action) => {
             id: newId,
             name: 'Empty set',
             search: {
-              query: ''
+              query: '',
+              results: []
             },
             filters: filters,
             filtersIsins: [],
@@ -325,16 +327,29 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
-    case actionTypes.SEARCH_BOND:
-      if(!action.id) { return state }
+    case actionTypes.SEARCH_REQUEST:
+      console.log('action request', action);
+      // should change state.query
+      return state;
+    // return {
+    //   ...state,
+    //   layersById: mapValues(state.layersById, (layer) => {
+    //     return layer.id === action.id ?
+    //       {...layer, search: {...layer.search, query: action.query}} :
+    //       layer
+    //   })
+    // };
+
+    case actionTypes.SEARCH_RESPONSE:
+      console.log('action response', action.id, action.data);
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, search: {...layer.search, query: action.query}} :
+            {...layer, search: {...layer.search, query: action.query, results: action.data }} :
             layer
         })
-      }
+      };
 
     case actionTypes.FILTERS_CHANGE:
       if(!action.id) { return state }
@@ -358,8 +373,7 @@ const layers = (state = initialState, action) => {
             {...layer, filtersIsins: action.isins} :
             layer
         })
-      }
-
+      };
 
     default:
       return state

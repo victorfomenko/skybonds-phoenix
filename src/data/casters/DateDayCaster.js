@@ -1,6 +1,6 @@
 export default {
 
-  format: function(value) {
+  format: (value)=> {
     if(value == null) {
       return null;
     }
@@ -8,6 +8,14 @@ export default {
     let month = (('0' + (value.getMonth() + 1)).slice(-2));
     let day = (('0' + (value.getDate() + 1)).slice(-2));
     return year + month + day;
+  },
+
+  cast: (value)=> {
+    if(typeof value == 'string' && value.length == 8)  {
+      return new Date(value.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3'));
+    } else {
+      return null;
+    }
   }
 
 };

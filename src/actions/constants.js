@@ -17,8 +17,8 @@ export const ACTIVATE_LAYER = 'ACTIVATE_LAYER';
 export const RENAME_LAYER = 'RENAME_LAYER';
 export const CHANGE_LAYER_VIEW = 'CHANGE_LAYER_VIEW';
 
-//Search
-export const SEARCH_BOND = 'SEARCH_BOND';
+export const SEARCH_REQUEST = 'SEARCH_REQUEST';
+export const SEARCH_RESPONSE = 'SEARCH_RESPONSE';
 
 //Movers
 export const LOAD_MOVERS = 'LOAD_MOVERS';
