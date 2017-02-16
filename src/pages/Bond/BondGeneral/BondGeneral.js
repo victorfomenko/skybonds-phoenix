@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import * as Data from '../../../data/providers/Data';
 import Promise from 'rsvp';
 import style from './style.sass';
+import { getColor, getSynonym } from '../../../helpers/bondRating';
+import DateFormatter from '../../../helpers/formatters/DateFormatter';
+import NumberFormatter from '../../../helpers/formatters/NumberFormatter';
 
 class BondGeneral extends Component {
   constructor(props) {
@@ -15,67 +18,91 @@ class BondGeneral extends Component {
   }
 
   componentWillMount() {
-    this.initIssuer(this.props.bond.info.issuerId);
+    this.initData(this.props.bond);
   }
 
 
-  async initIssuer(id = null) {
-    if(id != null) {
+  async initData(bond = null) {
+    if(bond.info.issuerId != null) {
+      let couponPeriod = null;
       let attrs = [ 'ratingGroupIssuer','linkCbondsIssuer','issuer','spIssuer','mdyIssuer','ftcIssuer','country','group','registrationForm','type','ogrn','inn','websiteLink' ];
-      const response = await Data.getIssuersInfo([id], attrs);
+      const issuerInfo = await Data.getIssuersInfo([bond.info.issuerId], attrs);
+      const repayment = await Data.getRepayment(bond.isin);
+      if (repayment.data != null && repayment.data.length) {
+        let monthsDiff = Math.round(this.monthDiff(this.parseDate(repayment.data[0].date), this.parseDate(repayment.data[1].date)));
+        let daysDiff = this.daysDiff(this.parseDate(repayment.data[0].date), this.parseDate(repayment.data[1].date))
+
+        switch (monthsDiff){
+          case 12:
+            couponPeriod = 'once a year'
+          case 6:
+            couponPeriod = 'twice a year'
+          default:
+            couponPeriod = 'every ' + daysDiff + ' days'
+        }
+
+      }
+
       this.setState({
         'loaded': true,
-        'issuer': response[0].data
+        'issuer': issuerInfo[0].data,
+        'couponPeriod': couponPeriod
       });
     }
   }
 
   getOutlookLabel(outlook) {
-    if (outlook == null)
-      return null;
-    switch (outlook.toLowerCase()) {
-      case 'positive':
-        return 'Positive ↑';
-      case 'negative':
-        return 'Negative ↓';
-      case 'stable':
-        return 'Stable ≈';
-      case 'sta':
-        return 'Stable ≈';
-      default:
-        return 'NA outlook';
+    if ( typeof outlook === 'string') {
+      switch (outlook.toLowerCase()) {
+        case 'positive':
+        case 'pos':
+          return 'Positive ↑';
+        case 'negative':
+        case 'neg':
+          return 'Negative ↓';
+        case 'stable':
+        case 'sta':
+          return 'Stable ≈';
+        default:
+          return 'NA outlook';
+      }
+    } else
+    {
+      return 'NA outlook';
     }
   };
-
-  getDateFormat(date) {
-    if (date instanceof Date){
-      let dateFormatted = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
-      return dateFormatted;
-    } else {
-      return null;
-    }
-
-  }
 
   parseDate(str) {
     if(!/^(\d){8}$/.test(str)) return 'invalid date';
     var y = str.substr(0,4),
       m = str.substr(4,2),
       d = str.substr(6,2);
-    return new Date(y,m,d);
+
+    return new Date(y,(m-1),d);
   }
 
-  getDateDiff(date) {
-    let date1 = this.parseDate(date);
-    let date2 = new Date();
-    let timeDiff = Math.abs(date2.getTime() - date1.getTime());
+  daysDiff(d1, d2) {
+    let timeDiff = Math.abs(d2.getTime() - d1.getTime());
     let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return diffDays
   }
 
+  monthDiff(d1, d2) {
+    let months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth() + 1;
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months;
+  }
+
+  getCleanWebLink(link) {
+    return link.replace(/https?\:\/\/|\/$/ig, '')
+  }
 
   render(){
     let bond = this.props.bond;
     let issuer = this.state.issuer;
+    let couponPeriod = this.state.couponPeriod;
     let bondDailyPortfolio = this.state.bondDailyPortfolio;
     if(this.state.loaded){
       return (
@@ -85,7 +112,7 @@ class BondGeneral extends Component {
               <a href={ '/issuer/' + bond.info.issuerId } className={'common-link' + ' ' + style.bondGeneralIissuer_link}>{issuer.issuer}</a>
             </li>
             <li className={style.bondGeneralIssuer_item}>
-              <a href={issuer.websiteLink} className={'common-link' + ' ' + style.bondGeneralIissuer_link}>{issuer.websiteLink}</a>
+              <a href={issuer.websiteLink} className={'common-link' + ' ' + style.bondGeneralIissuer_link}>{this.getCleanWebLink(issuer.websiteLink)}</a>
             </li>
             <li className={style.bondGeneralIssuer_item}>
               <a href={bond.info.onCBonds} className={'common-link' + ' ' + style.bondGeneralIissuer_link}>Issue on Cbonds</a>
@@ -99,20 +126,20 @@ class BondGeneral extends Component {
               <ul className={style.bondGeneralValues_list}>
                 <li className={style.bondGeneralValues_field}>
                 <span className={style.bondGeneralValues_value}>
-                  <div className={style.bondGeneralValues_row + ' __date'}>{this.getDateFormat(this.parseDate(bond.info.fitchDate))}</div>
-                  <div className={style.bondGeneralValues_row + ' __date'}>{this.getDateFormat(this.parseDate(bond.info.spDate))}</div>
-                  <div className={style.bondGeneralValues_row + ' __date'}>{this.getDateFormat(this.parseDate(bond.info.moodysDate))}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__date}>{DateFormatter(this.parseDate(bond.info.fitchDate))}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__date}>{DateFormatter(this.parseDate(bond.info.spDate))}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__date}>{DateFormatter(this.parseDate(bond.info.moodysDate))}</div>
                 </span>
 
                 <span className={style.bondGeneralValues_value}>
-                  <div className={style.bondGeneralValues_row + ' __outlook'}>{this.getOutlookLabel(bond.info.fitch)}</div>
-                  <div className={style.bondGeneralValues_row + ' __outlook'}>{this.getOutlookLabel(bond.info.sp)}</div>
-                  <div className={style.bondGeneralValues_row + ' __outlook'}>{this.getOutlookLabel(bond.info.moodys)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.fitch)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.sp)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.moodys)}</div>
                 </span>
                 <span className={style.bondGeneralValues_value}>
-                  <div className={style.bondGeneralValues_row + ' __rating'}>{bond.info.ratingGroup}</div>
-                  <div className={style.bondGeneralValues_row + ' __rating'}>{bond.info.ratingGroup}</div>
-                  <div className={style.bondGeneralValues_row + ' __rating'}>{bond.info.ratingSynonym}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__rating} style={{color: getColor(bond.info.ratingGroup)}}>{bond.info.ratingGroup}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__rating} style={{color: getColor(bond.info.ratingGroup)}}>{bond.info.ratingGroup}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__rating} style={{color: getColor(bond.info.ratingGroup)}}>{getSynonym(bond.info.ratingGroup)}</div>
                 </span>
                 <span className={style.bondGeneralValues_label}>
                   <div className={style.bondGeneralValues_row}> Fitch</div>
@@ -132,12 +159,18 @@ class BondGeneral extends Component {
                   <span> bond</span>
                 </li>
 
-                <li className={style.bondGeneralValues_field}>
-                  <span className={style.bondGeneralValues_label}>Coupon</span>
-                  <span className={style.bondGeneralValues_unit}>%,</span>
-                  <span className={style.bondGeneralValues_unit}>{bond.info.couponPeriod}</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.coupon}</span>
-                </li>
+                { (!bond.info.isFloater) ?
+                  <li className={style.bondGeneralValues_field}>
+                    <span className={style.bondGeneralValues_label}>Coupon</span>
+                    <span className={style.bondGeneralValues_unit}>%,</span>
+                    <span className={style.bondGeneralValues_unit}>{couponPeriod}</span>
+                    <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.coupon, {
+                      minFraction: 2,
+                      maxFraction: 2
+                    })}</span>
+                  </li>
+                  : ''
+                }
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Floating rate formula </span>
                   <span>{bond.info.floatingRateFormula}</span>
@@ -151,12 +184,12 @@ class BondGeneral extends Component {
 
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Issue date</span>
-                  <span className={style.bondGeneralValues_value}>{this.getDateFormat(this.parseDate(bond.info.issueDate))}</span>
+                  <span className={style.bondGeneralValues_value}>{DateFormatter(this.parseDate(bond.info.issueDate))}</span>
                 </li>
 
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Maturity date</span>
-                  <span className={style.bondGeneralValues_value}>{this.getDateFormat(this.parseDate(bond.info.maturityDate))}</span>
+                  <span className={style.bondGeneralValues_value}>{DateFormatter(this.parseDate(bond.info.maturityDate))}</span>
                 </li>
 
                 <li className={style.bondGeneralValues_field}>
@@ -167,7 +200,7 @@ class BondGeneral extends Component {
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Maturity</span>
                   <span className={style.bondGeneralValues_unit}>yrs</span>
-                  <span className={style.bondGeneralValues_value}>{this.getDateFormat(this.parseDate(bond.info.maturityDate))}</span>
+                  <span className={style.bondGeneralValues_value}>{DateFormatter(this.parseDate(bond.info.maturityDate))}</span>
                 </li>
 
                 <li className={style.bondGeneralValues_field}>
@@ -190,18 +223,18 @@ class BondGeneral extends Component {
                     <span>{this.localCurrency}</span>
                     <span> eq.</span>
                   </div>
-                  <div className={style.bondGeneralValues_row + ' __number'}>{bond.info.totalOutstandingLC}</div>
-                  { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' __number'}>{bondDailyPortfolio.currentInvestmentLC}</div> : ''}
-                  { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' __number'}>{bondDailyPortfolio.issuerLimitLC}</div> : ''}
+                  <div className={style.bondGeneralValues_row + ' ' + style.__number}>{bond.info.totalOutstandingLC}</div>
+                  { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' ' + style.__number}>{bondDailyPortfolio.currentInvestmentLC}</div> : ''}
+                  { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' ' + style.__number}>{bondDailyPortfolio.issuerLimitLC}</div> : ''}
                 </span>
 
                 <span className={style.bondGeneralValues_value}>
                   <div className={style.bondGeneralValues_row + ' ' + style.bondGeneralValues_unit}>
                     <span>M </span>
                     <span>{bond.info.ccy}</span>
-                    <div className={style.bondGeneralValues_row + ' __number'}>{bond.info.totalOutstandingBC}</div>
-                    { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' __number'}>{bondDailyPortfolio.currentInvestmentBC}</div> : ''}
-                    { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' __number'}>{bondDailyPortfolio.issuerLimitBC}</div>: ''}
+                    <div className={style.bondGeneralValues_row + ' ' + style.__number}>{bond.info.totalOutstandingBC}</div>
+                    { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' ' + style.__number}>{bondDailyPortfolio.currentInvestmentBC}</div> : ''}
+                    { (bondDailyPortfolio != null) ? <div className={style.bondGeneralValues_row + ' ' + style.__number}>{bondDailyPortfolio.issuerLimitBC}</div>: ''}
                   </div>
                 </span>
                 <span className={style.bondGeneralValues_label}>
@@ -215,21 +248,21 @@ class BondGeneral extends Component {
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Discount</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.haircut}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.haircut,  { minFraction: 2, maxFraction: 2, percent: true } )}</span>
                 </li>
               </ul>
             </li>
             <li className={style.bondGeneralValues_right}>
               <ul className={style.bondGeneralValues_list}>
-                <li className={style.bondGeneralValues_field + ' __primary'}>
+                <li className={style.bondGeneralValues_field + ' ' + style.__primary}>
                   <span className={style.bondGeneralValues_label}>Yield</span>
                   <span className={style.bondGeneralValues_unit}>%</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.yield}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.yield,  { minFraction: 2, maxFraction: 2, percent: true } )}</span>
                 </li>
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Roll down</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.rollDown}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.rollDown,  { minFraction: 2, maxFraction: 2 })}</span>
                 </li>
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Total return</span>
@@ -238,26 +271,26 @@ class BondGeneral extends Component {
                 </li>
 
                 <li className={style.bondGeneralValues_title}></li>
-                <li className={style.bondGeneralValues_field + ' __primary'}>
+                <li className={style.bondGeneralValues_field + ' ' + style.__primary}>
                   <span className={style.bondGeneralValues_label}>Price</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.price}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.price,  { minFraction: 2, maxFraction: 2 })}</span>
                 </li>
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Accrued interest</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.accruedCoupon}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.accruedCoupon,  { minFraction: 2, maxFraction: 2 })}</span>
                 </li>
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Dirty price</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.price + bond.daily.accruedCoupon}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.price + bond.daily.accruedCoupon,  { minFraction: 2, maxFraction: 2 })}</span>
                 </li>
                 <li className={style.bondGeneralValues_title}></li>
-                <li className={style.bondGeneralValues_field + ' __primary'}>
+                <li className={style.bondGeneralValues_field + ' ' + style.__primary}>
                   <span className={style.bondGeneralValues_label}>Duration</span>
                   <span className={style.bondGeneralValues_unit}>yrs</span>
-                  <span className={style.bondGeneralValues_value}>{bond.daily.duration}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.duration,  { minFraction: 2, maxFraction: 2 })}</span>
                 </li>
               </ul>
 
@@ -280,7 +313,7 @@ class BondGeneral extends Component {
                   </li>
                   <li className={style.bondGeneralValues_field}>
                     <span
-                      className={style.bondGeneralValues_label + ' __long'}>Months for recovery for total return</span>
+                      className={style.bondGeneralValues_label + ' ' + style.__long}>Months for recovery for total return</span>
                     <span className={style.bondGeneralValues_value}>{bondDailyPortfolio.mtrFromTr}</span>
                   </li>
                 </ul>
