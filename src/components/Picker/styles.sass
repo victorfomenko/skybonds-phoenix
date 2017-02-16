@@ -1,0 +1,126 @@
+@import "~@skybonds/ui-styles/vars"
+
+.reportSelectPicker
+  position: relative
+  cursor: pointer
+
+  .reportSelectPicker_dropdown
+    display: none
+    position: absolute
+    left: 0
+    top: 100%
+    width: 145px
+    margin-top: 7px
+    border: 1px solid $colorBorder
+    border-radius: 3px
+    background-color: $colorWhite
+    &:before
+      content: ""
+      position: absolute
+      top: -6px
+      left: 10px
+      width: 10px
+      height: 10px
+      border-style: solid
+      border-color: $colorBorder
+      border-width: 1px 0 0 1px
+      border-radius: 3px 0 0 0
+      background-color: $colorWhite
+      transform: rotate(45deg)
+    &.__active
+      display: block
+
+  .reportSelectPicker_list
+    padding: 5px 0
+
+  .reportSelectPicker_item
+    cursor: pointer
+    position: relative
+    padding: 5px 10px
+    color: $colorText
+    &:hover
+      background-color: $colorLinkHoverBackground
+      color: $colorLinkHover
+      .report-select-picker_text
+        &:after
+          content: none
+    &.__selected:hover
+      .report-select-picker_text
+        &:after
+          content: ''
+
+
+  .reportSelectPicker_value
+    border-bottom: 1px solid transparentize($colorText,0.75)
+
+  .reportSelectPicker_icon
+    display: inline-block
+    vertical-align: middle
+    width: 0
+    height: 0
+    margin-left: 4px
+    color: lighten($colorText, 20%)
+    border-top: 4px solid
+    border-right: 4px solid transparent
+    border-left: 4px solid transparent
+
+  &.__open
+    .report-select-picker_icon
+      border-top: 0
+      border-bottom: 4px solid
+
+  .reportSelectPicker_text
+    &:before
+      content: ''
+      margin: 3px 4px 0 0
+      width: 8px
+      height: 8px
+      border: 1px solid transparent
+      border-radius: 50%
+      display: inline-block
+      padding: 0
+      box-sizing: border-box
+      vertical-align: top
+      font-size: 12px
+      line-height: 14px
+      cursor: pointer
+
+    &:after
+      position: absolute
+      content: ''
+      width: 0
+      height: 0
+      border: 1px solid transparent
+      top: 11px
+      left: 13px
+      border-radius: 50%
+
+  .reportSelectPicker_item
+    &.__selected
+      .reportSelectPicker_text
+        &:before,
+        &:after
+          border-color: rgba(51,51,51,.5)
+
+  .reportSelectPicker_item:hover
+    .reportSelectPicker_text
+      &:before,
+      &:after
+        border-color: $colorLink
+
+  &.__dropup
+    .reportSelectPicker_dropdown
+      right: 0
+      bottom: 100%
+      width: 175px
+      margin-bottom: 7px
+      margin-top: 0
+      left: initial
+      top: initial
+
+      &:before
+        bottom: -6px
+        right: 10px
+        border-width: 0 1px 1px 0
+        left: initial
+        top: initial

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Promise from 'rsvp'
 import * as DataProvider from '../../data/providers/Data';
+import Picker from '../Picker'
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
 
 const defaultConfig = {
@@ -45,6 +46,21 @@ const defaultDate = new Date('2017/02/05');
 
 class ScatterPlot extends Component {
 
+  constructor(props) {
+    super(props);
+    const yAxisPicker = [{label: 'Yield', value: 'yield'},
+                      {label: 'Total Return', value: 'tr'},
+                      {label: 'Price', value: 'price'},
+                      {label: 'Spread to worst', value: 'spread'},
+                      {label: 'ROE', value: 'roe'},
+                      {label: 'ROE (TR)', value: 'roeFromTr'}];
+
+    const xAxisPicker = [{label: 'Duration', value: 'duration'},
+                      {label: 'Maturity', value: 'maturity'},
+                      {label: 'Months to Recovery', value: 'mtr'},
+                      {label: 'Months to Recovery (TR)', value: 'mtrFromTr'}];
+    this.state = { yAxisPicker, xAxisPicker, activeYAxisPicker: 'yield', activeXAxisPicker: 'duration' };
+  }
 
   componentWillMount() {
     this.initChart();
@@ -146,10 +162,22 @@ class ScatterPlot extends Component {
     }
   }
 
+  handleYAxisPickerChange(pickerValue) {
+    this.setState({ activeYAxisPicker: pickerValue });
+  }
+
+  handleXAxisPickerChange(pickerValue) {
+    this.setState({ activeXAxisPicker: pickerValue });
+  }
+
 
   render() {
     return (
-      <Chart document={this.chartDocument} />
+      <div>
+        <Picker pickerList={this.state.yAxisPicker} selectedPicker={this.state.activeYAxisPicker} onPickerChange={this.handleYAxisPickerChange.bind(this)} />
+        <Chart document={this.chartDocument} />
+        <Picker pickerList={this.state.xAxisPicker} selectedPicker={this.state.activeXAxisPicker} onPickerChange={this.handleXAxisPickerChange.bind(this)} />
+      </div>
     )
   }
 
