@@ -31,6 +31,8 @@ class BondGeneral extends Component {
   }
 
   getOutlookLabel(outlook) {
+    if (outlook == null)
+      return null
     switch (outlook.toLowerCase()) {
       case 'positive':
         return 'Positive ↑';
@@ -46,8 +48,7 @@ class BondGeneral extends Component {
   };
 
   getDateFormat(date) {
-    console.log('date', date);
-    if (date != null){
+    if (date instanceof Date){
       let dateFormatted = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear()
       return dateFormatted
     } else {
@@ -76,8 +77,6 @@ class BondGeneral extends Component {
     let bond = this.props.bond;
     let issuer = this.state.issuer;
     let bondDailyPortfolio = this.state.bondDailyPortfolio;
-    console.log('bond', bond);
-    console.log('issuer', issuer);
     if(this.state.loaded){
       return (
         <div className={style.bondGeneral}>
