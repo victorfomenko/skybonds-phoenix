@@ -4,6 +4,7 @@ import * as DataProvider from '../../data/providers/Data';
 import Picker from '../Picker';
 import ChartZoom from '../ChartZoom';
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
+import styles from './styles.sass';
 
 const defaultConfig = {
   backgroundColor: '#fff',
@@ -21,7 +22,7 @@ const defaultConfig = {
     left: 0,
     top: 0,
     right: 0,
-    bottom: 0
+    bottom: 38
   },
   axes: {
     x: 'duration',
@@ -65,6 +66,10 @@ class ScatterPlot extends Component {
 
   componentWillMount() {
     this.initChart();
+    // TODO: this hack enforces recalculation of chart borders, handle this elsewhere
+    setTimeout(()=>{
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
   }
 
 
@@ -177,11 +182,24 @@ class ScatterPlot extends Component {
 
   render() {
     return (
-      <div>
-        <Picker pickerList={this.state.yAxisPicker} selectedPicker={this.state.activeYAxisPicker} onPickerChange={this.handleYAxisPickerChange.bind(this)} />
+      <div className={styles.diagramScatterPlot}>
+        <div className={styles.diagramStats}>
+        { this.props.isins.length &&
+          <span>{this.props.isins.length} bonds</span>
+        }
+        </div>
         <Chart document={this.chartDocument} />
-        <Picker pickerList={this.state.xAxisPicker} selectedPicker={this.state.activeXAxisPicker} onPickerChange={this.handleXAxisPickerChange.bind(this)} />
-        <ChartZoom currentScale={this.state.scale} scaleStep={1} onZoomChange={this.handleZoomChange.bind(this)} />
+        <Picker className={styles.diagramPicker + ' ' + styles.__axisX}
+                pickerList={this.state.yAxisPicker}
+                selectedPicker={this.state.activeYAxisPicker}
+                onPickerChange={this.handleYAxisPickerChange.bind(this)} />
+        <Picker className={styles.diagramPicker + ' ' + styles.__axisY}
+                pickerList={this.state.xAxisPicker}
+                selectedPicker={this.state.activeXAxisPicker}
+                onPickerChange={this.handleXAxisPickerChange.bind(this)} />
+        <ChartZoom currentScale={this.state.scale}
+                   scaleStep={1}
+                   onZoomChange={this.handleZoomChange.bind(this)} />
       </div>
     );
   }

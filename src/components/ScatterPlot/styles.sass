@@ -1,0 +1,29 @@
+@import '~@skybonds/ui-styles/styles/variables/_variables'
+
+.diagramScatterPlot
+  position: relative
+  display: flex
+  flex: 1 1
+  flex-direction: column
+
+.diagramPicker
+  position: absolute
+  z-index: 2
+  &.__axisX
+    left: 0
+    top: 12px
+  &.__axisY
+    right: 0
+    bottom: 16px
+    padding: 0 0 0 10px
+    background: linear-gradient(to right, transparentize($colorWhite, 1) 0, transparentize($colorWhite, 0) 10px)
+
+.diagramStats
+  position: relative
+  padding: 12px 0 5px
+  text-align: right
+
+.diagramScatterPlot
+  :global(.axis)
+    line
+      stroke: #EEE

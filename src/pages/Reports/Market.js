@@ -48,9 +48,7 @@ class Market extends Component {
           <div className={reportStyle.reportView}>
             <div className={reportStyle.reportViewScatterPlot}>
               <div className={reportStyle.reportView_content}>
-                <div className={reportStyle.reportViewScatterPlotDiagram}>
-                  <ScatterPlot isins={this.state.totalIsins} />
-                </div>
+                <ScatterPlot isins={this.state.totalIsins} />
               </div>
               <div className={reportStyle.reportView_aside}>
                 <Movers isins={this.state.totalIsins} />

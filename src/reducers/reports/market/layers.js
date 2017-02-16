@@ -39,14 +39,14 @@ const filters = {
       {name:'ITL'},
       {name:'NZD'},
       {name:'HUF'},
-      {name:'ILS', selected: false, tag: '123'},
+      {name:'ILS'},
       {name:'CLP'},
       {name:'ZAR'},
       {name:'CRC'},
       {name:'JMD'},
-      {name:'TRY', disabled: true},
-      {name:'KZT', tag: '1123235'},
-      {name:'DOP', tag: '1235', selected: false},
+      {name:'TRY'},
+      {name:'KZT'},
+      {name:'DOP'},
       {name:'COP'},
       {name:'CAD'},
       {name:'KRW'},
@@ -178,8 +178,7 @@ const filters = {
   domInt: {
     values: [
       {
-        name: 'domestic',
-        tag: '1'
+        name: 'domestic'
       },
       {
         name: 'international'
@@ -293,7 +292,6 @@ const layers = (state = initialState, action) => {
       if(state.layers.length == 1) {
         return initialState;
       }
-      console.log(action.id);
       return {
         ...state,
         layers: state.layers.filter(id => id !== action.id),
@@ -328,7 +326,6 @@ const layers = (state = initialState, action) => {
       };
 
     case actionTypes.SEARCH_REQUEST:
-      console.log('action request', action);
       // should change state.query
       return state;
     // return {
@@ -341,7 +338,6 @@ const layers = (state = initialState, action) => {
     // };
 
     case actionTypes.SEARCH_RESPONSE:
-      console.log('action response', action.id, action.data);
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
