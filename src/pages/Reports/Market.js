@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
+import Movers from '../../components/Movers';
 const _ = require('lodash');
 
 import reportStyle from './style.sass';
@@ -17,7 +18,7 @@ class Market extends Component {
       isins: isins,
       reportID: props.match.params.reportID
     };
-  }
+    }
 
   shouldComponentUpdate(nextProps, nextState){
     if(_.isEqual(nextState, this.state)) {
@@ -44,7 +45,9 @@ class Market extends Component {
                   <ScatterPlot isins={this.state.isins} />
                 </div>
               </div>
-              <div className={reportStyle.reportView_aside}></div>
+              <div className={reportStyle.reportView_aside}>
+                <Movers isins={this.state.isins} />
+              </div>
             </div>
           </div>
         </div>

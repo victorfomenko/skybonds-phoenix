@@ -8,7 +8,7 @@ const headers = {
 }
 const getQS = (params) => {
     const esc = encodeURIComponent;
-    
+
     return Object.keys(params)
     .map(k => esc(k) + '=' + esc(params[k]))
     .join('&');

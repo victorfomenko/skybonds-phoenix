@@ -30,5 +30,12 @@ export const getBondsDaily = (isins, date, attrs = []) => {
   })
 }
 
+export const getMovers = (isins, startDate, endDate, paramName) => {
+  return requestProvider.post({
+    url: API_V1 + 'movers/' + paramName + '?endDate=' + DateDayCaster.format(endDate) + '&startDate=' + DateDayCaster.format(startDate),
+    body: isins
+  })
+}
+
 
 // TODO: handle errors on base _request layer

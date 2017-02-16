@@ -273,6 +273,7 @@ const layers = (state = initialState, action) => {
       if(state.layers.length == 1) {
         return initialState;
       }
+      console.log(action.id);
       return {
         ...state,
         layers: state.layers.filter(id => id !== action.id),
