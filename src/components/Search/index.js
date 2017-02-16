@@ -22,7 +22,6 @@ class Search extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    console.log('np', nextProps);
     this.setState({
       query: nextProps.layer.search.query,
       results: nextProps.layer.search.results

@@ -1,0 +1,94 @@
+@import '~@skybonds/ui-styles/styles/variables/_variables'
+
+.reportAsideMovers
+  display: flex
+  flex-direction: column
+  margin: 6px 0 0
+
+.reportAsideMovers_header
+  font-size: 14px
+  font-weight: bold
+
+.reportAsideMovers_content
+  margin-left: -20px
+  display: flex
+
+.reportAsideMovers_wrap
+  overflow: auto
+
+
+.reportAsideMoversTable
+  width: 100%
+  margin-bottom: 10px
+  table-layout: fixed
+
+.reportAsideMoversTable_row.__top
+    font-weight: bold
+.reportAsideMoversTable_body
+  .reportAsideMoversTable_row
+    line-height: 25px
+    &:hover
+      cursor: pointer
+      background: rgba(245, 245, 245, 0.5)
+
+.reportAsideMoversUnit
+  display: inline-block
+  margin: 0 0 0 .5em
+
+.reportAsideMoversPeriod
+  display: block
+  margin: 10px 0
+
+
+.reportAsideMoversTable_unit
+  font-size: 10px
+  font-weight: 400
+  color: $colorMuted
+.reportAsideMoversTable_row.__top
+  .reportAsideMoversTable_unit
+    display: block
+
+.reportAsideMoversTable_cell
+  vertical-align: middle
+  &.__symbol
+    width: 20px
+    text-align: center
+  &.__name
+    padding-right: 10px
+  &.__view
+    width: 140px
+    text-transform: capitalize
+    border-bottom: 1px solid $colorBorder
+  &.__current
+    width: 55px
+    padding-right: 10px
+    text-align: right
+  &.__change
+    width: 55px
+    text-align: right
+  &.__change.__increase
+    color: green
+  &.__change.__decrease
+    color: red
+.reportAsideMoversTable_row.__top
+  .reportAsideMoversTable_cell
+    &.__current,
+    &.__change
+      vertical-align: bottom
+
+.reportAsideMoversTable_value
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.reportAsideMoversTable_link
+  display: inline-block
+  margin: 0 0 10px
+  padding: 2px 3px
+  background-color: transparentize($colorLink,0.9)
+  border-radius: 2px
+  &:hover
+    color: $colorLoudHover
+    background-color: transparentize($colorLoudHover,0.9)
+  &.__na
+    cursor: not-allowed

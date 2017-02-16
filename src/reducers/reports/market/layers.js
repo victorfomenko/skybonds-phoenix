@@ -225,6 +225,16 @@ const filters = {
       {name: 'very high'}
     ]
   },
+  range: {
+    values: [
+        {name: 'price', values:[], defaultValues:[]},
+        {name: 'spread', values:[], defaultValues:[]},
+        {name: 'yield', values:[], defaultValues:[]},
+        {name: 'duration', values:[], defaultValues:[]},
+        {name: 'maturity', values:[], defaultValues:[]},
+        {name: 'discount', values:[], defaultValues:[]}
+      ],
+  },
   type: {
     values: [
       {name: 'regular'},
@@ -246,6 +256,8 @@ const initialState = {
         results: []
       },
       filters : filters,
+      filtersIsins: [],
+      totalIsins: [],
       'viewMode' : 'bonds'
     }
   },
@@ -269,6 +281,8 @@ const layers = (state = initialState, action) => {
               results: []
             },
             filters: filters,
+            filtersIsins: [],
+            totalIsins: [],
             'viewMode' : 'bonds',
           }
         },
@@ -279,6 +293,7 @@ const layers = (state = initialState, action) => {
       if(state.layers.length == 1) {
         return initialState;
       }
+      console.log(action.id);
       return {
         ...state,
         layers: state.layers.filter(id => id !== action.id),
@@ -312,37 +327,50 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
-    case actionTypes.CHANGE_FILTER:
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === state.activeLayer ?
-            assign({}, layer, { filters: action.filters }) :
-            layer
-        })
-      };
-
     case actionTypes.SEARCH_REQUEST:
       console.log('action request', action);
       // should change state.query
       return state;
-      // return {
-      //   ...state,
-      //   layersById: mapValues(state.layersById, (layer) => {
-      //     return layer.id === action.id ?
-      //       {...layer, search: {...layer.search, query: action.query}} :
-      //       layer
-      //   })
-      // };
+    // return {
+    //   ...state,
+    //   layersById: mapValues(state.layersById, (layer) => {
+    //     return layer.id === action.id ?
+    //       {...layer, search: {...layer.search, query: action.query}} :
+    //       layer
+    //   })
+    // };
 
     case actionTypes.SEARCH_RESPONSE:
       console.log('action response', action.id, action.data);
-      // should change state.result
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer, search: {...layer.search, query: action.query, results: action.data }} :
+            layer
+        })
+      };
+
+    case actionTypes.FILTERS_CHANGE:
+      if(!action.id) { return state }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, filters: action.filters} :
+            layer
+        })
+      }
+
+    case actionTypes.FILTERS_ISINS_CHANGE:
+      if(!action.id) { return state }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, filtersIsins: action.isins} :
             layer
         })
       };

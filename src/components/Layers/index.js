@@ -12,7 +12,6 @@ import {
         deleteLayer,
         activateLayer,
         renameLayer,
-        changeFilter,
         changeLayerView
       } from '../../actions'
 
@@ -47,10 +46,9 @@ class Layers extends Component {
     this.props.renameLayer(layerId, layerName);
   }
 
-  handleFilterChange(isins, filtersState) {
-    this.props.changeFilter(filtersState.all);
-    this.props.filteredDataHandler(isins);
-  }
+  // handleFilterChange(isins, filtersState) {
+  //   this.props.filteredDataHandler(isins);
+  // }
 
   handleLayerViewChange(layerId, viewMode) {
     this.props.changeLayerView(layerId, viewMode);
@@ -91,8 +89,7 @@ class Layers extends Component {
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
               <Filters
-                filteredDataHandler={this.handleFilterChange.bind(this)}
-                filters={layersState.layersById[layersState.activeLayer].filters}
+                layer={layersState.layersById[layersState.activeLayer]}
               />
             </div>
           </div>
@@ -109,15 +106,13 @@ class Layers extends Component {
 
 Layers.propTypes = {
   layers: React.PropTypes.object.isRequired,
-  filteredDataHandler: React.PropTypes.func.isRequired,
   addLayer: React.PropTypes.func.isRequired,
   deleteLayer: React.PropTypes.func.isRequired,
   renameLayer: React.PropTypes.func.isRequired,
-  changeFilter: React.PropTypes.func.isRequired,
   changeLayerView: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
-    addLayer, deleteLayer, activateLayer, renameLayer, changeFilter, changeLayerView
+    addLayer, deleteLayer, activateLayer, renameLayer, changeLayerView
   })(Layers);

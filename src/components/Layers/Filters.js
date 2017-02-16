@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
+import { connect } from 'react-redux';
 import * as DataProvider from '../../data/providers/Data';
-let event = new (require('events').EventEmitter);
+import { changeFilters, changeFiltersIsins } from '../../actions';
+
 
 class Filters extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: props.filters,
+      filters: props.layer.filters
     };
     this.handleFiltersChange = this.handleFiltersChange.bind(this)
-    console.log('propsFilters: ', props.filters);
+    console.log('propsFilters: ', props.layer.filters);
     //this.handleFiltersChange({selected: props.filters, all: props.filters})
   }
 
   componentWillReceiveProps(nextProps) {
-    const filters = nextProps.filters;
-    this.setState({ filters });
+    console.log(nextProps.layer.filters)
+    this.setState({ 
+      filters: nextProps.layer.filters
+    });
   }
 
   getYesterday(){
@@ -39,7 +43,8 @@ class Filters extends Component {
     const filters = this.formatFilters(selected);
     const { result, stats } = await DataProvider.filtersApply(filters, true);
     const newFilters = this.makeViewModel(stats, all)
-    this.setState({ filters: newFilters });
+    this.props.changeFilters(this.props.layer.id, newFilters)
+    this.props.changeFiltersIsins(this.props.layer.id, result)
   }
 
 
@@ -49,43 +54,25 @@ class Filters extends Component {
 
     stats.forEach(item => {
       switch(item.name){
-        case 'sector':
-          item.name = 'industry';
-          break;
-        case 'dom-int':
-          item.name = 'domInt';
-          break;
-        case 'financial':
-          if(item.values['true']){ item.values['financial'] = item.values['true']}
-          if(item.values['false']){ item.values['non-financial'] = item.values['false']}
-
-          delete item.values['true']
-          delete item.values['false']
-          break;
-        case 'corporations':
-          if(item.values['true']){ item.values['corporations'] = item.values['true']}
-          if(item.values['false']){ item.values['non-corporations'] = item.values['false']}
-
-          delete item.values['true']
-          delete item.values['false']
-          break;
-        case 'floater':
-        case 'convertible':
-        case 'regular':
-        case 'subord':
-          if(item.values.true !== null) {
-            typeValues[item.name] = item.values.true
+        case 'yield':
+        case 'spread':
+        case 'price':
+        case 'duration':
+        case 'maturity':
+        case 'discount':
+          viewModel['range'] = viewModel['range'] || { values: [] }
+          const values = item.values.length ? item.values : void 0
+          const selected = item.values.length ? true : false
+          const filter = {
+            name: item.name,
+            values: values || [],
+            defaultValues: stats[item.name] || [],
+            selected: selected
           }
+          viewModel['range'].values.push(filter)
           break;
       }
     })
-    if(Object.keys(typeValues).length){
-      stats.push({
-        name: 'type',
-        values: typeValues
-      })
-    }
-
     stats.forEach(item => {
       if(filters[item.name]){
         let values = filters[item.name].values;
@@ -127,7 +114,10 @@ class Filters extends Component {
 
 
 Filters.propTypes = {
-  filters: React.PropTypes.object.isRequired
+  layer: React.PropTypes.object.isRequired,
+  changeFilters: React.PropTypes.func.isRequired,
+  changeFiltersIsins: React.PropTypes.func.isRequired
 };
 
-export default Filters
+const mapStateToProps = state => ({ layers: state.reports.market.layers });
+export default connect(mapStateToProps, { changeFilters, changeFiltersIsins })(Filters);
