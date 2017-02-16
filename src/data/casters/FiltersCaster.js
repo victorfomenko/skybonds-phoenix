@@ -33,6 +33,7 @@ export default {
 		    case 'spread':
 		    case 'duration':
 		    case 'maturity':
+		    console.log(name, values)
 		      if (name === 'maturity') {
 		        name = 'yearsToPutCallMaturity';
 		      }
