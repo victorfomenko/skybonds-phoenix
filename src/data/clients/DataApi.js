@@ -30,5 +30,13 @@ export const getBondsDaily = (isins, date, attrs = []) => {
   })
 }
 
+export const getIssuersInfo = (issuerIds, attrs = []) => {
+  return requestProvider.post({
+    url: API_V1 + 'issuers/info',
+    body: issuerIds,
+    qs: { attrs }
+  })
+}
+
 
 // TODO: handle errors on base _request layer
