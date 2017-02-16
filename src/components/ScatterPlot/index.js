@@ -183,7 +183,11 @@ class ScatterPlot extends Component {
   render() {
     return (
       <div className={styles.diagramScatterPlot}>
-        <div className={styles.diagramStats}>stats: {this.props.isins.length}</div>
+        <div className={styles.diagramStats}>
+        { this.props.isins.length &&
+          <span>{this.props.isins.length} bonds</span>
+        }
+        </div>
         <Chart document={this.chartDocument} />
         <Picker className={styles.diagramPicker + ' ' + styles.__axisX}
                 pickerList={this.state.yAxisPicker}
