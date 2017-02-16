@@ -1,0 +1,81 @@
+.bondGeneral
+  display: block
+  padding: 113px 0 0
+  overflow: hidden
+  position: relative
+  z-index: 1
+
+.bondGeneralIssuer
+  display: block
+  margin-bottom: 30px
+.bondGeneralIssuer_item
+  display: inline-block
+  vertical-align: baseline
+  margin-left: 20px
+  &:first-child
+    margin-left: 0
+
+.bondGeneralValues
+  float: left
+  width: 550px
+  margin-right: 50px
+.bondGeneralValues_left
+  display: inline-block
+  vertical-align: top
+  width: 250px
+  margin-right: 50px
+.bondGeneralValues_right
+  display: inline-block
+  vertical-align: top
+  width: 250px
+.bondGeneralValues_list
+.bondGeneralValues_title
+  margin: 14px 0 6px
+  clear: both
+  font-weight: bold
+.bondGeneralValues_field
+  margin: 3px 0 6px 0
+  clear: both
+  &.__primary
+    font-size: 18px
+    font-weight: bold
+.bondGeneralValues_label
+  overflow: hidden
+  &.__long
+    display: inline-block
+    max-width: 140px
+.bondGeneralValues_unit
+  color: #999
+  font-size: 12px
+  font-weight: normal
+  &:before
+    content: '\00a0'
+.bondGeneralValues_row
+  margin: 0 0 6px
+  &.__rating
+    &:empty
+      &:before
+        content: "NA"
+        color: #CCC
+  &.__outlook
+    color: #999
+  &.__date
+    min-height: 16px
+    padding-top: 2px
+    color: #999
+    font-size: 12px
+  &.__number
+    text-align: right
+    &:empty
+      &:before
+        content: "NA"
+        color: #CCC
+.bondGeneralValues_value
+  display: block
+  float: right
+  min-height: 1px
+  margin-left: 10px
+  &:empty
+    &:before
+      content: "NA"
+      color: #CCC

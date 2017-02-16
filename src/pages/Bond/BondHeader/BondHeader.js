@@ -8,7 +8,6 @@ class BondHeader extends Component {
 
 
   render(){
-    console.log('this.props.bond', this.props.bond)
     return (
       <div className={style.bondHeader}>
         <div className={style.bondHeaderWatchlist}>

@@ -30,6 +30,14 @@ export const getBondsDaily = (isins, date, attrs = []) => {
   })
 }
 
+export const getIssuersInfo = (issuerIds, attrs = []) => {
+  return requestProvider.post({
+    url: API_V1 + 'issuers/info',
+    body: issuerIds,
+    qs: { attrs }
+  })
+}
+
 export const getMovers = (isins, startDate, endDate, paramName) => {
   return requestProvider.post({
     url: API_V1 + 'movers/' + paramName + '?endDate=' + DateDayCaster.format(endDate) + '&startDate=' + DateDayCaster.format(startDate),

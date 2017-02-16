@@ -20,7 +20,7 @@ const App = ({ user }) => (
 	    <Route path="/" exact={true} component={Home}/>
 	     {user.token ? <Route path="/reports" component={Reports} /> : null}
 	    <Route path="/login" component={Login} />
-	    <Route path="/bond" component={Bond} />
+	    <Route path="/bond/:isin" component={Bond} />
 	    <Route path="/logout" component={Logout} />
 	    <Redirect to="/" />
     </Switch>
