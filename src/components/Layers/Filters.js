@@ -55,7 +55,6 @@ class Filters extends Component {
 
   makeViewModel(stats, filters) {
     let viewModel = Object.assign({}, filters)
-    delete viewModel['range']
     let typeValues = {}
 
     stats.forEach(item => {
@@ -75,7 +74,19 @@ class Filters extends Component {
             defaultValues: values || [],
             selected: selected
           }
-          viewModel['range'].values.push(filter)
+          viewModel['range'].values.map(filter=> {
+            if(item.name === filter.name) {
+              console.log(stats[item.name])
+              return {
+                name: item.name,
+                values: stats[item.name] || [],
+                defaultValues: values || [],
+                selected: selected
+              }
+            }
+            return filter
+          })
+          console.log(viewModel['range'])
           break;
       }
     })
