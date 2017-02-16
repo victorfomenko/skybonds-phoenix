@@ -186,8 +186,11 @@ class ScatterPlot extends Component {
     return (
       <div className={styles.diagramScatterPlot}>
         <div className={styles.diagramStats}>
-        { this.props.isins.length &&
+        { this.props.isins.length > 0 &&
           <span>{this.props.isins.length} bonds</span>
+        }
+        { this.props.isins.length == 0 &&
+          <span>No data</span>
         }
         </div>
         <Chart document={this.chartDocument} />

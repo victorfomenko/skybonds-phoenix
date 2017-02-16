@@ -94,14 +94,14 @@ class Movers extends Component {
         <tr className={style.reportAsideMoversTable_row}>
           <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
           <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
-            No data.
+            No data
           </td>
         </tr>
       decrease =
         <tr className={style.reportAsideMoversTable_row}>
           <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
           <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
-            No data.
+            No data
           </td>
         </tr>
     } else {
