@@ -41,7 +41,7 @@ class Market extends Component {
       } else if (layers[key].searchIsins) {
         isins.push(layers[key].searchIsins);
       } else if (layers[key].filtersIsins) {
-        isins.push(layers[key].searchIsins);
+        isins.push(layers[key].filtersIsins);
       }
     }
     return _.union(...isins);
