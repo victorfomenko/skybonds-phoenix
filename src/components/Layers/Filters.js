@@ -15,8 +15,8 @@ class Filters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ 
-      filters: nextProps.layer.filters
+    this.setState({
+      filters: JSON.parse(JSON.stringify(nextProps.layer.filters))
     });
   }
 
@@ -31,12 +31,16 @@ class Filters extends Component {
   formatFilters(selectedFilters) {
     for (const key in selectedFilters) {
       if(key === 'range') {
-        const values = selectedFilters[key];
-        const name = values[0].name;
-        const val = values[0].values;
-        selectedFilters[name] = val;
+        const values = selectedFilters[key]
+        values.forEach(filter=>{
+          const name = filter.name;
+          const value = filter.values;
+          selectedFilters[name] = value
+        })
+
       }
     }
+    delete selectedFilters['range']
     let filtersProviderParams = {'filters': selectedFilters};
     filtersProviderParams['date'] = this.getYesterday();;
 
@@ -44,7 +48,6 @@ class Filters extends Component {
   }
 
   async handleFiltersChange({ selected, all }) {
-    console.log('selectedFilters: ', selected);
     const filters = this.formatFilters(selected);
     const { result, stats } = await DataProvider.filtersApply(filters, true);
     const newFilters = this.makeViewModel(stats, all);
@@ -65,31 +68,20 @@ class Filters extends Component {
         case 'duration':
         case 'maturity':
         case 'discount':
-          viewModel['range'] = viewModel['range'] || { values: [] };
-          const values = item.values.length ? item.values : void 0;
-          const selected = item.values.length ? true : false;
-          const filter = {
-            name: item.name,
-            values: stats[item.name] || [],
-            defaultValues: values || [],
-            selected: selected
-          };
-          viewModel['range'].values.map(filter=> {
+          viewModel['range'].values = viewModel['range'].values.map(filter=> {
             if(item.name === filter.name) {
-              console.log(stats[item.name]);
               return {
                 name: item.name,
-                values: stats[item.name] || [],
-                defaultValues: values || [],
-                selected: selected
-              };
+                values:  filter.values || [],
+                defaultValues: item.values || [],
+                selected: item.values.length ? true : false
+              }
             }
-            return filter;
-          });
-          console.log(viewModel['range']);
-          break;
+            return filter
+          })
       }
-    });
+    })
+
     stats.forEach(item => {
       if(filters[item.name]){
         let values = filters[item.name].values;
