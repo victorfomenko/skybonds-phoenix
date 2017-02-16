@@ -11,7 +11,8 @@ import App from './containers/App';
 const rootEl = document.getElementById('root')
 rootEl.style.height = '100%'
 
-render(
+store.then(store=>{
+  render(
   <AppContainer>
     <Provider store={store}>
       <BrowserRouter>
@@ -39,3 +40,5 @@ if (module.hot) {
     );
   });
 }
+
+})
