@@ -13,9 +13,8 @@ class Bond extends Component {
 
   constructor(props) {
     super(props);
-    const isin = 'XS1171917617';
     this.state = {
-      isin: isin,
+      isin: props.match.params.isin,
       info: null,
       daily: null,
       portfolioInfo: null,
