@@ -9,6 +9,6 @@ import Market from './Market';
 const Reports = ({ match }) => (
     <Route path={`${match.url}/market/:reportID?`} component={Market}/>
     //{/*<Route path="/reports/portfolio" component={Portfolio} />*/}
-)
+);
 
-export default connect(state => ({ user: {} }))(Reports)
+export default connect(state => ({ user: {} }))(Reports);

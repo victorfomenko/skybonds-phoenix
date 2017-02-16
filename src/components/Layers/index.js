@@ -13,7 +13,7 @@ import {
         activateLayer,
         renameLayer,
         changeLayerView
-      } from '../../actions'
+      } from '../../actions';
 
 
 class Layers extends Component {
@@ -67,7 +67,7 @@ class Layers extends Component {
                 onLayerClick={this.handleLayerClick.bind(this)}
                 onLayerRename={this.handleLayerRename.bind(this)}
                 onLayerViewChange={this.handleLayerViewChange.bind(this)}
-            />
+            />;
     }));
 
     if(this.state.loaded){

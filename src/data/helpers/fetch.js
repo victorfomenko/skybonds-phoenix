@@ -11,7 +11,7 @@ const getQS = (params) => {
 
   return Object.keys(params)
     .filter((key)=>{
-      return params[key] != null
+      return params[key] != null;
     })
     .map((key)=>{
       let value;
@@ -20,7 +20,7 @@ const getQS = (params) => {
       } else {
         value = esc(params[key]);
       }
-      return esc(key) + '=' + value
+      return esc(key) + '=' + value;
     })
     .join('&');
 };

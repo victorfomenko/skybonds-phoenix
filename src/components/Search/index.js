@@ -30,7 +30,7 @@ class Search extends Component {
 
 
   componentWillUnmount() {
-    this.sendSearchRequest.cancel()
+    this.sendSearchRequest.cancel();
   }
 
 
@@ -60,20 +60,20 @@ class Search extends Component {
     if(this.state.query < 3) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
-      </div>
+      </div>;
     }
 
     else if(this.state.results.length == 0) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         No bonds found.
-      </div>
+      </div>;
     }
 
     else {
       let searchGroups = this.state.results.map((group, index)=> {
         let searchGroupBonds = group.bonds.map((bond, index)=> {
           if(!bond.actual) {
-            return ''
+            return '';
           }
           return <li className={styles.bondsSearch_item + ' ' + styles.__body} key={ 'search_result_item_key_' + index } >
 
@@ -110,7 +110,7 @@ class Search extends Component {
                     onClick={this.onSearchClick.bind(this)} />
             </a>
           </span>
-          </li>
+          </li>;
         });
 
         return <div className={styles.bondsSearch_group} key={ 'search_result_group_key_' + index }>
@@ -134,7 +134,7 @@ class Search extends Component {
           <ul>
             { searchGroupBonds }
           </ul>
-        </div>
+        </div>;
       });
 
       let actualBonds = 0;
@@ -180,7 +180,7 @@ class Search extends Component {
               { searchGroups }
             </ul>
           </div>
-        </div>
+        </div>;
     }
 
     return (

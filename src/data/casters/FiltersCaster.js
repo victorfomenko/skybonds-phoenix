@@ -107,10 +107,10 @@ export default {
 		      });
 		  }
 		}
-		return filterArray
+		return filterArray;
 	},
 	cast: (stats) => {
-		let typeValues = {}
+		let typeValues = {};
 		stats.forEach(function(arg, index) {
 		  var name, values;
 		  name = arg.name, values = arg.values;
@@ -190,4 +190,4 @@ export default {
 
 		return stats;
 	}
-}
+};

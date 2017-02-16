@@ -5,10 +5,10 @@ import {sortBy} from 'lodash';
 const moversLimitList = 5;
 
 export const loadMovers = ({isins, startDate, endDate, paramName}) => {
-	let moversData = {}
+	let moversData = {};
 	return DataApi.getMovers(isins, startDate, endDate, paramName)
 	.then(resp => {
-		if(!!resp.error) return Promise.reject(resp)
+		if(!!resp.error) return Promise.reject(resp);
 		let map = {};
 	    let results = [];
 	    for (let isin of isins) {
@@ -55,6 +55,6 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 		return moversData;
 	})
 	.catch(error => {
-		return Promise.reject(error)
-	})
-}
+		return Promise.reject(error);
+	});
+};

@@ -1,29 +1,29 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
-import throttle from 'lodash/throttle'
-import * as Auth from './data/providers/Auth'
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import throttle from 'lodash/throttle';
+import * as Auth from './data/providers/Auth';
 
 
-import rootReducer from './reducers'
-import { loginWithToken } from './actions'
-import { localStorageProvider } from './data/helpers'
+import rootReducer from './reducers';
+import { loginWithToken } from './actions';
+import { localStorageProvider } from './data/helpers';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = ( async ()=> {
-	let data = {}
+	let data = {};
 	try {
 		data = await Auth.loginWithToken();
 	}
 	catch (e) {
-		data = {}
+		data = {};
 	}
 	return createStore(rootReducer, {user: data},
 	  composeEnhancers(
 	    applyMiddleware(thunk),
 	  ),
-	)
-})()
+	);
+})();
 
 
 

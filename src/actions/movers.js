@@ -1,5 +1,5 @@
 import { actionTypes } from './actionTypes';
-import * as Movers from '../data/providers/Movers'
+import * as Movers from '../data/providers/Movers';
 
 
 export const loadMovers = ({isins, startDate, endDate, selectedPeriod, selectedUnit}) => async (dispatch) => {
@@ -11,5 +11,5 @@ export const loadMovers = ({isins, startDate, endDate, selectedPeriod, selectedU
   catch (error) {
     dispatch({ type: actionTypes.LOAD_MOVERS_FAILURE, data: error });
   }
-}
+};
 

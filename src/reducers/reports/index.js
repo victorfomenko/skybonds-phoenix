@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import market from './market'
+import market from './market';
 // import portfolioList from './portfolioList'
 
 const reports = combineReducers({
@@ -8,4 +8,4 @@ const reports = combineReducers({
   // portfolioList
 });
 
-export default reports
+export default reports;

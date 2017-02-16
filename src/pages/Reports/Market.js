@@ -26,16 +26,16 @@ class Market extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const totalIsins = this.calcTotalIsins(nextProps.market.layers.layersById)
-    this.setState({ totalIsins })
+    const totalIsins = this.calcTotalIsins(nextProps.market.layers.layersById);
+    this.setState({ totalIsins });
   }
 
   calcTotalIsins(layers){
-    const isins = []
+    const isins = [];
     for(const key in layers) {
-      isins.push(layers[key].filtersIsins)
+      isins.push(layers[key].filtersIsins);
     }
-    return _.union(...isins)
+    return _.union(...isins);
   }
 
   render(){

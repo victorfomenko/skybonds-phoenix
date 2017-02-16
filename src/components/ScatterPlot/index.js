@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Promise from 'rsvp'
+import Promise from 'rsvp';
 import * as DataProvider from '../../data/providers/Data';
-import Picker from '../Picker'
-import ChartZoom from '../ChartZoom'
+import Picker from '../Picker';
+import ChartZoom from '../ChartZoom';
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
 
 const defaultConfig = {
@@ -120,7 +120,7 @@ class ScatterPlot extends Component {
   transformArrayToMap(data) {
     let result = {};
     for(let item of data) {
-      result[ item.isin ] = item.data
+      result[ item.isin ] = item.data;
     }
     return result;
   }
@@ -160,7 +160,7 @@ class ScatterPlot extends Component {
           [ axes.y ]: data.daily[ isin ] ? data.daily[ isin ][ axes.y ] : null
         };
       }
-    }
+    };
   }
 
   handleYAxisPickerChange(pickerValue) {
@@ -183,7 +183,7 @@ class ScatterPlot extends Component {
         <Picker pickerList={this.state.xAxisPicker} selectedPicker={this.state.activeXAxisPicker} onPickerChange={this.handleXAxisPickerChange.bind(this)} />
         <ChartZoom currentScale={this.state.scale} scaleStep={1} onZoomChange={this.handleZoomChange.bind(this)} />
       </div>
-    )
+    );
   }
 
 }
@@ -191,4 +191,4 @@ class ScatterPlot extends Component {
 ScatterPlot.propTypes = {
 };
 
-export default ScatterPlot
+export default ScatterPlot;

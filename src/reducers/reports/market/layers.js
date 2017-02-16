@@ -1,4 +1,4 @@
-import { actionTypes } from '../../../actions/actionTypes'
+import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign } from 'lodash';
 
 
@@ -61,7 +61,7 @@ const filters = {
       ];
 
       order.forEach((value, index) => {
-        map[value] = order.length - index
+        map[value] = order.length - index;
       });
 
       order = map;
@@ -70,11 +70,11 @@ const filters = {
       const nameB = String(b.name).toUpperCase();
       const aWeight = order[nameA] ? order[nameA] : 0;
       const bWeight = order[nameB] ? order[nameB] : 0;
-      if (aWeight > bWeight){return -1}
-      if (aWeight < bWeight){return 1}
-      if (nameA < nameB){return -1}
-      if (nameA > nameB){return 1}
-      return 0
+      if (aWeight > bWeight){return -1;}
+      if (aWeight < bWeight){return 1;}
+      if (nameA < nameB){return -1;}
+      if (nameA > nameB){return 1;}
+      return 0;
     }
   },
   rating: {
@@ -131,13 +131,13 @@ const filters = {
       };
 
       let getOrder = (rating)=> {
-        return ratings[rating].order
+        return ratings[rating].order;
       };
 
       let result = getOrder(a.name);
-      if (result == null) {result = 0}
+      if (result == null) {result = 0;}
       let result1 = getOrder(b.name);
-      if (result1 == null) {result1 = 0}
+      if (result1 == null) {result1 = 0;}
       return result1 - result;
     }
   },
@@ -307,9 +307,9 @@ const layers = (state = initialState, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             assign({}, layer, { name: action.name }) :
-            layer
+            layer;
         })
-      }
+      };
 
     case actionTypes.CHANGE_LAYER_VIEW:
       return {
@@ -317,7 +317,7 @@ const layers = (state = initialState, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             assign({}, layer, { viewMode: action.viewMode }) :
-            layer
+            layer;
         })
       };
 
@@ -347,37 +347,37 @@ const layers = (state = initialState, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer, search: {...layer.search, query: action.query, results: action.data }} :
-            layer
+            layer;
         })
       };
 
     case actionTypes.FILTERS_CHANGE:
-      if(!action.id) { return state }
+      if(!action.id) { return state; }
 
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer, filters: action.filters} :
-            layer
+            layer;
         })
-      }
+      };
 
     case actionTypes.FILTERS_ISINS_CHANGE:
-      if(!action.id) { return state }
+      if(!action.id) { return state; }
 
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer, filtersIsins: action.isins} :
-            layer
+            layer;
         })
       };
 
     default:
-      return state
+      return state;
   }
 };
 
-export default layers
+export default layers;

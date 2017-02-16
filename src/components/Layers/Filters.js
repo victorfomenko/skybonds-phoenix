@@ -11,11 +11,11 @@ class Filters extends Component {
     this.state = {
       filters: props.layer.filters
     };
-    this.handleFiltersChange = this.handleFiltersChange.bind(this)
+    this.handleFiltersChange = this.handleFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ 
+    this.setState({
       filters: nextProps.layer.filters
     });
   }
@@ -25,7 +25,7 @@ class Filters extends Component {
     // Better is get date from server
     let date = new Date();
     date.setDate(date.getDate() - 2);
-    return date.toJSON().slice(0,10).replace(/-/g,'')
+    return date.toJSON().slice(0,10).replace(/-/g,'');
   }
 
   formatFilters(selectedFilters) {
@@ -37,7 +37,7 @@ class Filters extends Component {
           const value = filter.values;
           selectedFilters[name] = value
         })
-        
+
       }
     }
     delete selectedFilters['range']
@@ -50,15 +50,15 @@ class Filters extends Component {
   async handleFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
     const { result, stats } = await DataProvider.filtersApply(filters, true);
-    const newFilters = this.makeViewModel(stats, all)
-    this.props.changeFilters(this.props.layer.id, newFilters)
-    this.props.changeFiltersIsins(this.props.layer.id, result)
+    const newFilters = this.makeViewModel(stats, all);
+    this.props.changeFilters(this.props.layer.id, newFilters);
+    this.props.changeFiltersIsins(this.props.layer.id, result);
   }
 
 
   makeViewModel(stats, filters) {
-    let viewModel = Object.assign({}, filters)
-    let typeValues = {}
+    let viewModel = Object.assign({}, filters);
+    let typeValues = {};
 
     stats.forEach(item => {
       switch(item.name){
@@ -85,27 +85,27 @@ class Filters extends Component {
     stats.forEach(item => {
       if(filters[item.name]){
         let values = filters[item.name].values;
-        if(!values.length) return
+        if(!values.length) return;
         values.forEach(value=>{
-          value.tag = null
+          value.tag = null;
           if(Object.keys(item.values).length) {
-            value.disabled = true
+            value.disabled = true;
           }
           if(Object.keys(item.values).length === 0){
-            value.disabled = false
+            value.disabled = false;
           }
           Object.keys(item.values).forEach(_value=>{
             if(value.name == _value){
-              value.disabled = !Number(item.values[_value])
-              value.tag = item.values[_value]
+              value.disabled = !Number(item.values[_value]);
+              value.tag = item.values[_value];
             }
-          })
-        })
-        viewModel[item.name] = { values }
+          });
+        });
+        viewModel[item.name] = { values };
       }
-    })
+    });
 
-    return viewModel
+    return viewModel;
   }
 
   render(){
@@ -113,10 +113,10 @@ class Filters extends Component {
       <UIFilters
         filters={this.state.filters}
         onStateChange={state=>{
-          this.handleFiltersChange({selected: state.selected, all: state.all})
+          this.handleFiltersChange({selected: state.selected, all: state.all});
         }}
       />
-    )
+    );
   }
 }
 

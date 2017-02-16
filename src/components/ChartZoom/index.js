@@ -11,7 +11,7 @@ class ChartZoom extends Component {
     if ((typeof scale === 'undefined' || scale === null) || isNaN(scale)) {
       scale = 1;
     }
-    return scale
+    return scale;
   }
 
   onPlusClick() {

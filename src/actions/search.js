@@ -38,7 +38,7 @@ export const searchRequest = (id, query, date) => async (dispatch) => {
       dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data });
     }
     catch (response) {
-      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, response })
+      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, response });
     }
   }
 };
