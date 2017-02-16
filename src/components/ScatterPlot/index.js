@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Promise from 'rsvp'
-import * as Data from '../../data/providers/Data';
+import * as DataProvider from '../../data/providers/Data';
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
 
 const defaultConfig = {
@@ -85,8 +85,8 @@ class ScatterPlot extends Component {
     if(isins.length) {
       let attrs = [config.axes.x, config.axes.y, 'liquidity'];
       Promise.all([
-        Data.getBondsInfo(isins),
-        Data.getBondsDaily(isins, config.date, attrs)
+        DataProvider.getBondsInfo(isins),
+        DataProvider.getBondsDaily(isins, config.date, attrs)
       ]).then((response) => {
         config.data = {
           info: this.transformArrayToMap(response[0]),

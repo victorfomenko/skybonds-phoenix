@@ -1,5 +1,5 @@
-import { actionTypes as types, urls } from '../constants';
+import { actionTypes } from './actionTypes';
 
-export const searchBond = (id) => (dispatch, getState) => {
-  dispatch({ type: types.SEARCH_BOND, id: id })
+export const searchChange = (id, query) => (dispatch, getState) => {
+  dispatch({ type: actionTypes.SEARCH_BOND, id: id, query: query })
 };

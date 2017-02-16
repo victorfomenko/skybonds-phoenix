@@ -1,4 +1,4 @@
-import { actionTypes as types, urls } from '../constants';
+import { actionTypes } from './actionTypes';
 import * as Movers from '../data/providers/Movers'
 
 

@@ -10,14 +10,22 @@ export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
+//Layers
 export const ADD_LAYER = 'ADD_LAYER';
 export const DELETE_LAYER = 'DELETE_LAYER';
 export const ACTIVATE_LAYER = 'ACTIVATE_LAYER';
 export const RENAME_LAYER = 'RENAME_LAYER';
-export const CHANGE_FILTER = 'CHANGE_FILTER';
 export const CHANGE_LAYER_VIEW = 'CHANGE_LAYER_VIEW';
+
+//Search
 export const SEARCH_BOND = 'SEARCH_BOND';
 
+//Movers
 export const LOAD_MOVERS = 'LOAD_MOVERS';
 export const LOAD_MOVERS_SUCCESS = 'LOAD_MOVERS_SUCCESS';
 export const LOAD_MOVERS_FAILURE = 'LOAD_MOVERS_FAILURE';
+
+
+//Filters
+export const FILTERS_CHANGE = 'FILTERS_CHANGE';
+export const FILTERS_ISINS_CHANGE = 'FILTERS_ISINS_CHANGE';

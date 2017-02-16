@@ -1,4 +1,4 @@
-import { actionTypes as types } from '../../../constants'
+import { actionTypes } from '../../../actions/actionTypes'
 import NumberCaster from '../../../data/casters/NumberCaster';
 
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
 
 const movers = (state = initialState, action) => {
 	switch (action.type) {
-		case types.LOAD_MOVERS_SUCCESS:
+		case actionTypes.LOAD_MOVERS_SUCCESS:
       return {
         ...state,
         selectedPeriod: action.selectedPeriod,
@@ -17,7 +17,7 @@ const movers = (state = initialState, action) => {
         bonds: action.data
       }
 
-    case types.LOAD_MOVERS_FAILURE:
+    case actionTypes.LOAD_MOVERS_FAILURE:
   		return state
     default:
 			return state
