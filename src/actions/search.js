@@ -1,8 +1,8 @@
 import { actionTypes } from './actionTypes';
 import * as SearchProvider from '../data/providers/Search';
-import * as BondsProvider from '../data/providers/Search';
-import { isBondActual } from '../helpers/bondActual';
-
+import * as DataProvider from '../data/providers/Data';
+import { isBondActual } from '../helpers/BondActual';
+import { keyBy } from 'lodash';
 
 const SEARCH_LIMIT = 200;
 const SEARCH_FIELDS = ['maturityDate', 'finalDate', 'issueDate', 'status', 'ccy', 'ratingGroup'];
@@ -10,7 +10,7 @@ const MIN_QUERY_LENGTH = 3;
 
 export const searchRequest = (id, query, date) => async (dispatch) => {
   dispatch({ type: actionTypes.SEARCH_REQUEST });
-  // TODO { bonds: [], issuers: [], groups: []} (((
+  // TODO { data: [] } (((
   if(query.length < MIN_QUERY_LENGTH) {
     dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data: [] });
   } else {
@@ -28,13 +28,31 @@ export const searchRequest = (id, query, date) => async (dispatch) => {
         };
         for(let b = 0; b < response.bonds.length; b++) {
           if(response.bonds[b].issuerId == response.issuers[i].id) {
-            response.bonds[b].actual = isBondActual(response.bonds[b], date);
+            response.bonds[b].isActual = isBondActual(response.bonds[b], date);
             group.bonds.push(response.bonds[b]);
           }
         }
         data.push(group);
       }
 
+      dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data });
+
+      const attrs = ['yield', 'duration'];
+      const isins = response.bonds.filter((bond)=>{
+        return bond.isActual;
+      }).map((bond)=>{
+        return bond.isin;
+      });
+      const dailyData = await DataProvider.getBondsDaily(isins, date, attrs);
+      let dailyDataMap = keyBy(dailyData, 'isin');
+      for(let group of data) {
+        for(let bond of group.bonds) {
+          if(dailyDataMap[ bond.isin ] && dailyDataMap[ bond.isin ].data != null) {
+            bond['yield'] = dailyDataMap[ bond.isin ].data.yield;
+            bond['duration'] = dailyDataMap[ bond.isin ].data.duration;
+          }
+        }
+      }
       dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data });
     }
     catch (response) {

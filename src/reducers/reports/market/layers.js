@@ -293,7 +293,6 @@ const layers = (state = initialState, action) => {
       if(state.layers.length == 1) {
         return initialState;
       }
-      console.log(action.id);
       return {
         ...state,
         layers: state.layers.filter(id => id !== action.id),
@@ -328,7 +327,6 @@ const layers = (state = initialState, action) => {
       };
 
     case actionTypes.SEARCH_REQUEST:
-      console.log('action request', action);
       // should change state.query
       return state;
     // return {
@@ -341,7 +339,6 @@ const layers = (state = initialState, action) => {
     // };
 
     case actionTypes.SEARCH_RESPONSE:
-      console.log('action response', action.id, action.data);
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
