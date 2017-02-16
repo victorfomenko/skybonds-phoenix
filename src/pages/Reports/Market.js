@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
-const _ = require('lodash');
+import Movers from '../../components/Movers';
+import {isEqual} from 'lodash';
 
 import reportStyle from './style.sass';
 
@@ -10,24 +11,31 @@ class Market extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
-    const isins = [];
     this.state = {
       reportName: 'Reports',
-      isins: isins,
+      totalIsins: [],
       reportID: props.match.params.reportID
     };
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    if(_.isEqual(nextState, this.state)) {
+    if(isEqual(nextState, this.state)) {
       return false;
     }
     return true;
   }
 
-  handleFilterChange(isins) {
-    this.setState({ isins });
+  componentWillReceiveProps(nextProps) {
+    const totalIsins = this.calcTotalIsins(nextProps.market.layers.layersById)
+    this.setState({ totalIsins })
+  }
+
+  calcTotalIsins(layers){
+    const isins = []
+    for(const key in layers) {
+      isins.push(layers[key].filtersIsins)
+    }
+    return _.union(...isins)
   }
 
   render(){
@@ -35,16 +43,18 @@ class Market extends Component {
       <div className='skybondsWrap'>
         <div className={reportStyle.reportWrap}>
           <div className={reportStyle.reportHeader}>
-            <Layers filteredDataHandler={this.handleFilterChange.bind(this)} />
+            <Layers />
           </div>
           <div className={reportStyle.reportView}>
             <div className={reportStyle.reportViewScatterPlot}>
               <div className={reportStyle.reportView_content}>
                 <div className={reportStyle.reportViewScatterPlotDiagram}>
-                  <ScatterPlot isins={this.state.isins} />
+                  <ScatterPlot isins={this.state.totalIsins} />
                 </div>
               </div>
-              <div className={reportStyle.reportView_aside}></div>
+              <div className={reportStyle.reportView_aside}>
+                <Movers isins={this.state.totalIsins} />
+              </div>
             </div>
           </div>
         </div>

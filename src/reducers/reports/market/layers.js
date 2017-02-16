@@ -1,4 +1,4 @@
-import { actionTypes as types } from '../../../constants'
+import { actionTypes } from '../../../actions/actionTypes'
 import { omit, mapValues, assign } from 'lodash';
 
 
@@ -135,9 +135,9 @@ const filters = {
       };
 
       let result = getOrder(a.name);
-      if (result == null) {result = 0};
+      if (result == null) {result = 0}
       let result1 = getOrder(b.name);
-      if (result1 == null) {result1 = 0};
+      if (result1 == null) {result1 = 0}
       return result1 - result;
     }
   },
@@ -225,6 +225,16 @@ const filters = {
       {name: 'very high'}
     ]
   },
+  range: {
+    values: [
+        {name: 'price', values:[], defaultValues:[]},
+        {name: 'spread', values:[], defaultValues:[]},
+        {name: 'yield', values:[], defaultValues:[]},
+        {name: 'duration', values:[], defaultValues:[]},
+        {name: 'maturity', values:[], defaultValues:[]},
+        {name: 'discount', values:[], defaultValues:[]}
+      ],
+  },
   type: {
     values: [
       {name: 'regular'},
@@ -241,8 +251,13 @@ const initialState = {
     1: {
       id : 1,
       name : 'Empty set',
-      search: {},
+      search: {
+        query: '',
+        results: []
+      },
       filters : filters,
+      filtersIsins: [],
+      totalIsins: [],
       'viewMode' : 'bonds'
     }
   },
@@ -252,7 +267,7 @@ const initialState = {
 const layers = (state = initialState, action) => {
   switch (action.type) {
 
-    case types.ADD_LAYER:
+    case actionTypes.ADD_LAYER:
       let newId = state.layers[state.layers.length-1] + 1;
       return {
         layers: state.layers.concat(newId),
@@ -261,26 +276,32 @@ const layers = (state = initialState, action) => {
           [newId]: {
             id: newId,
             name: 'Empty set',
-            search: {},
+            search: {
+              query: '',
+              results: []
+            },
             filters: filters,
+            filtersIsins: [],
+            totalIsins: [],
             'viewMode' : 'bonds',
           }
         },
         activeLayer: newId,
       };
 
-    case types.DELETE_LAYER:
+    case actionTypes.DELETE_LAYER:
       if(state.layers.length == 1) {
         return initialState;
       }
+      console.log(action.id);
       return {
         ...state,
         layers: state.layers.filter(id => id !== action.id),
         layersById: omit(state.layersById, action.id),
         activeLayer: (action.id == state.activeLayer) ? state.layers[0] : state.activeLayer,
-      }
+      };
 
-    case types.RENAME_LAYER:
+    case actionTypes.RENAME_LAYER:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -290,7 +311,7 @@ const layers = (state = initialState, action) => {
         })
       }
 
-    case types.CHANGE_LAYER_VIEW:
+    case actionTypes.CHANGE_LAYER_VIEW:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -298,31 +319,65 @@ const layers = (state = initialState, action) => {
             assign({}, layer, { viewMode: action.viewMode }) :
             layer
         })
-      }
+      };
 
-    case types.ACTIVATE_LAYER:
+    case actionTypes.ACTIVATE_LAYER:
       return {
         ...state,
         activeLayer: action.id,
-      }
+      };
 
-    case types.CHANGE_FILTER:
+    case actionTypes.SEARCH_REQUEST:
+      console.log('action request', action);
+      // should change state.query
+      return state;
+    // return {
+    //   ...state,
+    //   layersById: mapValues(state.layersById, (layer) => {
+    //     return layer.id === action.id ?
+    //       {...layer, search: {...layer.search, query: action.query}} :
+    //       layer
+    //   })
+    // };
+
+    case actionTypes.SEARCH_RESPONSE:
+      console.log('action response', action.id, action.data);
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === state.activeLayer ?
-            assign({}, layer, { filters: action.filters }) :
+          return layer.id === action.id ?
+            {...layer, search: {...layer.search, query: action.query, results: action.data }} :
+            layer
+        })
+      };
+
+    case actionTypes.FILTERS_CHANGE:
+      if(!action.id) { return state }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, filters: action.filters} :
             layer
         })
       }
 
-    case types.SEARCH_BOND:
-      return state;
+    case actionTypes.FILTERS_ISINS_CHANGE:
+      if(!action.id) { return state }
 
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer, filtersIsins: action.isins} :
+            layer
+        })
+      };
 
     default:
       return state
   }
-}
+};
 
 export default layers

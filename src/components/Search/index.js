@@ -1,48 +1,215 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { searchBond } from '../../actions';
+import { searchRequest, searchResponse } from '../../actions';
 import { Icon, GLYPHS } from '../../components/Icon';
+import { getColor } from '../../helpers/bondRating';
 import styles from './styles.sass';
+
+const DEBOUNCE_DELAY = 250;
+const defaultDate = new Date('2017/02/05');
 
 class Search extends Component {
 
-
   constructor(props) {
     super(props);
-    const search = props.layers.layersById[props.layerId];
-    this.state = {search}
+    // if(this.props.layer)
+    this.state = {
+      query: props.layer.search.query,
+      results: props.layer.search.results,
+      dropdownActive: true
+    };
   }
+
 
   componentWillReceiveProps(nextProps) {
-    const search = nextProps.layers.layersById[nextProps.layerId];
-    this.setState({search});
+    this.setState({
+      query: nextProps.layer.search.query,
+      results: nextProps.layer.search.results
+    });
   }
 
 
-  componentDidMount() {
-
+  componentWillUnmount() {
+    this.sendSearchRequest.cancel()
   }
 
-  onSearchClick() {
-    console.log(this.state.search);
-    this.props.searchBond(this.props.layerId);
-    console.log('search', this.props.layerId);
+
+  sendSearchRequest = _.debounce((query, date) => {
+    this.props.searchRequest(this.props.layer.id, query, date);
+  }, DEBOUNCE_DELAY);
+
+
+  onSearchClick() {console.log('search', this.props.layerId);}
+
+  onSearchClear() {console.log('close');}
+
+  onInputBlur() {console.log('blur');}
+
+  onInputChange(event) {
+    console.log('change', event.target.value);
+    let query = event.target.value;
+    this.setState({query: query});
+    this.sendSearchRequest(query, defaultDate);
   }
 
+  onInputKeyPress() {console.log('press');}
 
   render() {
+    let searchDropdown;
+
+    if(this.state.query < 3) {
+      searchDropdown = <div className={styles.bondsSearch_status}>
+        Enter 3+ characters…
+      </div>
+    }
+
+    else if(this.state.results.length == 0) {
+      searchDropdown = <div className={styles.bondsSearch_status}>
+        No bonds found.
+      </div>
+    }
+
+    else {
+      let searchGroups = this.state.results.map((group, index)=> {
+        let searchGroupBonds = group.bonds.map((bond, index)=> {
+          if(!bond.actual) {
+            return ''
+          }
+          return <li className={styles.bondsSearch_item + ' ' + styles.__body} key={ 'search_result_item_key_' + index } >
+
+          { bond.actual &&
+            <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
+             <input className={styles.bondsSearch_checkbox} type="checkbox"/>
+            </span>
+          }
+
+          <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
+            <span className={styles.bondsSearch_link}>
+              <span className={styles.bondsSearch_main}>{bond.name}</span>
+            </span>
+          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__yield + ' ' + styles.__turn}>
+            {/*{bond.daily.yield}*/}
+              {12.5}
+          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__duration + ' ' + styles.__turn}>
+            {/*{bond.daily.duration}*/}
+              {3.12}
+          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__rating + ' ' + styles.__turn}
+                  style={{color: getColor(bond.ratingGroup)}}>
+            {bond.ratingGroup}
+          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__currency + ' ' + styles.__turn}>
+            {bond.ccy}
+          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
+            <a className={styles.bondsSearch_info} onClick={null} href={'/bond/' + bond.isin} target="_blank">
+              <Icon glyph={GLYPHS.INFO}
+                    width="14" height="14"
+                    onClick={this.onSearchClick.bind(this)} />
+            </a>
+          </span>
+          </li>
+        });
+
+        return <div className={styles.bondsSearch_group} key={ 'search_result_group_key_' + index }>
+          <div className={styles.bondsSearch_item + ' ' + styles.__head }>
+          <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
+           <input className={styles.bondsSearch_checkbox} type="checkbox"/>
+           </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
+            <span className={styles.bondsSearch_link}>
+              <span className={styles.bondsSearch_main}>{group.issuerName}</span>
+            </span>
+          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
+            <a className={styles.bondsSearch_info} onClick={null} href={'/issuer/' + group.issuerId} target="_blank">
+              <Icon glyph={GLYPHS.INFO}
+                    width="14" height="14"
+                    onClick={this.onSearchClick.bind(this)} />
+            </a>
+          </span>
+          </div>
+          <ul>
+            { searchGroupBonds }
+          </ul>
+        </div>
+      });
+
+      let actualBonds = 0;
+      let nonActualBonds = 0;
+      for(let group of this.state.results) {
+        for(let bond of group.bonds) {
+          if(bond.actual) {
+            actualBonds++;
+          } else {
+            nonActualBonds++;
+          }
+        }
+      }
+
+      searchDropdown =
+        <div>
+          <div className={styles.bondsSearch_status + ' ' + styles.__total}>
+            { actualBonds &&
+              <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
+                <input className={styles.bondsSearch_checkbox} type="checkbox"/>
+              </span>
+            }
+            { actualBonds > 0 &&
+              <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
+                  <span>{actualBonds} actual bonds found</span>
+              </span>
+            }
+            { actualBonds == 0 && nonActualBonds > 0 &&
+              <span className={styles.bondsSearch_cell + ' ' + styles.__name}>No actual bonds found.</span>
+            }
+            { nonActualBonds > 0 &&
+              <span className={styles.bondsSearch_cell + ' ' + styles.__expired}>
+                <input className={styles.bondsSearch_checkbox} type="checkbox"/>
+                <span>show {nonActualBonds} others</span>
+              </span>
+            }
+            <span className={styles.bondsSearch_cell + ' ' + styles.__yield}>Yield</span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__duration}>Duration</span>
+          </div>
+
+          <div className={styles.bondsSearch_content}>
+            <ul className={styles.bondsSearch_list}>
+              { searchGroups }
+            </ul>
+          </div>
+        </div>
+    }
+
     return (
-      <div className={styles.reportsMarketSearch}>
-        Test!
-        <Icon glyph={GLYPHS.SEARCH} width="20" height="20" onClick={this.onSearchClick.bind(this)} />
+      <div className={styles.bondsSearch}>
+        <input className={styles.bondsSearch_input}
+               placeholder="Name, Issuer, ISIN or Rating"
+               onBlur={this.onInputBlur.bind(this)}
+               onChange={this.onInputChange.bind(this)}
+               onKeyPress={this.onInputKeyPress.bind(this)}
+               value={this.state.query} />
+        <Icon className={styles.bondsSearch_icon}
+              glyph={GLYPHS.SEARCH}
+              width="10" height="10"
+              onClick={this.onSearchClick.bind(this)} />
+        <Icon className={styles.bondsSearch_icon + ' ' + styles.__close}
+              glyph={GLYPHS.CLOSE}
+              width="8" height="8"
+              onClick={this.onSearchClear.bind(this)} />
+        <div className={styles.bondsSearch_dropdown + (this.state.dropdownActive ? ' ' + styles.__active : '')}>
+          { searchDropdown }
+        </div>
       </div>
     );
   }
 }
 
 Search.propTypes = {
-  searchBond: React.PropTypes.func.isRequired,
+  // layer: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
-export default connect(mapStateToProps, { searchBond })(Search);
+export default connect(mapStateToProps, { searchRequest, searchResponse })(Search);

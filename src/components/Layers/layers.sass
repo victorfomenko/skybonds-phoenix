@@ -166,13 +166,6 @@ report-layer-set-view
   .reportLayersView > .reportLayersView_icon
     opacity: .5
 
-
-.reportLayerSettings
-  //display: flex
-  flex-direction: row
-  clear: both
-  position: relative
-
 .reportLayersStrip_item
   display: inline-block
   border-radius: 3px 3px 0 0
@@ -249,3 +242,23 @@ report-layer-set-view
   cursor: pointer
   &:hover
     color: $colorLoudHover
+
+
+
+.reportLayerSettings
+  display: flex
+  flex-direction: row
+  clear: both
+  position: relative
+
+.reportLayerSettings_search
+  display: block
+  width: 420px
+  min-width: 420px
+  padding: 4px
+  border-radius: 0 0 0 3px
+  background-color: transparentize($colorBlack, 0.93)
+  position: relative
+
+.reportLayerSettings_filters
+  flex-grow: 1
