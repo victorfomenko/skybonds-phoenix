@@ -3,7 +3,8 @@ import styles from './styles.sass';
 
 export const GLYPHS = {
   SEARCH: require('../../resources/icons/search.svg'),
-  CLOSE: require('../../resources/icons/close.svg')
+  CLOSE: require('../../resources/icons/close.svg'),
+  INFO: require('../../resources/icons/info.svg')
 };
 
 export class Icon extends Component {
