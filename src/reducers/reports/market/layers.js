@@ -39,14 +39,14 @@ const filters = {
       {name:'ITL'},
       {name:'NZD'},
       {name:'HUF'},
-      {name:'ILS', selected: false, tag: '123'},
+      {name:'ILS'},
       {name:'CLP'},
       {name:'ZAR'},
       {name:'CRC'},
       {name:'JMD'},
-      {name:'TRY', disabled: true},
-      {name:'KZT', tag: '1123235'},
-      {name:'DOP', tag: '1235', selected: false},
+      {name:'TRY'},
+      {name:'KZT'},
+      {name:'DOP'},
       {name:'COP'},
       {name:'CAD'},
       {name:'KRW'},
@@ -178,8 +178,7 @@ const filters = {
   domInt: {
     values: [
       {
-        name: 'domestic',
-        tag: '1'
+        name: 'domestic'
       },
       {
         name: 'international'
