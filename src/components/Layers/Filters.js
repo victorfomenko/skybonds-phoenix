@@ -16,7 +16,7 @@ class Filters extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      filters: nextProps.layer.filters
+      filters: JSON.parse(JSON.stringify(nextProps.layer.filters))
     });
   }
 
