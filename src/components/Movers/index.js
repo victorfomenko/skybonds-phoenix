@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ButtonGroup from '../ButtonGroup';
 import {isEqual, mapValues} from 'lodash';
+import { Icon, GLYPHS } from '../../components/Icon';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import style from './styles.sass';
 
@@ -23,23 +24,26 @@ class Movers extends Component {
     this.state = { unitList, periodList, isLoaded: true};
   }
 
-  componentDidMount() {
-
-  }
-
   componentWillReceiveProps(nextProps) {
-    if(!isEqual(nextProps, this.props)) {
+    if(!isEqual(nextProps.isins, this.props.isins)) {
       const periods = this.getPeriodRange(nextProps.movers.selectedPeriod);
       this.loadMovers(nextProps.isins, periods.startDate, periods.endDate, nextProps.movers.selectedPeriod, nextProps.movers.selectedUnit);
     }
     this.setState({isLoaded: true});
   }
 
+  async loadMovers(isins, startDate, endDate, selectedPeriod, selectedUnit){
+    this.setState({isLoaded: false});
+    if(isins) {
+      await this.props.loadMovers({ isins, startDate: startDate, endDate: endDate, selectedPeriod, selectedUnit});
+    }
+  }
+
   getLastDate() {
     // TODO !!Client date can be wrong!!
     // Better is get date from server
     let endDate = new Date();
-    endDate.setDate(endDate.getDate() - 4);
+    endDate.setDate(endDate.getDate() - 3);
     return endDate;
   }
 
@@ -61,14 +65,6 @@ class Movers extends Component {
 
     return { startDate, endDate };
   }
-
-  async loadMovers(isins, startDate, endDate, selectedPeriod, selectedUnit){
-    this.setState({isLoaded: false});
-    if(isins) {
-      await this.props.loadMovers({ isins, startDate: startDate, endDate: endDate, selectedPeriod, selectedUnit});
-    }
-  }
-
 
   handleUnitChange(unit) {
     let periods = this.getPeriodRange(this.props.movers.selectedPeriod);
@@ -101,6 +97,7 @@ class Movers extends Component {
         </tr>
     } else {
       for (var key in movers.bonds) {
+        let portfolioIcon = <Icon glyph={GLYPHS.TRIANGLE} width="10" height="10" />;
         let bond = movers.bonds[key];
         let selectedUnit = movers.selectedUnit;
         if(movers.selectedUnit == 'spread') {
@@ -115,7 +112,9 @@ class Movers extends Component {
         if(bond.moverType == 'increase') {
           increase.push(
             <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
-              <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
+                {(bond.inBondPortfolio) ? portfolioIcon : ''}
+              </td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
                 <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
               </td>
@@ -131,7 +130,9 @@ class Movers extends Component {
         else if(bond.moverType == 'decrease') {
           decrease.push(
             <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
-              <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
+                {(bond.inBondPortfolio) ? portfolioIcon : ''}
+              </td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
                 <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
               </td>
