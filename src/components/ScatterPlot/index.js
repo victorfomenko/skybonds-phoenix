@@ -4,6 +4,7 @@ import * as DataProvider from '../../data/providers/Data';
 import Picker from '../Picker';
 import ChartZoom from '../ChartZoom';
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
+import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import styles from './styles.sass';
 
 const defaultConfig = {
@@ -163,8 +164,8 @@ class ScatterPlot extends Component {
           'name': data.info[ isin ][ 'standardName' ],
           'ratingGroup': data.info[ isin ][ 'ratingGroup' ],
           'liquidity': data.daily[ isin ] ? data.daily[ isin ][ 'liquidity' ] : null,
-          [ axes.x ]: data.daily[ isin ] ? data.daily[ isin ][ axes.x ] : null,
-          [ axes.y ]: data.daily[ isin ] ? data.daily[ isin ][ axes.y ] : null
+          [ axes.x ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.x ], { percent: axes.x }) : null,
+          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { percent: axes.y }) : null
         };
       }
     };
