@@ -10,7 +10,8 @@ const DEFAULT_OPTIONS = {
   maxFraction: 2,
   placeholder: '',
   isPercent: false,
-  asNumber: false
+  asNumber: false,
+  forceSign: false
 };
 
 // Safe scaling to avoid JS rounding quirks, see:
@@ -32,6 +33,7 @@ export default (value, options = {})=> {
   if (isNaN(num) || value == null || value === '') {
     return options.placeholder;
   }
+
   if (typeof options.isPercent == 'boolean' && options.isPercent ||
     typeof options.isPercent == 'string' && PERCENT_FIELDS.indexOf(options.isPercent) != -1) {
     num *= 100;

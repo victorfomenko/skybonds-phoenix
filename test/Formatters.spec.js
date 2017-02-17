@@ -95,6 +95,10 @@ describe('Formatters Suite', function () {
     expect(
       NumberFormatter(123456789.98765, { asNumber: true, maxFraction: 4 })
     ).to.equal(123456789.9877);
+
+    expect(
+      NumberFormatter(123456789.01234, { forceSign: true } )
+    ).to.equal('+123456789.01');
   });
 
 });
