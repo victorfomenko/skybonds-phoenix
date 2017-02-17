@@ -22,7 +22,7 @@ class Picker extends Component {
   }
 
   bindOutsideClick() {
-    document.body.addEventListener("click", this.outsideClickListener.bind(this));
+    document.body.addEventListener('click', this.outsideClickListener.bind(this));
   }
 
   outsideClickListener(event) {
