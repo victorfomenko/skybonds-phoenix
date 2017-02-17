@@ -2,7 +2,8 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import {expect} from 'chai';
 
-import Filters from '../src/components/layers/Filters';
+import Filters from '../src/components/Filters';
+
 const filters = {
       rating: {
         values: [

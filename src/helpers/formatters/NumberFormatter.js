@@ -1,6 +1,8 @@
 // For more information and options:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString
 
+const PERCENT_FIELDS = ['yield', 'haircut', 'rollDown', 'roe', 'roeFromTr'];
+
 const DEFAULT_OPTIONS = {
   locale: 'en',
   group: false,
@@ -18,8 +20,9 @@ export default (value, options = {})=> {
     return options.placeholder;
   }
   else if (num.toLocaleString != null) {
-    if (options.percent) {
-      num = num*100;
+    if (typeof options.percent == 'boolean' && options.percent ||
+      typeof options.percent == 'string' && PERCENT_FIELDS.indexOf(options.percent) != -1) {
+      num = num * 100;
     }
     return num.toLocaleString(options.locale, {
       useGrouping: options.group,
