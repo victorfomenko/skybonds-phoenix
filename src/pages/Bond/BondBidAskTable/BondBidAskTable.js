@@ -52,12 +52,17 @@ class BondBidAskTable extends Component {
   }
 
   _prepareData(marketData) {
-    let _quotes = this._getQuotes(marketData)
+
+    marketData.sort(function(first, second) {
+      return (new Date(first.timestamp).getTime()) < (new Date(second.timestamp).getTime());
+    });
+
+    let _quotes = this._getQuotes(marketData);
     this.quotes = _quotes;
     this.priceBidMax = this._getMax(_quotes);
     this.priceAskMin = this._getMin(_quotes);
     this.totals = this._getTotals(_quotes);
-
+    this.timestamp = this._getTimestamp(_quotes);
   }
 
   _getMax(collection) {
@@ -95,7 +100,9 @@ class BondBidAskTable extends Component {
       if (!(quote.bid || quote.ask)) {
         continue;
       }
-      let quoteDay = new Date(quote.timestamp);
+      let timestampDate = new Date(quote.timestamp);
+      let quoteDay = timestampDate.toDateString().substring(8, 10) + ' ' + timestampDate.toDateString().substring(4, 7)
+
       if (!quotesDays[quoteDay]) {
         quotesDays[quoteDay] = true;
       } else {
@@ -171,9 +178,49 @@ class BondBidAskTable extends Component {
   }
 
   _getTimestamp(collection) {
+
     let ref;
     if ((ref = collection[0]) != null ? ref.date : void 0) {
-      return moment(collection[0].date).fromNow();
+      let diffTime = new Date().getTime() - (new Date(collection[0].date)).getTime();
+
+      let seconds=(diffTime/1000)%60;
+      let minutes=(diffTime/(1000*60))%60;
+      let hours=(diffTime/(1000*60*60))%24;
+
+      let roundHours = Math.floor(hours)
+      if ( 1 <= roundHours <= 2 ) {
+        return roundHours + ' hour ago'
+      }
+
+      if (roundHours >= 2) {
+        return roundHours + ' hours ago'
+      }
+
+      let roundMinutes = Math.floor(minutes)
+      if ( 1 <= roundMinutes <= 2 ) {
+        return roundMinutes + ' minute ago'
+      }
+
+      if (roundMinutes >= 2) {
+        return roundMinutes + ' minutes ago'
+      }
+
+      let roundSeconds = Math.floor(seconds)
+      if ( 1 <= roundSeconds <= 2 ) {
+        return roundSeconds + ' second ago'
+      }
+
+      if (roundSeconds >= 2) {
+        return roundSeconds + ' seconds ago'
+      }
+
+
+
+      return {
+        'seconds': seconds,
+        'minutes': minutes,
+        'hours': hours
+      }
     } else {
       return null;
     }
@@ -185,6 +232,7 @@ class BondBidAskTable extends Component {
     let priceBidMax = this.priceBidMax;
     let priceAskMin = this.priceAskMin;
     let totals = this.totals;
+    let timestamp = this.timestamp;
 
     if(this.state.loaded){
 
@@ -286,7 +334,7 @@ class BondBidAskTable extends Component {
             <td className={style.bondBidAskTable_cell + ' ' + style.__time}>
               <span className={style.bondBidAskTable_times}></span>
               { quote.day ?
-                <div className={style.bondBidAskTable_day}>{DateFormatter(quote.day)}</div>
+                <div className={style.bondBidAskTable_day}>{quote.day}</div>
                 : ''
               }
               <span className={style.bondBidAskTable_time}>{quote.time}</span>
@@ -430,7 +478,19 @@ class BondBidAskTable extends Component {
               {listQuotes}
               </tbody>
             </table>
-
+            { timestamp ?
+              <p className={style.bondBidAskTable_timestamp}>
+                <span>Last change </span>
+                <span>{timestamp}</span>
+                <span>. </span>
+                <span>Delayed up to 15 minutes.</span>
+              </p>
+              : ''
+            }
+            { quotes.length == 0 ?
+              <p className={style.bondBidAskTable_nodata}>No data.</p>
+              : ''
+            }
           </div>
         </div>
       )
