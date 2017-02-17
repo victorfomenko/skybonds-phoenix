@@ -14,12 +14,9 @@ export const getQuantityByDate = (date) => {
 		}, (error, response, body) => {
 			if(error) { reject(error) }
 			if(response.status == 200) { 
-				const result = body.map(item=> {
-					return item.isin;
-				})
-				resolve(result) 
+				resolve(body) 
 			}
-			reject(error)
+			reject(body)
 		})	
 	})
 	
