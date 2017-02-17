@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import style from './style.sass';
 
-import { filtersApply, getBondsInfo, getBondsDaily } from '../../data/providers/Data';
-
 class Home extends Component {
   render () {
     const { user } = this.props;

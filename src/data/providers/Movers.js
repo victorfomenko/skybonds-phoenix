@@ -42,8 +42,8 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	    }
 	    const attrs = ['yield', 'price', 'spreadToBMK'];
 	    return Promise.all([
-	    	DataApi.getBondsDaily(Object.keys(moversData), endDate, attrs),
 	    	DataApi.getBondsInfo(Object.keys(moversData)),
+	    	DataApi.getBondsDaily(Object.keys(moversData), endDate, attrs),
 	    	PortfolioApi.getQuantityByDate(DateDayCaster.format(endDate))
 	    ]);
 	})
