@@ -354,7 +354,7 @@ class BondGeneral extends Component {
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Discount</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.haircut,  { minFraction: 2, maxFraction: 2, percent: true } )}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.haircut,  { minFraction: 2, maxFraction: 2, isPercent: true } )}</span>
                 </li>
               </ul>
             </li>
@@ -363,12 +363,12 @@ class BondGeneral extends Component {
                 <li className={style.bondGeneralValues_field + ' ' + style.__primary}>
                   <span className={style.bondGeneralValues_label}>Yield</span>
                   <span className={style.bondGeneralValues_unit}>%</span>
-                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.yield,  { minFraction: 2, maxFraction: 2, percent: true } )}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.yield,  { minFraction: 2, maxFraction: 2, isPercent: true } )}</span>
                 </li>
                 <li className={style.bondGeneralValues_field}>
                   <span className={style.bondGeneralValues_label}>Roll down</span>
                   <span className={style.bondGeneralValues_unit}> %</span>
-                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.rollDown,  { minFraction: 2, maxFraction: 2, percent: true })}</span>
+                  <span className={style.bondGeneralValues_value}>{NumberFormatter(bond.daily.rollDown,  { minFraction: 2, maxFraction: 2, isPercent: true })}</span>
                 </li>
                 { (bondDailyPortfolio != null) ?
                   <li className={style.bondGeneralValues_field}>
@@ -409,12 +409,12 @@ class BondGeneral extends Component {
                   <li className={style.bondGeneralValues_field}>
                     <span className={style.bondGeneralValues_label}>ROE</span>
                     <span className={style.bondGeneralValues_unit}> %</span>
-                    <span className={style.bondGeneralValues_value}>{NumberFormatter(bondDailyPortfolio.roe,  { minFraction: 2, maxFraction: 2, percent: true })}</span>
+                    <span className={style.bondGeneralValues_value}>{NumberFormatter(bondDailyPortfolio.roe,  { minFraction: 2, maxFraction: 2, isPercent: true })}</span>
                   </li>
                   <li className={style.bondGeneralValues_field}>
                     <span className={style.bondGeneralValues_label}>Total ROE</span>
                     <span className={style.bondGeneralValues_unit}> %</span>
-                    <span className={style.bondGeneralValues_value}>{NumberFormatter(bondDailyPortfolio.roeFromTr,  { minFraction: 2, maxFraction: 2, percent: true })}</span>
+                    <span className={style.bondGeneralValues_value}>{NumberFormatter(bondDailyPortfolio.roeFromTr,  { minFraction: 2, maxFraction: 2, isPercent: true })}</span>
                   </li>
                   <li className={style.bondGeneralValues_field}>
                     <span className={style.bondGeneralValues_label}>Months for recovery</span>
