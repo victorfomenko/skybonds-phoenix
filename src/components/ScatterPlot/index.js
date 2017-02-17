@@ -19,7 +19,7 @@ const defaultConfig = {
   paddingCoefficient: 0.15,
   localRegressionBandwidth: 0.9,
   margin: {
-    left: 0,
+    left: 30,
     top: 0,
     right: 0,
     bottom: 38
@@ -45,22 +45,24 @@ const defaultConfig = {
 
 const defaultDate = new Date('2017/02/05');
 
-
 class ScatterPlot extends Component {
 
   constructor(props) {
     super(props);
-    const yAxisPicker = [{label: 'Yield', value: 'yield'},
-                      {label: 'Total Return', value: 'tr'},
-                      {label: 'Price', value: 'price'},
-                      {label: 'Spread to worst', value: 'spread'},
-                      {label: 'ROE', value: 'roe'},
-                      {label: 'ROE (TR)', value: 'roeFromTr'}];
-
-    const xAxisPicker = [{label: 'Duration', value: 'duration'},
-                      {label: 'Maturity', value: 'maturity'},
-                      {label: 'Months to Recovery', value: 'mtr'},
-                      {label: 'Months to Recovery (TR)', value: 'mtrFromTr'}];
+    const yAxisPicker = [
+      {label: 'Yield', value: 'yield'},
+      // {label: 'Total Return', value: 'tr'},
+      {label: 'Price', value: 'price'},
+      {label: 'Spread to worst', value: 'spreadToBMK'},
+      // {label: 'ROE', value: 'roe'},
+      // {label: 'ROE (TR)', value: 'roeFromTr'}
+    ];
+    const xAxisPicker = [
+      {label: 'Duration', value: 'duration'},
+      {label: 'Maturity', value: 'yearsToPutCallMaturity'},
+      // {label: 'Months to Recovery', value: 'mtr'},
+      // {label: 'Months to Recovery (TR)', value: 'mtrFromTr'}
+    ];
     this.state = { yAxisPicker, xAxisPicker, activeYAxisPicker: 'yield', activeXAxisPicker: 'duration', scale: 1 };
   }
 
@@ -105,7 +107,7 @@ class ScatterPlot extends Component {
     };
 
     if(isins.length) {
-      let attrs = [config.axes.x, config.axes.y, 'liquidity'];
+      let attrs = ['yield', 'price', 'spreadToBMK', 'duration', 'maturity', 'liquidity'];
       Promise.all([
         DataProvider.getBondsInfo(isins),
         DataProvider.getBondsDaily(isins, config.date, attrs)
@@ -184,19 +186,23 @@ class ScatterPlot extends Component {
     return (
       <div className={styles.diagramScatterPlot}>
         <div className={styles.diagramStats}>
-        { this.props.isins.length &&
+        { this.props.isins.length > 0 &&
           <span>{this.props.isins.length} bonds</span>
+        }
+        { this.props.isins.length == 0 &&
+          <span>No data</span>
         }
         </div>
         <Chart document={this.chartDocument} />
-        <Picker className={styles.diagramPicker + ' ' + styles.__axisX}
+        <Picker className={styles.diagramPicker + ' ' + styles.__axisY}
                 pickerList={this.state.yAxisPicker}
                 selectedPicker={this.state.activeYAxisPicker}
                 onPickerChange={this.handleYAxisPickerChange.bind(this)} />
-        <Picker className={styles.diagramPicker + ' ' + styles.__axisY}
+        <Picker className={styles.diagramPicker + ' ' + styles.__axisX}
                 pickerList={this.state.xAxisPicker}
                 selectedPicker={this.state.activeXAxisPicker}
-                onPickerChange={this.handleXAxisPickerChange.bind(this)} />
+                onPickerChange={this.handleXAxisPickerChange.bind(this)}
+                direction="up" />
         <ChartZoom currentScale={this.state.scale}
                    scaleStep={1}
                    onZoomChange={this.handleZoomChange.bind(this)} />

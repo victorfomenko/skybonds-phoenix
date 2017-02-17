@@ -17,7 +17,6 @@ class Home extends Component {
           <ul className={style.home_list}>
             <li className={style.home_item}><Link to={'/'}>Home</Link></li>
             <li className={style.home_item}><Link to={'/reports/market'}>Market</Link></li>
-            <li className={style.home_item}><Link to={'/bond'}>Bond page</Link></li>
             {!user.token ? <li className={style.home_item}><Link to={'/login'}>Login</Link></li> : null}
             {user.token ? <li className={style.home_item}><Link to={'/logout'}>Logout</Link></li> : null}
           </ul>

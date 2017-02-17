@@ -4,7 +4,7 @@ import * as Rates from '../../../data/providers/Rates';
 import { connect } from 'react-redux';
 import Promise from 'rsvp';
 import style from './style.sass';
-import { getColor, getSynonym } from '../../../helpers/bondRating';
+import { getColor, getSynonym } from '../../../helpers/BondRating';
 import DateFormatter from '../../../helpers/formatters/DateFormatter';
 import NumberFormatter from '../../../helpers/formatters/NumberFormatter';
 import { isPortfolioScb } from '../../../helpers/portfolio';

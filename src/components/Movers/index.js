@@ -89,42 +89,59 @@ class Movers extends Component {
     var movers = this.props.movers;
     let increase = [];
     let decrease = [];
-    for (var key in movers.bonds) {
-      let bond = movers.bonds[key];
-      let selectedUnit = movers.selectedUnit;
-      if(movers.selectedUnit == 'spread') {
-        selectedUnit = 'spreadToBMK';
-      }
-      let unitValue = (bond.dailyData) ? bond.dailyData[selectedUnit] : null;
-      let changeRel = (unitValue) ? Math.round(bond.change / unitValue * 100) : null;
-      if(bond.moverType == 'increase') {
-        increase.push(
-          <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
-              <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
-            </td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{this.formatNumber(unitValue)}</td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
-            {(this.formatNumber(bond.change)>0)? '+' : ''}</span><span>{this.formatNumber(bond.change)}</span></td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
-                {(this.formatNumber(bond.changeRel)>0)? '+' : ''}
-            </span><span>{this.formatNumber(changeRel)}</span></td>
-          </tr>
-        );
-      }
-      else if(bond.moverType == 'decrease') {
-        decrease.push(
-          <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
-              <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
-            </td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{this.formatNumber(unitValue)}</td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{this.formatNumber(bond.change)}</span></td>
-            <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{this.formatNumber(changeRel)}</span></td>
-          </tr>
-        );
+    if(Object.keys(movers.bonds) == 0) {
+      increase =
+        <tr className={style.reportAsideMoversTable_row}>
+          <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+          <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
+            No data
+          </td>
+        </tr>
+      decrease =
+        <tr className={style.reportAsideMoversTable_row}>
+          <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+          <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
+            No data
+          </td>
+        </tr>
+    } else {
+      for (var key in movers.bonds) {
+        let bond = movers.bonds[key];
+        let selectedUnit = movers.selectedUnit;
+        if(movers.selectedUnit == 'spread') {
+          selectedUnit = 'spreadToBMK';
+        }
+        let unitValue = (bond.dailyData) ? bond.dailyData[selectedUnit] : null;
+        let changeRel = (unitValue) ? Math.round(bond.change / unitValue * 100) : null;
+        if(bond.moverType == 'increase') {
+          increase.push(
+            <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
+                <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
+              </td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{this.formatNumber(unitValue)}</td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
+              {(this.formatNumber(bond.change)>0)? '+' : ''}</span><span>{this.formatNumber(bond.change)}</span></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
+                  {(this.formatNumber(bond.changeRel)>0)? '+' : ''}
+              </span><span>{this.formatNumber(changeRel)}</span></td>
+            </tr>
+          );
+        }
+        else if(bond.moverType == 'decrease') {
+          decrease.push(
+            <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
+                <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
+              </td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{this.formatNumber(unitValue)}</td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{this.formatNumber(bond.change)}</span></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{this.formatNumber(changeRel)}</span></td>
+            </tr>
+          );
+        }
       }
     }
 
