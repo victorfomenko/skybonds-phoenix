@@ -19,20 +19,20 @@ export const filtersApply = (filters, stats, details) => {
 		if(filter.name === 'portfolio') {
 			isPortfolio = true;
 		}
-	})
+	});
 
 	let promises = [
 		DataApi.filtersApply(filters, stats, details),
 	];
 	if(isPortfolio){
-		promises.push(PortfolioProvider.getBondsInfo(filters.date))
+		promises.push(PortfolioProvider.getIsinsByDate(filters.date))
 	}
 
 	return Promise.all(promises)
 	.then(([filters, portfolio]) => {
-		let isins = filters.result
+		let isins = filters.result;
 		if(portfolio && portfolio.length) {
-			isins = _.intersection(isins, portfolio)
+			isins = _.intersection(isins, portfolio);
 			filters = {...filters, result: isins}
 		}
 		if(filters.stats) {

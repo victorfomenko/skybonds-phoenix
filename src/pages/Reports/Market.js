@@ -54,7 +54,7 @@ class Market extends Component {
       else {
       }
     }
-    return _.union(...isins);
+    return _.union(...isins).slice(0, 200);
   }
 
   render(){
