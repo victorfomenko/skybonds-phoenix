@@ -13,7 +13,7 @@ class Picker extends Component {
   }
 
   onLabelClick() {
-    this.setState({open: true});
+    this.setState({open: !this.state.open});
   }
 
   onPickerChange(picker) {
@@ -39,8 +39,8 @@ class Picker extends Component {
             (this.state.open ? ' ' + style.__open : '') +
             (this.props.className ? ' ' + this.props.className : '') +
             (this.props.direction == 'up' ? ' ' + style.__dropup : '')}
-           onBlur={this.closePicker.bind(this)}>
-        <span className={style.reportSelectPicker_label} onClick={this.onLabelClick.bind(this)}>
+           >
+        <span className={style.reportSelectPicker_label} onClick={this.onLabelClick.bind(this)} >
           <span className={style.reportSelectPicker_value}>{activePicker.label}</span>
           <span className={style.reportSelectPicker_icon}></span>
         </span>

@@ -36,8 +36,10 @@ class Movers extends Component {
   }
 
   getLastDate() {
+    // TODO !!Client date can be wrong!!
+    // Better is get date from server
     let endDate = new Date();
-    endDate.setDate(endDate.getDate() - 3);
+    endDate.setDate(endDate.getDate() - 4);
     return endDate;
   }
 
@@ -105,9 +107,9 @@ class Movers extends Component {
           selectedUnit = 'spreadToBMK';
         }
         let unitValue = (bond.dailyData) ? bond.dailyData[selectedUnit] : null;
-        let change = NumberFormatter(bond.change, {minFraction: 2, maxFraction: 2});
         unitValue = NumberFormatter(unitValue, {minFraction: 2, maxFraction: 2});
-        let changeRel = (unitValue) ? Math.round(bond.change / unitValue * 100) : null;
+        let change = NumberFormatter((bond.change/100), {minFraction: 2, maxFraction: 2});
+        let changeRel = (unitValue) ? Math.round(change / unitValue * 100) : null;
         changeRel = NumberFormatter(changeRel, {minFraction: 2, maxFraction: 2});
 
         if(bond.moverType == 'increase') {
@@ -168,7 +170,7 @@ class Movers extends Component {
                 <thead className={style.reportAsideMoversTable_header}>
                   <tr className={style.reportAsideMoversTable_row + ' ' + style.__top}>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
-                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest Increase</td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest rise</td>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}><span>Last </span><span></span><span className={style.reportAsideMoversTable_unit}>%</span></td>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ for {movers.selectedPeriod}<span></span><span className={style.reportAsideMoversTable_unit}> BPS</span></td>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ<span className={style.reportAsideMoversTable_unit}> BPS</span></td>
@@ -182,7 +184,7 @@ class Movers extends Component {
                 <thead className={style.reportAsideMoversTable_header}>
                   <tr className={style.reportAsideMoversTable_row + ' ' + style.__top}>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
-                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest Decrease</td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest fall</td>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}><span>Last </span><span></span><span className={style.reportAsideMoversTable_unit}>%</span></td>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ for <span></span><span className={style.reportAsideMoversTable_unit}> BPS</span></td>
                     <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ<span className={style.reportAsideMoversTable_unit}> BPS</span></td>
