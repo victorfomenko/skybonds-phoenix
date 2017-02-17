@@ -7,7 +7,7 @@ import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import styles from './styles.sass';
 
-const defaultConfig = {
+const DEFAULT_CONFIG = {
   backgroundColor: '#fff',
   labelStyle: {
     color: '#000',
@@ -44,12 +44,21 @@ const defaultConfig = {
   disableZoom: false
 };
 
-const defaultDate = new Date('2017/02/05');
+const DEFAULT_DATE = new Date('2017/02/05');
+
+const AVAILABLE_FIELDS = ['yield', 'price', 'spreadToBMK', 'duration', 'yearsToPutCallMaturity', 'liquidity'];
 
 class ScatterPlot extends Component {
 
   constructor(props) {
     super(props);
+    // TODO: enable commented axes when we have portfolio
+    const xAxisPicker = [
+      {label: 'Duration', value: 'duration'},
+      {label: 'Maturity', value: 'yearsToPutCallMaturity'},
+      // {label: 'Months to Recovery', value: 'mtr'},
+      // {label: 'Months to Recovery (TR)', value: 'mtrFromTr'}
+    ];
     const yAxisPicker = [
       {label: 'Yield', value: 'yield'},
       // {label: 'Total Return', value: 'tr'},
@@ -58,48 +67,44 @@ class ScatterPlot extends Component {
       // {label: 'ROE', value: 'roe'},
       // {label: 'ROE (TR)', value: 'roeFromTr'}
     ];
-    const xAxisPicker = [
-      {label: 'Duration', value: 'duration'},
-      {label: 'Maturity', value: 'yearsToPutCallMaturity'},
-      // {label: 'Months to Recovery', value: 'mtr'},
-      // {label: 'Months to Recovery (TR)', value: 'mtrFromTr'}
-    ];
-    this.state = { yAxisPicker, xAxisPicker, activeYAxisPicker: 'yield', activeXAxisPicker: 'duration', scale: 1 };
+    this.state = {
+      xAxisPicker,
+      yAxisPicker,
+      activeXAxisPicker: 'duration',
+      activeYAxisPicker: 'yield',
+      zoom: { scale: 1 }
+    };
   }
 
   componentWillMount() {
     this.initChart();
-    // TODO: this hack enforces recalculation of chart borders, handle this elsewhere
+    // TODO: this hack enforces recalculation of chart borders, on this elsewhere
     setTimeout(()=>{
       window.dispatchEvent(new Event('resize'));
     }, 100);
   }
 
-
   componentWillReceiveProps(props) {
     this.updateChart(props.isins);
   }
-
 
   initChart() {
     this.dotsSetsPlugin = new ChartPlugins.DotsSetsPlugin;
     this.dotsSetsPlugin.update({ dotsSets: [] });
 
-    let chartDocumentConfig = _.clone(defaultConfig);
+    let chartDocumentConfig = _.clone(DEFAULT_CONFIG);
     chartDocumentConfig.plugins = [
       this.dotsSetsPlugin
     ];
     this.chartDocument = new ChartDocument(chartDocumentConfig);
   }
 
-
   updateChart(isins = []) {
-    isins = isins.slice(0, 200);
     let config = {
-      date: defaultDate,
+      date: DEFAULT_DATE,
       axes: {
-        x: defaultConfig.axes.x,
-        y: defaultConfig.axes.y
+        x: this.state.activeXAxisPicker,
+        y: this.state.activeYAxisPicker
       },
       data: {
         info: {},
@@ -108,10 +113,9 @@ class ScatterPlot extends Component {
     };
 
     if(isins.length) {
-      let attrs = ['yield', 'price', 'spreadToBMK', 'duration', 'maturity', 'liquidity'];
       Promise.all([
         DataProvider.getBondsInfo(isins),
-        DataProvider.getBondsDaily(isins, config.date, attrs)
+        DataProvider.getBondsDaily(isins, config.date, AVAILABLE_FIELDS)
       ]).then((response) => {
         config.data = {
           info: this.transformArrayToMap(response[0]),
@@ -124,7 +128,6 @@ class ScatterPlot extends Component {
     }
   }
 
-
   transformArrayToMap(data) {
     let result = {};
     for(let item of data) {
@@ -133,12 +136,10 @@ class ScatterPlot extends Component {
     return result;
   }
 
-
   refreshChart(isins, config) {
     this.dotsSetsPlugin.update( this.getDotsSetsConfig(isins, config.date) );
     this.chartDocument.update( this.getChartConfig(config.data, config.axes) );
   }
-
 
   getDotsSetsConfig(isins, date) {
     return {
@@ -149,7 +150,6 @@ class ScatterPlot extends Component {
       }]
     };
   }
-
 
   getChartConfig(data, axes) {
     return {
@@ -171,15 +171,19 @@ class ScatterPlot extends Component {
     };
   }
 
-  handleYAxisPickerChange(pickerValue) {
-    this.setState({ activeYAxisPicker: pickerValue });
+  onXAxisPickerChange(pickerValue) {
+    this.setState({ activeXAxisPicker: pickerValue }, () => {
+      this.updateChart(this.props.isins);
+    });
   }
 
-  handleXAxisPickerChange(pickerValue) {
-    this.setState({ activeXAxisPicker: pickerValue });
+  onYAxisPickerChange(pickerValue) {
+    this.setState({ activeYAxisPicker: pickerValue }, () => {
+      this.updateChart(this.props.isins);
+    });
   }
 
-  handleZoomChange(scale) {
+  onZoomChange(scale) {
     this.setState({ scale });
   }
 
@@ -195,18 +199,18 @@ class ScatterPlot extends Component {
         }
         </div>
         <Chart document={this.chartDocument} />
-        <Picker className={styles.diagramPicker + ' ' + styles.__axisY}
-                pickerList={this.state.yAxisPicker}
-                selectedPicker={this.state.activeYAxisPicker}
-                onPickerChange={this.handleYAxisPickerChange.bind(this)} />
         <Picker className={styles.diagramPicker + ' ' + styles.__axisX}
                 pickerList={this.state.xAxisPicker}
                 selectedPicker={this.state.activeXAxisPicker}
-                onPickerChange={this.handleXAxisPickerChange.bind(this)}
+                onPickerChange={this.onXAxisPickerChange.bind(this)}
                 direction="up" />
-        <ChartZoom currentScale={this.state.scale}
+        <Picker className={styles.diagramPicker + ' ' + styles.__axisY}
+                pickerList={this.state.yAxisPicker}
+                selectedPicker={this.state.activeYAxisPicker}
+                onPickerChange={this.onYAxisPickerChange.bind(this)} />
+        <ChartZoom currentScale={this.state.zoom.scale}
                    scaleStep={1}
-                   onZoomChange={this.handleZoomChange.bind(this)} />
+                   onZoomChange={this.onZoomChange.bind(this)} />
       </div>
     );
   }
