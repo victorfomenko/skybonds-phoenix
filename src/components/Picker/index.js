@@ -6,6 +6,7 @@ class Picker extends Component {
   constructor(props) {
     super(props);
     this.state = {open: false};
+    this.bindOutsideClick();
   }
 
   closePicker() {
@@ -18,6 +19,16 @@ class Picker extends Component {
 
   onPickerChange(picker) {
     this.props.onPickerChange(picker.value);
+  }
+
+  bindOutsideClick() {
+    document.body.addEventListener("click", this.outsideClickListener.bind(this));
+  }
+
+  outsideClickListener(event) {
+    if (!this.state.open) {
+      return;
+    }
     this.closePicker();
   }
 
