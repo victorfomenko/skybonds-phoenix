@@ -1,0 +1,234 @@
+@import "~@skybonds/ui-styles/vars"
+
+.bondBidAskTable
+  display: block
+  position: relative
+  z-index: 1
+
+.bondBidAskTable_wrap
+  counter-reset: quote
+  position: relative
+  &.__full
+    width: calc(100% + 24px)
+    max-width: 960px
+    left: -12px
+    font-size: 14px
+
+.bondBidAskTable_title
+  margin-top: 24px
+  margin-bottom: -21px
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_title
+    margin-left: 12px
+    font-size: 24px
+    line-height: 24px
+    font-weight: bold
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_title
+    font-size: 14px
+    font-weight: bold
+.bondBidAskTable_part.__bid
+  color: $colorBid
+.bondBidAskTable_part.__ask
+  color: $colorAsk
+
+.bondBidAskTable
+  border-collapse: collapse
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable
+    font-size: 14px
+    width: 100%
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable
+    font-size: 12px
+
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_body
+    .bondBidAskTable_row
+      &:hover
+        background-color: $colorLightestContrast
+      &.__average
+        background-color: $colorLightContrast
+        &:hover
+          background-color: $colorLightContrast
+
+.bondBidAskTable_cell
+  position: relative
+  padding: 3px 0 3px 0
+  vertical-align: bottom
+  &.__header
+    padding-bottom: 2px
+  &.__subheader
+    padding-top: 0
+    padding-bottom: 5px
+    vertical-align: top
+    color: $colorMuted
+    font-weight: normal
+  &.__shrink
+    width: 1%
+  &.__spread
+    padding-left: 12px
+  &.__text
+    text-align: left
+    white-space: nowrap
+  &.__number
+    text-align: right
+  &.__time
+    text-align: right
+    position: relative
+  &.__slash:after
+    display: inline-block
+    margin: 0 1px
+    color: $colorBorder
+    content: "/"
+    font-size: 12px
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_cell
+    &:first-child
+      padding-left: 12px
+    &:last-child
+      padding-right: 12px
+    &.__header
+      vertical-align: top
+      font-weight: bold
+    &.__subheader
+      font-size: 12px
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_cell
+    &.__header
+      vertical-align: bottom
+      color: $colorMuted
+      font-weight: normal
+    &.__subheader
+      font-size: 10px
+.bondBidAskTable_wrap.__full
+  td.bondBidAskTable_cell
+    &.__number
+      font-family: monospace
+      font-size: 15px
+      letter-spacing: -.0625em
+.bondBidAskTable_wrap.__short
+  td.bondBidAskTable_cell
+    &.__number
+      font-family: monospace
+      font-size: 12px
+
+.bondBidAskTable_text
+  display: block
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_text
+    max-width: 240px
+    &:before
+      counter-increment: quote
+      content: counter(quote)
+      font-size: 10px
+      color: $colorMuted
+      padding: 0 .5em 0 0
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_text
+    max-width: 100px
+
+.bondBidAskTable_times
+  white-space: nowrap
+
+.bondBidAskTable_day
+  display: block
+  margin: 4px 0 2px
+  white-space: nowrap
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_day
+    font-size: 12px
+    font-weight: bold
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_day
+    font-size: 10px
+    font-weight: normal
+    color: $colorMuted
+.bondBidAskTable_row:first-child
+  .bondBidAskTable_day
+    position: absolute
+    bottom: 100%
+    right: 0
+
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_time
+    font-family: monospace
+    font-size: 15px
+    letter-spacing: -.0625em
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_time
+    font-family: monospace
+    font-size: 12px
+
+.bondBidAskTable_unit
+  display: inline-block
+  padding: 0 0 0 .35em
+  color: $colorMuted
+  font-weight: normal
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_unit
+    font-size: 12px
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_unit
+    font-size: 10px
+
+.bondBidAskTable_value
+  &.__bid
+    color: $colorBid
+  &.__ask
+    color: $colorAsk
+  &.__bid.__max
+    background-color: transparentize($colorBid, 0.88)
+  &.__ask.__min
+    background-color: transparentize($colorAsk, 0.88)
+  &:empty:before
+    content: "NA"
+    color: $colorBorder
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+    font-size: 12px
+
+.bondBidAskTable_empty
+  display: block
+  position: absolute
+  left: 0
+  bottom: 3px
+  width: 100%
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+  color: $colorBorder
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_empty
+    font-size: 12px
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_empty
+    font-size: 10px
+
+.bondBidAskTable_note
+  color: $colorMuted
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_note
+    font-size: 14px
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_note
+    font-size: 10px
+
+.bondBidAskTable_timestamp
+  color: $colorMuted
+  text-align: right
+.bondBidAskTable_nodata
+  color: $colorMuted
+.bondBidAskTable_wrap.__full
+  .bondBidAskTable_timestamp,
+  .bondBidAskTable_nodata
+    margin: 12px 12px 0
+    font-size: 12px
+.bondBidAskTable_wrap.__short
+  .bondBidAskTable_timestamp,
+  .bondBidAskTable_nodata
+    margin: 6px 0 0
+    font-size: 10px
