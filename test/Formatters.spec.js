@@ -67,6 +67,18 @@ describe('Formatters Suite', function () {
     expect(
       NumberFormatter(123456789.01234, { group: true })
     ).to.equal('123,456,789.01');
+
+    expect(
+      NumberFormatter(123456789.01234, { percent: true } )
+    ).to.equal('12345678901.23');
+
+    expect(
+      NumberFormatter(123456789.01234, { percent: 'yield' } )
+    ).to.equal('12345678901.23');
+
+    expect(
+      NumberFormatter(123456789.01234, { percent: 'duration' } )
+    ).to.equal('123456789.01');
   });
 
 });

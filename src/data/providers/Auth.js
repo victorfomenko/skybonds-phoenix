@@ -1,6 +1,6 @@
 import * as UserApi from '../clients/UserApi';
 import { localStorageProvider } from '../helpers';
-import { ACCESS_TOKEN } from '../constants';
+import { ACCESS_TOKEN, USER_DATA } from '../constants';
 
 
 export const login = (email, password) => {
@@ -12,6 +12,7 @@ export const login = (email, password) => {
 	})
 	.then(resp => {
 		if(!!resp.error) return Promise.reject(resp);
+		localStorageProvider.save(USER_DATA, resp);
 		return {
 			...resp,
 			token: localStorageProvider.load(ACCESS_TOKEN)
@@ -19,6 +20,7 @@ export const login = (email, password) => {
 	})
 	.catch(error => {
 		localStorageProvider.remove(ACCESS_TOKEN);
+		localStorageProvider.remove(USER_DATA);
 		return Promise.reject(error);
 	});
 };
@@ -27,6 +29,7 @@ export const loginWithToken = async () => {
 	return UserApi.current()
 	.then(resp => {
 		if(!!resp.error) return Promise.reject(resp);
+		localStorageProvider.save(USER_DATA, resp);
 		return {
 			...resp,
 			token: localStorageProvider.load(ACCESS_TOKEN)
@@ -34,6 +37,7 @@ export const loginWithToken = async () => {
 	})
   	.catch(error => {
 		localStorageProvider.remove(ACCESS_TOKEN);
+		localStorageProvider.remove(USER_DATA);
 		return Promise.reject(error);
 	});
 };
@@ -43,6 +47,7 @@ export const logout = () => {
 	.then(resp => {
 		if(resp.status) {
 			localStorageProvider.remove(ACCESS_TOKEN);
+			localStorageProvider.remove(USER_DATA);
 		}
 		return resp;
 	}).catch(error => {
