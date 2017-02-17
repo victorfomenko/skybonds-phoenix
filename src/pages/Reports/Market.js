@@ -34,15 +34,19 @@ class Market extends Component {
   calcTotalIsins(layers){
     const isins = [];
     for(const key in layers) {
-      if(layers[key].searchIsins.length && layers[key].filtersIsins.length) {
-        isins.push(intersection(
-          layers[key].filtersIsins,
-          layers[key].searchIsins)
-        );
-      } else if (layers[key].searchIsins.length) {
-        isins.push(layers[key].searchIsins);
-      } else if (layers[key].filtersIsins.length) {
-        isins.push(layers[key].filtersIsins);
+      if(layers[key].viewMode != 'hidden'){
+        if(layers[key].searchIsins.length && layers[key].filtersIsins.length) {
+          isins.push(intersection(
+            layers[key].filtersIsins,
+            layers[key].searchIsins)
+          );
+        } else if (layers[key].searchIsins.length) {
+          isins.push(layers[key].searchIsins);
+        } else if (layers[key].filtersIsins.length) {
+          isins.push(layers[key].filtersIsins);
+        }
+      }
+      else {
       }
     }
     return _.union(...isins);
