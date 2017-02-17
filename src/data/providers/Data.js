@@ -35,7 +35,6 @@ export const filtersApply = (filters, stats, details) => {
 			isins = _.intersection(isins, portfolio)
 			filters = {...filters, result: isins}
 		}
-		console.log(filters)
 		if(filters.stats) {
 			return {
 				...filters,

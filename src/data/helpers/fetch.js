@@ -2,6 +2,7 @@ import { load } from './localStorage';
 import { ACCESS_TOKEN } from '../constants';
 
 const headers = {
+  'Accept': 'application/json, text/plain, */*',
   'Content-Type': 'application/json;charset=UTF-8',
   'X-REQUEST-CLIENT-TYPE': 'web',
   'X-REQUEST-CLIENT-VERSION': '1.0',
@@ -53,7 +54,7 @@ export const get = async ({ url, qs={} }) => {
     headers: {
       ...headers,
       'X-REQUEST-ID': Date.now(),
-      'X-Access-Token': load(ACCESS_TOKEN),
+      'X-Access-Token': load(ACCESS_TOKEN)
     },
   });
   return await res.json();
