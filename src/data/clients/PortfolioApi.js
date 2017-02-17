@@ -6,7 +6,7 @@ const PROTO_API = 'http://proto.skybonds.net/api/portfolio';
 const PORTFOLIO_ID = 'scb';
 
 export const getQuantityByDate = (date) => {
-	return new Promise((resolve,reject)=>{
+	return new Promise((resolve, reject)=>{
 		request({
 			method: 'GET',
 			url: `${PROTO_API}/${PORTFOLIO_ID}/bonds/${date}`,
@@ -20,6 +20,9 @@ export const getQuantityByDate = (date) => {
 		})	
 	})
 	
+	// TODO У Сухроба portfolioApi работало через fetch. Тогда как у меня — нет.
+	// Версия браузера полностью совпадала. Chrome 56.0.2924.87 (64-bit)
+	// Разобраться в почему fetch не отрабатывал у меня и заменить browser-request на fetch.
 	// return requestProvider.get({
 	// 	url: `${PROTO_API}/${PORTFOLIO_ID}/bonds/${date}`
 	// });

@@ -35,7 +35,6 @@ class BondGeneral extends Component {
       const callDates = await Data.getCallDates(bond.isin);
       const rates = await Rates.getByDate(bond.daily.date);
 
-      console.log('rates', rates);
       let currencyRate = rates[ bond.info.ccy ];
       if(isPortfolioScb(this.props.user)) {
         let attrs = ['tr', 'roe', 'roeFromTr', 'mtr', 'mtrFromTr'];
