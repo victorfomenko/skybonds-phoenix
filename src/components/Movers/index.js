@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ButtonGroup from '../ButtonGroup';
 import {isEqual, mapValues} from 'lodash';
+import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import style from './styles.sass';
 
 import { loadMovers } from '../../actions';
@@ -19,7 +20,7 @@ class Movers extends Component {
                       {value: '14D'},
                       {value: 'M'},
                       {value: '3M'}];
-    this.state = { unitList, periodList};
+    this.state = { unitList, periodList, isLoaded: true};
   }
 
   componentDidMount() {
@@ -31,6 +32,7 @@ class Movers extends Component {
       const periods = this.getPeriodRange(nextProps.movers.selectedPeriod);
       this.loadMovers(nextProps.isins, periods.startDate, periods.endDate, nextProps.movers.selectedPeriod, nextProps.movers.selectedUnit);
     }
+    this.setState({isLoaded: true});
   }
 
   getLastDate() {
@@ -59,6 +61,7 @@ class Movers extends Component {
   }
 
   async loadMovers(isins, startDate, endDate, selectedPeriod, selectedUnit){
+    this.setState({isLoaded: false});
     if(isins) {
       await this.props.loadMovers({ isins, startDate: startDate, endDate: endDate, selectedPeriod, selectedUnit});
     }
@@ -73,16 +76,6 @@ class Movers extends Component {
   handlePeriodChange(period) {
     let periods = this.getPeriodRange(period);
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, period, this.props.movers.selectedUnit);
-  }
-
-  formatNumber(num){
-    let scale = 2;
-    let number = Math.round(num * Math.pow(10, scale)) / Math.pow(10, scale);
-    if(num - number > 0) {
-      return (number + Math.floor(2 * Math.round((num - number) * Math.pow(10, (scale + 1))) / 10) / Math.pow(10, scale));
-    } else {
-      return number;
-    }
   }
 
   render() {
@@ -112,7 +105,11 @@ class Movers extends Component {
           selectedUnit = 'spreadToBMK';
         }
         let unitValue = (bond.dailyData) ? bond.dailyData[selectedUnit] : null;
+        let change = NumberFormatter(bond.change, {minFraction: 2, maxFraction: 2});
+        unitValue = NumberFormatter(unitValue, {minFraction: 2, maxFraction: 2});
         let changeRel = (unitValue) ? Math.round(bond.change / unitValue * 100) : null;
+        changeRel = NumberFormatter(changeRel, {minFraction: 2, maxFraction: 2});
+
         if(bond.moverType == 'increase') {
           increase.push(
             <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
@@ -120,12 +117,12 @@ class Movers extends Component {
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
                 <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
               </td>
-              <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{this.formatNumber(unitValue)}</td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{unitValue}</td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
-              {(this.formatNumber(bond.change)>0)? '+' : ''}</span><span>{this.formatNumber(bond.change)}</span></td>
+              {(change>0)? '+' : ''}</span><span>{change}</span></td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
-                  {(this.formatNumber(bond.changeRel)>0)? '+' : ''}
-              </span><span>{this.formatNumber(changeRel)}</span></td>
+                  {(changeRel>0)? '+' : ''}
+              </span><span>{changeRel}</span></td>
             </tr>
           );
         }
@@ -136,68 +133,73 @@ class Movers extends Component {
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
                 <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
               </td>
-              <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{this.formatNumber(unitValue)}</td>
-              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{this.formatNumber(bond.change)}</span></td>
-              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{this.formatNumber(changeRel)}</span></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{unitValue}</td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{change}</span></td>
+              <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{changeRel}</span></td>
             </tr>
           );
         }
       }
     }
 
-    return (
-      <div className={style.reportAsideMovers}>
-        <div className={style.reportAsideMovers_header}><span>Market movers by
-        </span>
-        <div className={style.reportAsideMoversUnit}>
-          <ButtonGroup
-            buttons={this.state.unitList}
-            onButtonClick={this.handleUnitChange.bind(this)}
-            selectedButton={movers.selectedUnit}
-          />
-        </div>
-        </div>
-        <div className={style.reportAsideMoversPeriod}>
-          <ButtonGroup
-            buttons={this.state.periodList}
-            onButtonClick={this.handlePeriodChange.bind(this)}
-            selectedButton={movers.selectedPeriod}
-          />
-        </div>
-        <div className={style.reportAsideMovers_content}>
-          <div className={style.reportAsideMovers_wrap}>
-            <table className={style.reportAsideMoversTable}>
-              <thead className={style.reportAsideMoversTable_header}>
-                <tr className={style.reportAsideMoversTable_row + ' ' + style.__top}>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest Increase</td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}><span>Last </span><span></span><span className={style.reportAsideMoversTable_unit}>%</span></td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ for <span></span><span className={style.reportAsideMoversTable_unit}> BPS</span></td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ<span className={style.reportAsideMoversTable_unit}> BPS</span></td>
-                </tr>
-              </thead>
-              <tbody className={style.reportAsideMoversTable_body}>
-                {increase}
-              </tbody>
-            </table>
-            <table className={style.reportAsideMoversTable}>
-              <thead className={style.reportAsideMoversTable_header}>
-                <tr className={style.reportAsideMoversTable_row + ' ' + style.__top}>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest Decrease</td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}><span>Last </span><span></span><span className={style.reportAsideMoversTable_unit}>%</span></td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ for <span></span><span className={style.reportAsideMoversTable_unit}> BPS</span></td>
-                  <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ<span className={style.reportAsideMoversTable_unit}> BPS</span></td>
-                </tr>
-              </thead>
-              <tbody className={style.reportAsideMoversTable_body}>
-                {decrease}
-              </tbody>
-            </table>
+    if(this.state.isLoaded) {
+      return (
+        <div className={style.reportAsideMovers}>
+          <div className={style.reportAsideMovers_header}><span>Market movers by
+          </span>
+          <div className={style.reportAsideMoversUnit}>
+            <ButtonGroup
+              buttons={this.state.unitList}
+              onButtonClick={this.handleUnitChange.bind(this)}
+              selectedButton={movers.selectedUnit}
+            />
+          </div>
+          </div>
+          <div className={style.reportAsideMoversPeriod}>
+            <ButtonGroup
+              buttons={this.state.periodList}
+              onButtonClick={this.handlePeriodChange.bind(this)}
+              selectedButton={movers.selectedPeriod}
+            />
+          </div>
+          <div className={style.reportAsideMovers_content}>
+            <div className={style.reportAsideMovers_wrap}>
+              <table className={style.reportAsideMoversTable}>
+                <thead className={style.reportAsideMoversTable_header}>
+                  <tr className={style.reportAsideMoversTable_row + ' ' + style.__top}>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest Increase</td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}><span>Last </span><span></span><span className={style.reportAsideMoversTable_unit}>%</span></td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ for {movers.selectedPeriod}<span></span><span className={style.reportAsideMoversTable_unit}> BPS</span></td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ<span className={style.reportAsideMoversTable_unit}> BPS</span></td>
+                  </tr>
+                </thead>
+                <tbody className={style.reportAsideMoversTable_body}>
+                  {increase}
+                </tbody>
+              </table>
+              <table className={style.reportAsideMoversTable}>
+                <thead className={style.reportAsideMoversTable_header}>
+                  <tr className={style.reportAsideMoversTable_row + ' ' + style.__top}>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}></td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>Biggest Decrease</td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}><span>Last </span><span></span><span className={style.reportAsideMoversTable_unit}>%</span></td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ for <span></span><span className={style.reportAsideMoversTable_unit}> BPS</span></td>
+                    <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}>Δ<span className={style.reportAsideMoversTable_unit}> BPS</span></td>
+                  </tr>
+                </thead>
+                <tbody className={style.reportAsideMoversTable_body}>
+                  {decrease}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
+    else {
+      return (<div>Loading...</div>);
+    }
   }
 }
 
