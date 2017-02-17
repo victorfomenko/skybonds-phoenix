@@ -38,9 +38,9 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	    for (let item of increase) {
 	    	moversData[item.isin] = { moverType: 'increase', change: item.change };
 	    }
-
+	    const attrs = ['yield', 'price', 'spreadToBMK'];
 	    return Promise.all([
-	    	DataApi.getBondsDaily(Object.keys(moversData), endDate),
+	    	DataApi.getBondsDaily(Object.keys(moversData), endDate, attrs),
 	    	DataApi.getBondsInfo(Object.keys(moversData))
 	    ]);
 	})

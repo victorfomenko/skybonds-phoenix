@@ -4,7 +4,7 @@ import {assign} from 'lodash';
 
 import Layer from './Layer';
 import Search from '../Search';
-import Filters from './Filters';
+import Filters from '../Filters';
 import layersStyle from './layers.sass';
 
 import {

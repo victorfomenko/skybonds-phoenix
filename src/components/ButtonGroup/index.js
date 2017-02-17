@@ -14,7 +14,6 @@ class ButtonGroup extends Component {
 
   onButtonClick(buttonValue) {
     this.props.onButtonClick(buttonValue);
-    this.setState({selectedButton: buttonValue});
   }
 
   render() {

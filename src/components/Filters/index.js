@@ -17,17 +17,18 @@ class Filters extends Component {
   componentWillReceiveProps(nextProps) {
     let filters = this.formatPortfolio(nextProps.layer.filters, this.props.user)
     this.setState({
-      filters: JSON.parse(JSON.stringify(filters))
+      filters: filters
     });
   }
 
   formatPortfolio(filters, user) {
+    if(filters['portfolio'] != null) {return filters}
     if(isPortfolioScb(user)) {
       filters['portfolio'] = {
         values: [{name: 'Portfolio'}]
       }
     }
-    return filters
+    return JSON.parse(JSON.stringify(filters))
   }
 
   getYesterday(){

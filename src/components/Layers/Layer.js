@@ -43,14 +43,14 @@ class Layer extends Component {
                   <li className={layersStyle.reportLayersView_item}>
                     <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'bonds')}><span>Bonds</span></a>
                   </li>
-                  <li className={layersStyle.reportLayersView_item}>
+                  {/*<li className={layersStyle.reportLayersView_item}>
                     <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'curves')}>
                       <span>Curves</span>
                     </a>
                   </li>
                   <li className={layersStyle.reportLayersView_item}>
                     <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'bonds&curves')}><span>Bonds &amp; Curves</span></a>
-                  </li>
+                  </li>*/}
                   <li className={layersStyle.reportLayersView_item}>
                     <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'hidden')}><span>Hidden</span></a>
                   </li>
