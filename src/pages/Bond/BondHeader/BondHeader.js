@@ -29,7 +29,7 @@ class BondHeader extends Component {
             <a href="#payments" className={style.bondHeaderAnchors_link}>Рayments schedule</a>
           </li>
         </ul>
-        <a href="" className={style.bondHeaderBack}>←</a>
+
         <div className={style.bondHeaderName}>
           {this.props.bond.info.name}
         </div>

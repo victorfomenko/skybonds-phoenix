@@ -255,6 +255,7 @@ const initialState = {
         results: []
       },
       filters : filters,
+      searchIsins: [],
       filtersIsins: [],
       totalIsins: [],
       'viewMode' : 'bonds'
@@ -280,6 +281,7 @@ const layers = (state = initialState, action) => {
               results: []
             },
             filters: filters,
+            searchIsins: [],
             filtersIsins: [],
             totalIsins: [],
             'viewMode' : 'bonds',
@@ -342,7 +344,7 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, search: {...layer.search, query: action.query, results: action.data }} :
+            {...layer, searchIsins: action.isins, search: {...layer.search, query: action.query, results: action.data }} :
             layer;
         })
       };

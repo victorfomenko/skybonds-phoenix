@@ -66,8 +66,7 @@ class Layers extends Component {
                 onLayerClose={this.handleClose.bind(this)}
                 onLayerClick={this.handleLayerClick.bind(this)}
                 onLayerRename={this.handleLayerRename.bind(this)}
-                onLayerViewChange={this.handleLayerViewChange.bind(this)}
-            />;
+                onLayerViewChange={this.handleLayerViewChange.bind(this)} />;
     }));
 
     if(this.state.loaded){
@@ -88,9 +87,7 @@ class Layers extends Component {
               <Search layer={layersState.layersById[layersState.activeLayer]} />
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
-              <Filters
-                layer={layersState.layersById[layersState.activeLayer]}
-              />
+              <Filters layer={layersState.layersById[layersState.activeLayer]} />
             </div>
           </div>
         </div>

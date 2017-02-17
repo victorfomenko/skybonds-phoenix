@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
-import {isEqual} from 'lodash';
+import { isEqual, intersection } from 'lodash';
 
 import reportStyle from './style.sass';
 
@@ -33,7 +34,16 @@ class Market extends Component {
   calcTotalIsins(layers){
     const isins = [];
     for(const key in layers) {
-      isins.push(layers[key].filtersIsins);
+      if(layers[key].searchIsins.length && layers[key].filtersIsins.length) {
+        isins.push(intersection(
+          layers[key].filtersIsins,
+          layers[key].searchIsins)
+        );
+      } else if (layers[key].searchIsins.length) {
+        isins.push(layers[key].searchIsins);
+      } else if (layers[key].filtersIsins.length) {
+        isins.push(layers[key].filtersIsins);
+      }
     }
     return _.union(...isins);
   }
@@ -41,6 +51,7 @@ class Market extends Component {
   render(){
     return (
       <div className='skybondsWrap'>
+        <Header />
         <div className={reportStyle.reportWrap}>
           <div className={reportStyle.reportHeader}>
             <Layers />

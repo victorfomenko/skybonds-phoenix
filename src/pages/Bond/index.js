@@ -4,10 +4,11 @@ import * as Data from '../../data/providers/Data';
 import Promise from 'rsvp';
 import BondHeader from './BondHeader/BondHeader';
 import BondGeneral from './BondGeneral/BondGeneral';
+import BondBidAskTable from './BondBidAskTable/BondBidAskTable';
 import ScatterPlot from '../../components/ScatterPlot';
 import style from './style.sass';
 
-const defaultDate = new Date('2017/02/05');
+const defaultDate = new Date('2017/02/14');
 
 class Bond extends Component {
 
@@ -15,6 +16,7 @@ class Bond extends Component {
     super(props);
     this.state = {
       isin: props.match.params.isin,
+      date: defaultDate,
       info: null,
       daily: null,
       portfolioInfo: null,
@@ -54,6 +56,9 @@ class Bond extends Component {
               bond={bond}
             />
             <BondGeneral
+              bond={bond}
+            />
+            <BondBidAskTable
               bond={bond}
             />
           </div>

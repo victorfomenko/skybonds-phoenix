@@ -45,5 +45,22 @@ export const getMovers = (isins, startDate, endDate, paramName) => {
   });
 };
 
+export const getRepayment = (isin) => {
+  return requestProvider.get({
+    url: API_V1 + 'bonds/schedule/' + isin
+  });
+};
+
+export const getPutDates = (isin) => {
+  return requestProvider.get({
+    url: API_V1 + 'bonds/schedule/' + isin + '/put'
+  });
+};
+
+export const getCallDates = (isin) => {
+  return requestProvider.get({
+    url: API_V1 + 'bonds/schedule/' + isin + '/call'
+  });
+};
 
 // TODO: handle errors on base _request layer

@@ -1,5 +1,5 @@
 export const isPortfolioScb = (user) => {
-	const email = typeof user !== "undefined" && user !== null ? user.email : void 0;
+	const email = typeof user !== 'undefined' && user !== null ? user.email : void 0;
 	return checkEmailAccess(email)
 }
 

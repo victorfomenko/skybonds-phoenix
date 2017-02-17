@@ -1,4 +1,5 @@
-@import '~@skybonds/ui-styles/styles/variables/_variables'
+@import '~@skybonds/ui-styles/vars'
+
 .buttonGroup
   display: inline-block
   line-height: 1.5
@@ -8,16 +9,16 @@
     left: -1px
     margin-right: -1px
     display: inline-block
-    background-color: #fff
-    border: 1px solid #ccc
+    background-color: $colorWhite
+    border: 1px solid $colorBorder
     cursor: pointer
     &.__active
-      background-color: #e6e6e6
-      border-color: #adadad
-      box-shadow: inset 0 3px 5px rgba(0,0,0,.125)
+      background-color: $colorLightContrast
+      border-color: $colorBorder
+      box-shadow: inset 0 3px 5px transparentize($colorBlack, .825)
     &:hover
-      background-color: #e6e6e6
-      border-color: #adadad
+      background-color: $colorLightContrast
+      border-color: $colorBorder
       z-index: 1
     &:first-child
       border-radius: 3px 0 0 3px

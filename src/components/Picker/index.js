@@ -35,7 +35,11 @@ class Picker extends Component {
       );
     }));
     return (
-      <div className={style.reportSelectPicker + (this.state.open ? ' ' + style.__open : '') + (this.props.className ? ' ' + this.props.className : '')} tabIndex='0' onBlur={this.closePicker.bind(this)}>
+      <div className={ style.reportSelectPicker +
+            (this.state.open ? ' ' + style.__open : '') +
+            (this.props.className ? ' ' + this.props.className : '') +
+            (this.props.direction == 'up' ? ' ' + style.__dropup : '')}
+           onBlur={this.closePicker.bind(this)}>
         <span className={style.reportSelectPicker_label} onClick={this.onLabelClick.bind(this)}>
           <span className={style.reportSelectPicker_value}>{activePicker.label}</span>
           <span className={style.reportSelectPicker_icon}></span>

@@ -6,7 +6,8 @@ const DEFAULT_OPTIONS = {
   group: false,
   minFraction: 0,
   maxFraction: 2,
-  placeholder: ''
+  placeholder: '',
+  percent: false
 };
 
 export default (value, options = {})=> {
@@ -16,8 +17,10 @@ export default (value, options = {})=> {
   if (isNaN(num) || value == null || value === '') {
     return options.placeholder;
   }
-
   else if (num.toLocaleString != null) {
+    if (options.percent) {
+      num = num*100;
+    }
     return num.toLocaleString(options.locale, {
       useGrouping: options.group,
       minimumFractionDigits: options.minFraction,

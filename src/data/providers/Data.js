@@ -58,3 +58,19 @@ export const getBondsDaily = (isins, date, attrs) => {
 export const getIssuersInfo = (ids, attrs) => {
   return DataApi.getIssuersInfo(ids, attrs);
 };
+
+export const getRepayment = (isin) => {
+  return DataApi.getRepayment(isin);
+};
+
+export const getPutDates = (isin) => {
+  return DataApi.getPutDates(isin);
+};
+
+export const getCallDates = (isin) => {
+  return DataApi.getCallDates(isin);
+};
+
+export const getRates = (isin) => {
+  return DataApi.getCallDates(isin);
+};

@@ -14,14 +14,12 @@ class Search extends Component {
 
   constructor(props) {
     super(props);
-    // if(this.props.layer)
     this.state = {
       query: props.layer.search.query,
       results: props.layer.search.results,
       dropdownActive: false
     };
   }
-
 
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -30,11 +28,9 @@ class Search extends Component {
     });
   }
 
-
   componentWillUnmount() {
     this.sendSearchRequest.cancel();
   }
-
 
   sendSearchRequest = _.debounce((query, date) => {
     this.props.searchRequest(this.props.layer.id, query, date);
@@ -66,14 +62,12 @@ class Search extends Component {
     let searchDropdown;
 
     if(this.state.query.length < MIN_QUERY_LENGTH) {
-      console.log ('lt');
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;
     }
 
     else if(this.state.results.length == 0) {
-      console.log ('empty');
       searchDropdown = <div className={styles.bondsSearch_status}>
         No bonds found.
       </div>;
@@ -82,42 +76,35 @@ class Search extends Component {
     else {
       let searchGroups = this.state.results.map((group, index)=> {
         let searchGroupBonds = group.bonds.map((bond, index)=> {
-          if(!bond.isActual) {
-            return '';
-          }
           return <li className={styles.bondsSearch_item + ' ' + styles.__body}
                      key={ 'search_result_item_key_' + index } >
-
-            { bond.isActual &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
-             {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
+              {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
             </span>
-            }
-
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
-            <span className={styles.bondsSearch_link}>
-              <span className={styles.bondsSearch_main}>{bond.name}</span>
+              <span className={styles.bondsSearch_link}>
+                <span className={styles.bondsSearch_main}>{bond.name}</span>
+              </span>
             </span>
-          </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__yield + ' ' + styles.__turn}>
-            {NumberFormatter(bond.yield, { placeholder: 'NA' })}
-          </span>
+              {NumberFormatter(bond.yield, { placeholder: 'NA' })}
+            </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__duration + ' ' + styles.__turn}>
-            {NumberFormatter(bond.duration, { placeholder: 'NA' })}
-          </span>
+              {NumberFormatter(bond.duration, { placeholder: 'NA' })}
+            </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__rating + ' ' + styles.__turn}
-                  style={{color: getColor(bond.ratingGroup)}}>
-            {bond.ratingGroup}
-          </span>
+            style={{color: getColor(bond.ratingGroup)}}>
+              {bond.ratingGroup}
+            </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__currency + ' ' + styles.__turn}>
-            {bond.ccy}
-          </span>
+              {bond.ccy}
+            </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
-            <a className={styles.bondsSearch_info} href={'/bond/' + bond.isin} target="_blank">
-              <Icon glyph={GLYPHS.INFO}
-                    width="14" height="14" />
-            </a>
-          </span>
+              <a className={styles.bondsSearch_info} href={'/bond/' + bond.isin} target="_blank">
+                <Icon glyph={GLYPHS.INFO}
+              width="14" height="14" />
+              </a>
+            </span>
           </li>;
         });
 
@@ -147,14 +134,9 @@ class Search extends Component {
       });
 
       let actualBonds = 0;
-      let nonActualBonds = 0;
       for(let group of this.state.results) {
         for(let bond of group.bonds) {
-          if(bond.isActual) {
-            actualBonds++;
-          } else {
-            nonActualBonds++;
-          }
+          actualBonds++;
         }
       }
 
@@ -171,14 +153,8 @@ class Search extends Component {
                   <span>{actualBonds} actual bonds found</span>
               </span>
             }
-            { actualBonds == 0 && nonActualBonds > 0 &&
+            { actualBonds == 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>No actual bonds found.</span>
-            }
-            { nonActualBonds > 0 &&
-            <span className={styles.bondsSearch_cell + ' ' + styles.__expired}>
-                {/*<input className={styles.bondsSearch_checkbox} type="checkbox"/>*/}
-              {/*<span>show {nonActualBonds} others</span>*/}
-              </span>
             }
             <span className={styles.bondsSearch_cell + ' ' + styles.__yield}>Yield</span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__duration}>Duration</span>
@@ -218,10 +194,6 @@ class Search extends Component {
     );
   }
 }
-
-Search.propTypes = {
-  // layer: React.PropTypes.object.isRequired,
-};
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, { searchRequest, searchResponse })(Search);
