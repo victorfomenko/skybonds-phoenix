@@ -116,7 +116,7 @@ class Movers extends Component {
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
-                <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
+                <div className={style.reportAsideMoversTable_value}>{bond.staticData.standardName}</div>
               </td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{unitValue}</td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span>
@@ -134,7 +134,7 @@ class Movers extends Component {
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__name}>
-                <div className={style.reportAsideMoversTable_value}>{bond.staticData.name}</div>
+                <div className={style.reportAsideMoversTable_value}>{bond.staticData.standardName}</div>
               </td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__current}>{unitValue}</td>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__change}><span></span><span>{change}</span></td>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Promise from 'rsvp';
 import * as DataProvider from '../../data/providers/Data';
+import * as PortfolioProvider from '../../data/providers/Portfolio';
 import Picker from '../Picker';
 import ChartZoom from '../ChartZoom';
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
@@ -115,11 +116,13 @@ class ScatterPlot extends Component {
     if(isins.length) {
       Promise.all([
         DataProvider.getBondsInfo(isins),
-        DataProvider.getBondsDaily(isins, config.date, AVAILABLE_FIELDS)
+        DataProvider.getBondsDaily(isins, config.date, AVAILABLE_FIELDS),
+        PortfolioProvider.getIsinsByDate(config.date)
       ]).then((response) => {
         config.data = {
           info: this.transformArrayToMap(response[0]),
-          daily: this.transformArrayToMap(response[1])
+          daily: this.transformArrayToMap(response[1]),
+          portfolio: response[2].reduce((prev, current)=>{ prev[current] = true; return prev }, {})
         };
         this.refreshChart(isins, config);
       });
@@ -165,7 +168,9 @@ class ScatterPlot extends Component {
           'ratingGroup': data.info[ isin ][ 'ratingGroup' ],
           'liquidity': data.daily[ isin ] ? data.daily[ isin ][ 'liquidity' ] : null,
           [ axes.x ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.x ], { percent: axes.x }) : null,
-          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { percent: axes.y }) : null
+          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { percent: axes.y }) : null,
+          'inPortfolio': data.portfolio[ isin ],
+          'quantity': data.portfolio[ isin ]
         };
       }
     };

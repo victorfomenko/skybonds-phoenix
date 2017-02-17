@@ -1,7 +1,6 @@
 import * as DataApi from '../clients/DataApi';
 import * as PortfolioApi from '../clients/PortfolioApi';
 import NumberCaster from '../casters/NumberCaster';
-import DateDayCaster from '../casters/DateDayCaster';
 import {sortBy} from 'lodash';
 
 const moversLimitList = 5;
@@ -44,23 +43,22 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	    return Promise.all([
 	    	DataApi.getBondsInfo(Object.keys(moversData)),
 	    	DataApi.getBondsDaily(Object.keys(moversData), endDate, attrs),
-	    	PortfolioApi.getQuantityByDate(DateDayCaster.format(endDate))
+	    	PortfolioApi.getQuantityByDate(endDate)
 	    ]);
 	})
 	.then(resp => {
 		if(!!resp.error) return Promise.reject(resp);
-	    for (let dailyItem of resp[0]) {
-	    	moversData[dailyItem.isin].dailyData = dailyItem.data;
-	    }
-		for (let staticItem of resp[1]) {
-	    	moversData[staticItem.isin].staticData = staticItem.data;
-	    }
-
-		for (let portfolioItem of resp[2]) {
+    for (let staticItem of resp[0]) {
+      moversData[staticItem.isin].staticData = staticItem.data;
+    }
+    for (let dailyItem of resp[1]) {
+      moversData[dailyItem.isin].dailyData = dailyItem.data;
+    }
+    for (let portfolioItem of resp[2]) {
 			if(moversData[portfolioItem.isin]) {
 				moversData[portfolioItem.isin].inBondPortfolio = true;
 			}
-	    }
+    }
 		return moversData;
 	})
 	.catch(error => {
