@@ -31,7 +31,7 @@ class BondHeader extends Component {
         </ul>
 
         <div className={style.bondHeaderName}>
-          {this.props.bond.info.name}
+          {this.props.bond.info.standardName}
         </div>
 
         <ul className={style.bondHeaderInfo}>
