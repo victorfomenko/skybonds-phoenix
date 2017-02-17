@@ -22,6 +22,7 @@ class Filters extends Component {
   }
 
   formatPortfolio(filters, user) {
+    if(filters['portfolio'] != null) {return filters}
     if(isPortfolioScb(user)) {
       filters['portfolio'] = {
         values: [{name: 'Portfolio'}]
