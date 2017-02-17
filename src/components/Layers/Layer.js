@@ -33,6 +33,7 @@ class Layer extends Component {
 
   render(){
     let readonly = (this.state.renameMode) ? false : true;
+    console.log(this.props.name);
     return (
         <li className={layersStyle.reportLayersStrip_item + ' ' +(this.props.active ? layersStyle.__active : '')}>
           <div className={layersStyle.reportLayersStrip_content}>
@@ -60,6 +61,7 @@ class Layer extends Component {
             <div className={layersStyle.reportLayersStrip_name} onClick={this.onLayerClick.bind(this)} onDoubleClick={this.onLayerDblClick.bind(this)}>
               <input
                 type='text'
+                key={'layer_input_'+this.props.id}
                 defaultValue={this.props.name}
                 className={layersStyle.reportLayersStrip_name}
                 onKeyUp={this.onLayerRename.bind(this)}
