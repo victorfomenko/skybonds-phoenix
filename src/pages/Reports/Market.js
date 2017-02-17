@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
+import { getSpaces } from '../../data/providers/Spaces';
 import { isEqual, intersection } from 'lodash';
 
 import reportStyle from './style.sass';
@@ -17,6 +18,10 @@ class Market extends Component {
       totalIsins: [],
       reportID: props.match.params.reportID
     };
+    getSpaces().then(spaces=>{
+      console.log('market spaces:', spaces);  
+    });
+    
   }
 
   shouldComponentUpdate(nextProps, nextState){
