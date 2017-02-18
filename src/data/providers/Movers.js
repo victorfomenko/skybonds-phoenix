@@ -50,6 +50,7 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	.then(resp => {
 		if(!!resp.error) return Promise.reject(resp);
     for (let staticItem of resp[0]) {
+      moversData[staticItem.isin].isin = staticItem.isin;
       moversData[staticItem.isin].staticData = staticItem.data;
     }
     for (let dailyItem of resp[1]) {
