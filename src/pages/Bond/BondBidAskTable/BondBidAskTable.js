@@ -276,7 +276,7 @@ class BondBidAskTable extends Component {
                 <span className={style.bondBidAskTable_value + ' ' + style.__bid}>{NumberFormatter(quote.yieldBid, {
                   minFraction: 2,
                   maxFraction: 2,
-                  percent: true
+                  isPercent: true
                 })}</span>
                 :
                 <span className={style.bondBidAskTable_empty}>Last trade</span>
@@ -288,7 +288,7 @@ class BondBidAskTable extends Component {
                 <span className={style.bondBidAskTable_value + ' ' + style.__ask}>{NumberFormatter(quote.yieldAsk, {
                   minFraction: 2,
                   maxFraction: 2,
-                  percent: true
+                  isPercent: true
                 })}</span>
                 :
                 <span className={style.bondBidAskTable_empty}>Last trade</span>
@@ -426,14 +426,14 @@ class BondBidAskTable extends Component {
                   <span className={style.bondBidAskTable_value + ' ' + style.__bid}>{NumberFormatter(totals.yieldBid, {
                     minFraction: 2,
                     maxFraction: 2,
-                    percent: true
+                    isPercent: true
                   })}</span>
                 </td>
                 <td className={style.bondBidAskTable_cell + ' ' + style.__number + ' ' + style.__yield}>
                   <span className={style.bondBidAskTable_value + ' ' + style.__ask}>{NumberFormatter(totals.yieldAsk, {
                     minFraction: 2,
                     maxFraction: 2,
-                    percent: true
+                    isPercent: true
                   })}</span>
                 </td>
                 <td className={style.bondBidAskTable_cell + ' ' + style.__number + ' ' + style.__spread}>

@@ -53,6 +53,10 @@ describe('Formatters Suite', function () {
     ).to.equal('123456789.01');
 
     expect(
+      NumberFormatter(123456789.98765)
+    ).to.equal('123456789.99');
+
+    expect(
       NumberFormatter(123456789.01234, {})
     ).to.equal('123456789.01');
 
@@ -69,16 +73,32 @@ describe('Formatters Suite', function () {
     ).to.equal('123,456,789.01');
 
     expect(
-      NumberFormatter(123456789.01234, { percent: true } )
+      NumberFormatter(123456789.01234, { isPercent: true } )
     ).to.equal('12345678901.23');
 
     expect(
-      NumberFormatter(123456789.01234, { percent: 'yield' } )
+      NumberFormatter(123456789.01234, { isPercent: 'yield' } )
     ).to.equal('12345678901.23');
 
     expect(
-      NumberFormatter(123456789.01234, { percent: 'duration' } )
+      NumberFormatter(123456789.01234, { isPercent: 'duration' } )
     ).to.equal('123456789.01');
+
+    expect(
+      NumberFormatter(123456789, { asNumber: true })
+    ).to.equal(123456789);
+
+    expect(
+      NumberFormatter(123456789.01234, { asNumber: true })
+    ).to.equal(123456789.01);
+
+    expect(
+      NumberFormatter(123456789.98765, { asNumber: true, maxFraction: 4 })
+    ).to.equal(123456789.9877);
+
+    expect(
+      NumberFormatter(123456789.01234, { forceSign: true } )
+    ).to.equal('+123456789.01');
   });
 
 });

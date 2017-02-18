@@ -73,7 +73,9 @@ class ScatterPlot extends Component {
       yAxisPicker,
       activeXAxisPicker: 'duration',
       activeYAxisPicker: 'yield',
-      zoom: { scale: 1 }
+      zoom: {
+        scale: 1
+      }
     };
   }
 
@@ -167,8 +169,8 @@ class ScatterPlot extends Component {
           'name': data.info[ isin ][ 'standardName' ],
           'ratingGroup': data.info[ isin ][ 'ratingGroup' ],
           'liquidity': data.daily[ isin ] ? data.daily[ isin ][ 'liquidity' ] : null,
-          [ axes.x ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.x ], { percent: axes.x }) : null,
-          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { percent: axes.y }) : null,
+          [ axes.x ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.x ], { isPercent: axes.x, asNumber: true, placeholder: null }) : null,
+          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { isPercent: axes.y, asNumber: true, placeholder: null }) : null,
           'inPortfolio': data.portfolio[ isin ],
           'quantity': data.portfolio[ isin ]
         };
@@ -189,7 +191,7 @@ class ScatterPlot extends Component {
   }
 
   onZoomChange(scale) {
-    this.setState({ scale });
+    this.setState({ zoom: { scale } });
   }
 
   render() {

@@ -81,7 +81,7 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
               <span className={styles.bondsSearch_link}>
-                <span className={styles.bondsSearch_main}>{bond.name}</span>
+                <span className={styles.bondsSearch_main}>{bond.standardName}</span>
               </span>
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__yield + ' ' + styles.__turn}>
