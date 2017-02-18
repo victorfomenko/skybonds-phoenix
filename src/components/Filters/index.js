@@ -35,7 +35,7 @@ class Filters extends Component {
     // TODO !!Client date can be wrong!!
     // Better is get date from server
     let date = new Date();
-    date.setDate(date.getDate() - 2);
+    date.setDate(date.getDate() - 3);
     return date
   }
 
