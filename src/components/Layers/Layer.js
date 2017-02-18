@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import layersStyle from './layers.sass';
+import styles from './styles.sass';
 
 
 class Layer extends Component {
@@ -35,41 +35,41 @@ class Layer extends Component {
     let readonly = (this.state.renameMode) ? false : true;
     console.log(this.props.name);
     return (
-        <li className={layersStyle.reportLayersStrip_item + ' ' +(this.props.active ? layersStyle.__active : '')}>
-          <div className={layersStyle.reportLayersStrip_content}>
-            <div className={layersStyle.reportLayersView}>
+        <li className={styles.reportLayersStrip_item + ' ' +(this.props.active ? styles.__active : '')}>
+          <div className={styles.reportLayersStrip_content}>
+            <div className={styles.reportLayersView}>
               &#9662;
-              <div className={layersStyle.reportLayersView_wrap}>
-                <ul className={layersStyle.reportLayersView_list}>
-                  <li className={layersStyle.reportLayersView_item}>
-                    <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'bonds')}><span>Bonds</span></a>
+              <div className={styles.reportLayersView_wrap}>
+                <ul className={styles.reportLayersView_list}>
+                  <li className={styles.reportLayersView_item}>
+                    <a className={styles.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'bonds')}><span>Bonds</span></a>
                   </li>
-                  {/*<li className={layersStyle.reportLayersView_item}>
-                    <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'curves')}>
+                  {/*<li className={styles.reportLayersView_item}>
+                    <a className={styles.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'curves')}>
                       <span>Curves</span>
                     </a>
                   </li>
-                  <li className={layersStyle.reportLayersView_item}>
-                    <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'bonds&curves')}><span>Bonds &amp; Curves</span></a>
+                  <li className={styles.reportLayersView_item}>
+                    <a className={styles.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'bonds&curves')}><span>Bonds &amp; Curves</span></a>
                   </li>*/}
-                  <li className={layersStyle.reportLayersView_item}>
-                    <a className={layersStyle.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'hidden')}><span>Hidden</span></a>
+                  <li className={styles.reportLayersView_item}>
+                    <a className={styles.reportLayersView_link} onClick={this.onLayerViewChange.bind(this, 'hidden')}><span>Hidden</span></a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className={layersStyle.reportLayersStrip_name} onClick={this.onLayerClick.bind(this)} onDoubleClick={this.onLayerDblClick.bind(this)}>
+            <div className={styles.reportLayersStrip_name} onClick={this.onLayerClick.bind(this)} onDoubleClick={this.onLayerDblClick.bind(this)}>
               <input
                 type='text'
                 key={'layer_input_'+this.props.id}
                 defaultValue={this.props.name}
-                className={layersStyle.reportLayersStrip_name}
+                className={styles.reportLayersStrip_name}
                 onKeyUp={this.onLayerRename.bind(this)}
                 readOnly={readonly}
               />
 
             </div>
-            <span className={layersStyle.reportLayersStrip_closeIcon} onClick={this.onLayerClose.bind(this)}></span>
+            <span className={styles.reportLayersStrip_closeIcon} onClick={this.onLayerClose.bind(this)}></span>
           </div>
         </li>
     );
