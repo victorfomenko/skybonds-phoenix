@@ -33,7 +33,6 @@ class Layer extends Component {
 
   render(){
     let readonly = (this.state.renameMode) ? false : true;
-    console.log(this.props.name);
     return (
         <li className={styles.reportLayersStrip_item + ' ' +(this.props.active ? styles.__active : '')}>
           <div className={styles.reportLayersStrip_content}>

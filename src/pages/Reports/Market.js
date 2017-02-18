@@ -20,7 +20,6 @@ class Market extends Component {
       reportID: props.match.params.reportID
     };
     getSpaces().then(spaces=>{
-      console.log('market spaces:', spaces);
     });
 
   }
