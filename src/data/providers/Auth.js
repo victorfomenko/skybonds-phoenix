@@ -26,13 +26,16 @@ export const login = (email, password) => {
 };
 
 export const loginWithToken = async () => {
+	const token = localStorageProvider.load(ACCESS_TOKEN)
+	if(typeof token === 'undefined') return Promise.reject();
+	
 	return UserApi.current()
 	.then(resp => {
 		if(!!resp.error) return Promise.reject(resp);
 		localStorageProvider.save(USER_DATA, resp);
 		return {
 			...resp,
-			token: localStorageProvider.load(ACCESS_TOKEN)
+			token
 		};
 	})
   	.catch(error => {
