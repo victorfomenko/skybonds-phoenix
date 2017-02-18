@@ -4,6 +4,8 @@ import NumberCaster from '../casters/NumberCaster';
 import {sortBy} from 'lodash';
 
 const moversLimitList = 5;
+const INFO_FIELDS = ['standardName'];
+const DAILY_FIELDS = ['yield', 'price', 'spreadToBMK'];
 
 export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	let moversData = {};
@@ -39,10 +41,9 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	    for (let item of increase) {
 	    	moversData[item.isin] = { moverType: 'increase', change: item.change };
 	    }
-	    const attrs = ['yield', 'price', 'spreadToBMK'];
 	    return Promise.all([
-	    	DataApi.getBondsInfo(Object.keys(moversData)),
-	    	DataApi.getBondsDaily(Object.keys(moversData), endDate, attrs),
+	    	DataApi.getBondsInfo(Object.keys(moversData), INFO_FIELDS),
+	    	DataApi.getBondsDaily(Object.keys(moversData), endDate, DAILY_FIELDS),
 	    	PortfolioApi.getQuantityByDate(endDate)
 	    ]);
 	})
