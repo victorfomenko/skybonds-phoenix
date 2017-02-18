@@ -36,7 +36,6 @@ class Filters extends Component {
     // Better is get date from server
     let date = new Date();
     date.setDate(date.getDate() - 2);
-    console.log(date);
     return date
   }
 
