@@ -17,6 +17,7 @@ export const filtersApply = (filters, stats, details) => {
 
 	filters.filters.forEach(filter=>{
 		if(filter.name === 'portfolio') {
+			console.log(filter)
 			isPortfolio = true;
 		}
 	});

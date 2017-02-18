@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import {assign} from 'lodash';
 
 import Layer from './Layer';
-import Search from '../Search';
+import LayerSearch from './LayerSearch';
 import Filters from '../Filters';
-import layersStyle from './layers.sass';
+import layersStyle from './styles.sass';
 
 import {
         addLayer,
@@ -84,7 +84,7 @@ class Layers extends Component {
           </div>
           <div className={layersStyle.reportLayerSettings}>
             <div className={layersStyle.reportLayerSettings_search}>
-              <Search layer={layersState.layersById[layersState.activeLayer]} />
+              <LayerSearch layer={layersState.layersById[layersState.activeLayer]} />
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
               <Filters layer={layersState.layersById[layersState.activeLayer]} />

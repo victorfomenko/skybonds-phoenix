@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { searchRequest, searchResponse } from '../../actions';
 import { Icon, GLYPHS } from '../../components/Icon';
 import { getColor } from '../../helpers/BondRating';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
@@ -15,16 +13,16 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: props.layer.search.query,
-      results: props.layer.search.results,
+      query: props.query,
+      results: props.results,
       dropdownActive: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      query: nextProps.layer.search.query,
-      results: nextProps.layer.search.results
+      query: nextProps.query,
+      results: nextProps.results,
     });
   }
 
@@ -33,7 +31,7 @@ class Search extends Component {
   }
 
   sendSearchRequest = _.debounce((query, date) => {
-    this.props.searchRequest(this.props.layer.id, query, date);
+    this.props.sendSearchRequest(query, date);
   }, DEBOUNCE_DELAY);
 
   onSearchClear() {
@@ -195,5 +193,4 @@ class Search extends Component {
   }
 }
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers });
-export default connect(mapStateToProps, { searchRequest, searchResponse })(Search);
+export default Search;
