@@ -1,25 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { homeSearchRequest } from '../../actions';
+import Header from '../../components/Header';
+import Search from '../../components/Search';
 import { Link } from 'react-router-dom';
 import style from './style.sass';
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: props.search.query,
+      results: props.search.results,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    this.setState({
+      query: nextProps.search.query,
+      results: nextProps.search.results
+    });
+  }
+
+  sendSearchRequest(query, date) {
+    this.props.homeSearchRequest(query, date);
+  }
+
   render () {
     const { user } = this.props;
     return (
       <div className={style.home}>
-        <div>First name: {JSON.stringify(user.firstName)}</div>
-        <div>Last name: {JSON.stringify(user.lastName)}</div>
-        <div className={style.home_info}>
-          <span className={style.home_title}>Home page</span>
-          <ul className={style.home_list}>
-            <li className={style.home_item}><Link to={'/'}>Home</Link></li>
-            <li className={style.home_item}><Link to={'/reports/market'}>Market</Link></li>
-            {!user.token ? <li className={style.home_item}><Link to={'/login'}>Login</Link></li> : null}
-            {user.token ? <li className={style.home_item}><Link to={'/logout'}>Logout</Link></li> : null}
-          </ul>
+        <Header />
+        <div className={style.startPage_search}>
+          <Search
+            query={this.state.query}
+            results={this.state.results}
+            sendSearchRequest={this.sendSearchRequest.bind(this)}
+          />
         </div>
-
       </div>
     );
   }
@@ -29,5 +48,5 @@ class Home extends Component {
 Home.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
 };
-
-export default connect(state => ({ user: state.user }))(Home);
+const mapStateToProps = state => ({ user: state.user, search: state.home });
+export default connect(mapStateToProps, { homeSearchRequest})(Home);
