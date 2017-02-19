@@ -183,7 +183,7 @@ class BondGeneral extends Component {
 
     if(this.state.loaded){
       return (
-        <div className={style.bondGeneral}>
+        <div className={style.bondGeneral} id="general">
           <ul className={style.bondGeneralIssuer}>
             <li className={style.bondGeneralIssuer_item}>
               <a href={ '/issuer/' + bond.info.issuerId } className={'common-link' + ' ' + style.bondGeneralIissuer_link}>{issuer.issuer}</a>
