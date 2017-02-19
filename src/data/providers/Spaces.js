@@ -11,4 +11,7 @@ export const getSpaces = () => {
 		const result = SpacesCaster.cast(spaces);
 		return Promise.resolve(result);
 	})
+	.catch(err => {
+		console.warn(err);
+	})
 };

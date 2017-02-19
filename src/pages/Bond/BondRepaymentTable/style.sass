@@ -1,0 +1,90 @@
+.bondRepayment
+  display: block
+  width: calc(100% + 24px)
+  min-height: 120px
+  max-width: 640px
+  position: relative
+  z-index: 1
+  left: -12px
+  font-size: 14px
+  margin: 48px 0 0 0
+
+.bondRepaymentTitle
+  margin: 0 0 0 12px
+  font-size: 24px
+  line-height: 24px
+  font-weight: bold
+
+.bondRepaymentNote
+  margin: 3px 0 12px 12px
+
+.bondRepaymentTable
+  width: 100%
+  border-collapse: collapse
+
+.bondRepaymentTable_body
+  .bondRepaymentTable_row:hover
+    background-color: #f5f5f5
+
+.bondRepaymentTable_cell
+  position: relative
+  padding: 3px 0 0 20px
+  vertical-align: bottom
+  &:first-child
+    padding-left: 12px
+  &:last-child
+    padding-right: 20px
+  &.__header
+    vertical-align: top
+    font-weight: bold
+    padding-bottom: 2px
+  &.__subheader
+    padding-top: 0
+    padding-bottom: 5px
+    vertical-align: top
+    color: #999
+    font-size: 12px
+    font-weight: normal
+  &.__date
+    padding-left: 12px
+    text-align: right
+    white-space: nowrap
+  &.__text
+    text-align: left
+    white-space: nowrap
+  &.__issue
+    padding-left: .25em
+  &.__number
+    text-align: right
+    &:empty:before
+      content: "0"
+      color: #CCC
+td.bondRepaymentTable_cell
+  &.__text
+  &.__number
+    font-family: monospace
+    font-size: 15px
+    letter-spacing: -.0625em
+.bondRepaymentTable_row.__past
+  .bondRepaymentTable_cell
+    color: #999
+.bondRepaymentTable_row.__last
+  border-bottom: 1px solid #CCC
+  &:last-child
+    border-bottom: none
+    .bondRepaymentTable_cell
+      padding-bottom: 3px
+  .bondRepaymentTable_cell
+    padding-bottom: 6px
+.bondRepaymentTable_row.__last + .bondRepaymentTable_row
+  .bondRepaymentTable_cell
+    padding-top: 6px
+
+.bondRepaymentTable_more
+  display: block
+  cursor: pointer
+  padding: 3px 0
+  text-align: center
+  background-color: #ECF2F8
+  &:hover
+    background-color: #D0E2F4
