@@ -64,7 +64,7 @@ class Market extends Component {
   render(){
     return (
       <div className='skybondsWrap'>
-        <Header />
+        <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
         <div className={reportStyle.reportWrap}>
           <div className={reportStyle.reportHeader}>
             <Layers />
@@ -91,5 +91,5 @@ class Market extends Component {
 }
 
 
-const mapStateToProps = state => ({ market: state.reports.market });
+const mapStateToProps = state => ({ user: state.user, market: state.reports.market });
 export default connect(mapStateToProps)(Market);
