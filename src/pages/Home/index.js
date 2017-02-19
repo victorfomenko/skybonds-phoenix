@@ -16,7 +16,6 @@ class Home extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
     this.setState({
       query: nextProps.search.query,
       results: nextProps.search.results
@@ -31,8 +30,8 @@ class Home extends Component {
     const { user } = this.props;
     return (
       <div className={style.home}>
-        <Header />
-        <div className={style.startPage_search}>
+        <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
+        <div className={style.home_search}>
           <Search
             query={this.state.query}
             results={this.state.results}
