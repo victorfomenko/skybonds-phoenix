@@ -31,12 +31,12 @@ class Filters extends Component {
     return JSON.parse(JSON.stringify(filters))
   }
 
-  getYesterday(){
+  getDate(){
     // TODO !!Client date can be wrong!!
     // Better is get date from server
     let date = new Date();
-    date.setDate(date.getDate() - 2);
-    return date.toJSON().slice(0,10).replace(/-/g,'');
+    date.setDate(date.getDate() - 3);
+    return date
   }
 
   formatFilters(selectedFilters) {
@@ -54,7 +54,7 @@ class Filters extends Component {
     }
     delete selectedFilters['range']
     let filtersProviderParams = {'filters': selectedFilters};
-    filtersProviderParams['date'] = this.getYesterday();;
+    filtersProviderParams['date'] = this.getDate();
 
     return filtersProviderParams;
   }

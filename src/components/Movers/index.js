@@ -111,7 +111,10 @@ class Movers extends Component {
 
         if(bond.moverType == 'increase') {
           increase.push(
-            <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
+            <tr key={'marketmover_' + key }
+                className={style.reportAsideMoversTable_row}
+                onMouseEnter={() => this.props.onActiveIsinChange(bond.isin)}
+                onMouseLeave={() => this.props.onActiveIsinChange(null)}>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
@@ -129,7 +132,10 @@ class Movers extends Component {
         }
         else if(bond.moverType == 'decrease') {
           decrease.push(
-            <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
+            <tr key={'marketmover_' + key }
+                className={style.reportAsideMoversTable_row}
+                onMouseEnter={() => this.props.onActiveIsinChange(bond.isin)}
+                onMouseLeave={() => this.props.onActiveIsinChange(null)}>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
@@ -207,7 +213,8 @@ class Movers extends Component {
 }
 
 Movers.propTypes = {
-  loadMovers: React.PropTypes.func.isRequired
+  loadMovers: React.PropTypes.func.isRequired,
+  onActiveIsinChange: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ movers: state.reports.market.movers });

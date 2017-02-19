@@ -31,13 +31,14 @@ export const searchRequest = (id, query, date) => async (dispatch) => {
           issuerName: response.issuers[i].name,
           bonds: []
         };
-        for(let b = 0; b < response.bonds.length; b++) {
-          if(response.bonds[b].issuerId == response.issuers[i].id) {
-            response.bonds[b].isActual = isBondActual(response.bonds[b], date);
-            group.bonds.push(response.bonds[b]);
+        for(let b = 0; b < actualBonds.length; b++) {
+          if(actualBonds[b].issuerId == response.issuers[i].id) {
+            group.bonds.push(actualBonds[b]);
           }
         }
-        data.push(group);
+        if(group.bonds.length) {
+          data.push(group);
+        }
       }
 
       dispatch({ type: actionTypes.SEARCH_RESPONSE, id, query, data, isins: actualIsins });

@@ -47,7 +47,8 @@ const DEFAULT_CONFIG = {
 
 const DEFAULT_DATE = new Date('2017/02/05');
 
-const AVAILABLE_FIELDS = ['yield', 'price', 'spreadToBMK', 'duration', 'yearsToPutCallMaturity', 'liquidity'];
+const INFO_FIELDS = ['standardName', 'ratingGroup'];
+const DAILY_FIELDS = ['yield', 'price', 'spreadToBMK', 'duration', 'yearsToPutCallMaturity', 'liquidity'];
 
 class ScatterPlot extends Component {
 
@@ -73,20 +74,22 @@ class ScatterPlot extends Component {
       yAxisPicker,
       activeXAxisPicker: 'duration',
       activeYAxisPicker: 'yield',
-      zoom: { scale: 1 }
+      zoom: {
+        scale: 1
+      }
     };
   }
 
   componentWillMount() {
     this.initChart();
-    // TODO: this hack enforces recalculation of chart borders, on this elsewhere
+    // TODO: this hack enforces recalculation of chart borders, do this elsewhere
     setTimeout(()=>{
       window.dispatchEvent(new Event('resize'));
     }, 100);
   }
 
   componentWillReceiveProps(props) {
-    this.updateChart(props.isins);
+    this.updateChart(props.isins, props.activeIsin);
   }
 
   initChart() {
@@ -100,7 +103,7 @@ class ScatterPlot extends Component {
     this.chartDocument = new ChartDocument(chartDocumentConfig);
   }
 
-  updateChart(isins = []) {
+  updateChart(isins = [], activeIsin) {
     let config = {
       date: DEFAULT_DATE,
       axes: {
@@ -109,14 +112,16 @@ class ScatterPlot extends Component {
       },
       data: {
         info: {},
-        daily: {}
-      }
+        daily: {},
+        portfolio: {}
+      },
+      activeIsin: activeIsin
     };
 
     if(isins.length) {
       Promise.all([
-        DataProvider.getBondsInfo(isins),
-        DataProvider.getBondsDaily(isins, config.date, AVAILABLE_FIELDS),
+        DataProvider.getBondsInfo(isins, INFO_FIELDS),
+        DataProvider.getBondsDaily(isins, config.date, DAILY_FIELDS),
         PortfolioProvider.getIsinsByDate(config.date)
       ]).then((response) => {
         config.data = {
@@ -140,16 +145,17 @@ class ScatterPlot extends Component {
   }
 
   refreshChart(isins, config) {
-    this.dotsSetsPlugin.update( this.getDotsSetsConfig(isins, config.date) );
+    this.dotsSetsPlugin.update( this.getDotsSetsConfig(isins, config.date, config.activeIsin) );
     this.chartDocument.update( this.getChartConfig(config.data, config.axes) );
   }
 
-  getDotsSetsConfig(isins, date) {
+  getDotsSetsConfig(isins, date, activeIsin) {
     return {
       dotsSets: [{
         isins: isins,
         date: date,
-        opacity: 1
+        opacity: 1,
+        highlight: activeIsin
       }]
     };
   }
@@ -167,10 +173,10 @@ class ScatterPlot extends Component {
           'name': data.info[ isin ][ 'standardName' ],
           'ratingGroup': data.info[ isin ][ 'ratingGroup' ],
           'liquidity': data.daily[ isin ] ? data.daily[ isin ][ 'liquidity' ] : null,
-          [ axes.x ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.x ], { percent: axes.x }) : null,
-          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { percent: axes.y }) : null,
+          [ axes.x ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.x ], { isPercent: axes.x, asNumber: true, placeholder: null }) : null,
+          [ axes.y ]: data.daily[ isin ] ? NumberFormatter(data.daily[ isin ][ axes.y ], { isPercent: axes.y, asNumber: true, placeholder: null }) : null,
           'inPortfolio': data.portfolio[ isin ],
-          'quantity': data.portfolio[ isin ]
+          'quantity': data.portfolio[ isin ] ? 1 : 0
         };
       }
     };
@@ -189,7 +195,7 @@ class ScatterPlot extends Component {
   }
 
   onZoomChange(scale) {
-    this.setState({ scale });
+    this.setState({ zoom: { scale } });
   }
 
   render() {
@@ -223,6 +229,7 @@ class ScatterPlot extends Component {
 }
 
 ScatterPlot.propTypes = {
+  onActiveIsinChange: React.PropTypes.func.isRequired
 };
 
 export default ScatterPlot;

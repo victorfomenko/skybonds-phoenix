@@ -18,7 +18,7 @@ export const login = ({ email, password }) => async (dispatch) => {
 
 export const loginWithToken = () => async (dispatch) => {
   const token = localStorageProvider.load(ACCESS_TOKEN);
-
+  
   if (typeof token === 'undefined') return;
 
   dispatch({ type: actionTypes.LOGIN_REQUEST });

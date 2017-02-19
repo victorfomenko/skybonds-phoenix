@@ -5,6 +5,12 @@ const API_V1 = '/api/v1/data/';
 const API_V2 = '/api/v2/data/';
 
 export const filtersApply = (filters={}, stats=false, details=false) => {
+  if(filters.date != null){
+    filters = {
+      ...filters,
+      date: DateDayCaster.format(filters.date)
+    }
+  }
   return requestProvider.post({
     url: API_V2 + 'filters/apply',
     body: filters,
@@ -15,10 +21,11 @@ export const filtersApply = (filters={}, stats=false, details=false) => {
   });
 };
 
-export const getBondsInfo = (isins) => {
+export const getBondsInfo = (isins, attrs = []) => {
   return requestProvider.post({
     url: API_V1 + 'bonds/info',
-    body: isins
+    body: isins,
+    qs: { attrs }
   });
 };
 
