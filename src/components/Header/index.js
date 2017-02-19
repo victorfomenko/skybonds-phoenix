@@ -8,7 +8,7 @@ class Header extends Component {
     return (
       <div className={styles.header}>
         <nav className={styles.headerNav}>
-          <Link className={styles.headerNav_home} to={'/home'}>Skybonds</Link>
+          <Link className={styles.headerNav_home} to={'/'}>Skybonds</Link>
           <ul className={styles.headerNav_list}>
             <li className={styles.headerNav_item}>
               <Link className={styles.headerNav_text} to={'/reports/market'}>Market report</Link>
