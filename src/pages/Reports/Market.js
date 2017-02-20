@@ -37,18 +37,22 @@ class Market extends Component {
   }
 
   calcTotalIsins(layers){
+
     const isins = [];
     for(const key in layers) {
+      const searchIsins = layers[key].dataComputed.search.bonds.map(bond=>{return bond.isin});
+      const filtersIsins = layers[key].dataComputed.filters.isins;
+
       if(layers[key].viewMode != 'hidden'){
-        if(layers[key].searchIsins.length && layers[key].filtersIsins.length) {
+        if(searchIsins.length && filtersIsins.length) {
           isins.push(intersection(
-            layers[key].filtersIsins,
-            layers[key].searchIsins)
+            filtersIsins,
+            searchIsins)
           );
-        } else if (layers[key].searchIsins.length) {
-          isins.push(layers[key].searchIsins);
-        } else if (layers[key].filtersIsins.length) {
-          isins.push(layers[key].filtersIsins);
+        } else if (searchIsins.length) {
+          isins.push(searchIsins);
+        } else if (filtersIsins.length) {
+          isins.push(filtersIsins);
         }
       }
       else {

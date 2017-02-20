@@ -9,13 +9,13 @@ import { isPortfolioScb } from '../../helpers/portfolio';
 class Filters extends Component {
   constructor(props) {
     super(props);
-    let filters = this.formatPortfolio(props.layer.filters, props.user)
+    let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user)
     this.state = { filters };
     this.onFiltersChange = this.onFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    let filters = this.formatPortfolio(nextProps.layer.filters, this.props.user)
+    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user)
     this.setState({
       filters: filters
     });

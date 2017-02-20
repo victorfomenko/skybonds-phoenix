@@ -250,12 +250,6 @@ const initialState = {
     1: {
       id : 1,
       name : 'Empty set',
-      search: {
-        query: ''
-      },
-      filters : cloneDeep(filters),
-      searchIsins: [],
-      filtersIsins: [],
       totalIsins: [],
       // dataSource and dataComputed are a reflection of a new spaces API
       dataSource: {
@@ -263,7 +257,7 @@ const initialState = {
           query: '',
           peersFor: []
         },
-        filters: [],
+        filters: cloneDeep(filters),
         include: [],
         exclude: []
       },
@@ -298,9 +292,6 @@ const layers = (state = initialState, action) => {
             search: {
               query: ''
             },
-            filters : cloneDeep(filters),
-            searchIsins: [],
-            filtersIsins: [],
             totalIsins: [],
             // dataSource and dataComputed are a reflection of a new spaces API
             dataSource: {
@@ -308,7 +299,7 @@ const layers = (state = initialState, action) => {
                 query: '',
                 peersFor: []
               },
-              filters: [],
+              filters: cloneDeep(filters),
               include: [],
               exclude: []
             },
@@ -383,8 +374,10 @@ const layers = (state = initialState, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
-              search: {...layer.search,
-                query: action.query
+              dataSource: {...layer.dataSource,
+                search: {...layer.dataSource.search,
+                  query: action.query
+                },
               },
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
@@ -417,8 +410,11 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, filters: action.filters} :
-            layer;
+            {...layer,
+              dataSource: {...layer.dataSource,
+                filters: action.filters
+              }
+            } : layer;
         })
       };
 
@@ -429,8 +425,13 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, filtersIsins: action.isins} :
-            layer;
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                filters: {...layer.dataComputed.filters,
+                  isins: action.isins
+                },
+              }
+            } : layer;
         })
       };
 

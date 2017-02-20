@@ -26,7 +26,6 @@ class Home extends Component {
   }
 
   render () {
-    const { user } = this.props;
     return (
       <div className={style.home}>
         <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
