@@ -45,18 +45,16 @@ class Market extends Component {
         continue;
       }
 
-      const searchQuery = layer.dataSource.search.query;
       const searchIsins = layer.dataComputed.search.bonds.map(bond=>{return bond.isin});
+      const searchQuery = layer.dataSource.search.query;
       const filtersIsins = layer.dataComputed.filters.isins;
 
-      if(filtersIsins.length) {
-        if(searchIsins.length) {
-          result = [...result, ...intersection(filtersIsins, searchIsins)]
-        } else if (searchQuery.length == 0) {
-          result = [...result, ...filtersIsins];
-        }
+      if (searchIsins.length && filtersIsins.length) {
+        result = [...result, ...intersection(searchIsins, filtersIsins)];
       } else if (searchIsins.length) {
         result = [...result, ...searchIsins];
+      } else if(filtersIsins.length && searchQuery.length == 0) {
+        result = [...result, ...filtersIsins];
       }
     }
 
