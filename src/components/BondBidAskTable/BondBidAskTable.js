@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import * as Rates from '../../../data/providers/Rates';
-import * as Market from '../../../data/providers/Market';
-import NumberFormatter from '../../../helpers/formatters/NumberFormatter';
-import DateFormatter from '../../../helpers/formatters/DateFormatter';
+import * as Rates from '../../data/providers/Rates';
+import * as Market from '../../data/providers/Market';
+import NumberFormatter from '../../helpers/formatters/NumberFormatter';
+import DateFormatter from '../../helpers/formatters/DateFormatter';
 import style from './style.sass';
 
 class BondBidAskTable extends Component {

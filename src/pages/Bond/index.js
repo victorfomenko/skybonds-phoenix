@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as Data from '../../data/providers/Data';
 import Promise from 'rsvp';
-import BondHeader from './BondHeader/BondHeader';
-import BondGeneral from './BondGeneral/BondGeneral';
-import BondBidAskTable from './BondBidAskTable/BondBidAskTable';
-import BondRepaymentTable from './BondRepaymentTable/BondRepaymentTable';
+import BondHeader from '../../components/BondHeader/BondHeader';
+import BondGeneral from '../../components/BondGeneral/BondGeneral';
+import BondBidAskTable from '../../components/BondBidAskTable/BondBidAskTable';
+import BondRepaymentTable from '../../components/BondRepaymentTable/BondRepaymentTable';
 import ScatterPlot from '../../components/ScatterPlot';
 import style from './style.sass';
 
