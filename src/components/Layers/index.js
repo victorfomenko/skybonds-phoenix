@@ -83,7 +83,8 @@ class Layers extends Component {
               <LayerSearch layer={layersState.layersById[layersState.activeLayer]} />
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
-              <Filters key={'filters_' + layersState.activeLayer} layer={layersState.layersById[layersState.activeLayer]} />
+              <Filters key={'filters_' + layersState.activeLayer}
+                       layer={layersState.layersById[layersState.activeLayer]} />
             </div>
           </div>
         </div>

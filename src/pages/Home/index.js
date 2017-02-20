@@ -33,8 +33,7 @@ class Home extends Component {
           <Search
             query={this.state.query}
             bonds={this.state.bonds}
-            sendSearchRequest={this.sendSearchRequest.bind(this)}
-          />
+            sendSearchRequest={this.sendSearchRequest.bind(this)} />
         </div>
       </div>
     );

@@ -119,29 +119,29 @@ class Search extends Component {
           </li>;
         });
 
-        return <div className={styles.bondsSearch_group}
-                    onMouseDown={this.onDropdownMouseDown.bind(this)}
-                    key={ 'search_result_group_key_' + index }>
+        return <li className={styles.bondsSearch_group}
+                   onMouseDown={this.onDropdownMouseDown.bind(this)}
+                   key={ 'search_result_group_key_' + index }>
           <div className={styles.bondsSearch_item + ' ' + styles.__head }>
-          <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
-           {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
-           </span>
-            <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
-            <span className={styles.bondsSearch_link}>
-              <span className={styles.bondsSearch_main}>{group.issuerName}</span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
+              {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
             </span>
-          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
+              <span className={styles.bondsSearch_link}>
+                <span className={styles.bondsSearch_main}>{group.issuerName}</span>
+              </span>
+            </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
-            <a className={styles.bondsSearch_info} href={'/issuer/' + group.issuerId} target="_blank">
-              <Icon glyph={GLYPHS.INFO}
-                    width="14" height="14" />
-            </a>
-          </span>
+              <a className={styles.bondsSearch_info} href={'/issuer/' + group.issuerId} target="_blank">
+                <Icon glyph={GLYPHS.INFO}
+                      width="14" height="14" />
+              </a>
+            </span>
           </div>
           <ul>
             { searchGroupBonds }
           </ul>
-        </div>;
+        </li>;
       });
 
       searchDropdown =
