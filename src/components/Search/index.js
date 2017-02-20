@@ -35,7 +35,8 @@ class Search extends Component {
   }, DEBOUNCE_DELAY);
 
   onSearchClear() {
-    this.setState({ query: '' })
+    this.setState({ query: '' });
+    this.sendSearchRequest('', defaultDate);
   }
 
   onDropdownMouseDown(e) {
