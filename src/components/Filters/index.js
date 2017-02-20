@@ -28,7 +28,7 @@ class Filters extends Component {
         values: [{name: 'Portfolio'}]
       }
     }
-    return JSON.parse(JSON.stringify(filters))
+    return filters;
   }
 
   getDate(){
