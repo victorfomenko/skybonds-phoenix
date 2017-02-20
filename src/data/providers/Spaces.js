@@ -11,7 +11,7 @@ export const getSpaces = () => {
 		const result = spaces.map(item=>{return SpaceCaster.cast(item);})
 		return Promise.resolve(result);
 	})
-	.catch(error => {
-		console.warn(error);
+	.catch(err => {
+		console.warn(err);
 	})
 };

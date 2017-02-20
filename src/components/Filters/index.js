@@ -11,7 +11,7 @@ class Filters extends Component {
     super(props);
     let filters = this.formatPortfolio(props.layer.filters, props.user)
     this.state = { filters };
-    this.handleFiltersChange = this.handleFiltersChange.bind(this);
+    this.onFiltersChange = this.onFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -28,14 +28,14 @@ class Filters extends Component {
         values: [{name: 'Portfolio'}]
       }
     }
-    return JSON.parse(JSON.stringify(filters))
+    return filters;
   }
 
   getDate(){
     // TODO !!Client date can be wrong!!
     // Better is get date from server
     let date = new Date();
-    date.setDate(date.getDate() - 2);
+    date.setDate(date.getDate() - 3);
     return date
   }
 
@@ -59,7 +59,7 @@ class Filters extends Component {
     return filtersProviderParams;
   }
 
-  async handleFiltersChange({ selected, all }) {
+  async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
     const { result, stats } = await DataProvider.filtersApply(filters, true);
     const newFilters = this.makeViewModel(stats, all);
@@ -125,7 +125,7 @@ class Filters extends Component {
       <UIFilters
         filters={this.state.filters}
         onStateChange={state=>{
-          this.handleFiltersChange({selected: state.selected, all: state.all});
+          this.onFiltersChange({selected: state.selected, all: state.all});
         }}
       />
     );

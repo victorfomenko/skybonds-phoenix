@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import * as Data from '../../../data/providers/Data';
-import * as Rates from '../../../data/providers/Rates';
+import * as Data from '../../data/providers/Data';
+import * as Rates from '../../data/providers/Rates';
 import { connect } from 'react-redux';
 import Promise from 'rsvp';
 import style from './style.sass';
-import { getColor, getSynonym } from '../../../helpers/BondRating';
-import DateFormatter from '../../../helpers/formatters/DateFormatter';
-import NumberFormatter from '../../../helpers/formatters/NumberFormatter';
-import { isPortfolioScb } from '../../../helpers/portfolio';
+import { getColor, getSynonym } from '../../helpers/BondRating';
+import DateFormatter from '../../helpers/formatters/DateFormatter';
+import NumberFormatter from '../../helpers/formatters/NumberFormatter';
+import { isPortfolioScb } from '../../helpers/portfolio';
 
 class BondGeneral extends Component {
   constructor(props) {
@@ -183,7 +183,7 @@ class BondGeneral extends Component {
 
     if(this.state.loaded){
       return (
-        <div className={style.bondGeneral}>
+        <div className={style.bondGeneral} id="general">
           <ul className={style.bondGeneralIssuer}>
             <li className={style.bondGeneralIssuer_item}>
               <a href={ '/issuer/' + bond.info.issuerId } className={'common-link' + ' ' + style.bondGeneralIissuer_link}>{issuer.issuer}</a>

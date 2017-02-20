@@ -51,8 +51,8 @@ export const filtersApply = (filters, stats, details) => {
 };
 
 
-export const getBondsInfo = (isins) => {
-	return DataApi.getBondsInfo(isins);
+export const getBondsInfo = (isins, attrs) => {
+	return DataApi.getBondsInfo(isins, attrs);
 };
 
 export const getBondsDaily = (isins, date, attrs) => {

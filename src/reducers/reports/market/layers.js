@@ -1,5 +1,5 @@
 import { actionTypes } from '../../../actions/actionTypes';
-import { omit, mapValues, assign } from 'lodash';
+import { omit, mapValues, assign, cloneDeep } from 'lodash';
 
 
 const filters = {
@@ -254,7 +254,7 @@ const initialState = {
         query: '',
         results: []
       },
-      filters : filters,
+      filters : cloneDeep(filters),
       searchIsins: [],
       filtersIsins: [],
       totalIsins: [],
@@ -280,7 +280,7 @@ const layers = (state = initialState, action) => {
               query: '',
               results: []
             },
-            filters: filters,
+            filters : cloneDeep(filters),
             searchIsins: [],
             filtersIsins: [],
             totalIsins: [],
@@ -327,7 +327,7 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
-    case actionTypes.SEARCH_REQUEST:
+    case actionTypes.LAYER_SEARCH_REQUEST:
       // should change state.query
       return state;
     // return {
@@ -339,7 +339,7 @@ const layers = (state = initialState, action) => {
     //   })
     // };
 
-    case actionTypes.SEARCH_RESPONSE:
+    case actionTypes.LAYER_SEARCH_RESPONSE:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {

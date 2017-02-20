@@ -21,10 +21,11 @@ export const filtersApply = (filters={}, stats=false, details=false) => {
   });
 };
 
-export const getBondsInfo = (isins) => {
+export const getBondsInfo = (isins, attrs = []) => {
   return requestProvider.post({
     url: API_V1 + 'bonds/info',
-    body: isins
+    body: isins,
+    qs: { attrs }
   });
 };
 

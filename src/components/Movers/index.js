@@ -66,12 +66,12 @@ class Movers extends Component {
     return { startDate, endDate };
   }
 
-  handleUnitChange(unit) {
+  onUnitChange(unit) {
     let periods = this.getPeriodRange(this.props.movers.selectedPeriod);
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, this.props.movers.selectedPeriod, unit);
   }
 
-  handlePeriodChange(period) {
+  onPeriodChange(period) {
     let periods = this.getPeriodRange(period);
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, period, this.props.movers.selectedUnit);
   }
@@ -111,7 +111,10 @@ class Movers extends Component {
 
         if(bond.moverType == 'increase') {
           increase.push(
-            <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
+            <tr key={'marketmover_' + key }
+                className={style.reportAsideMoversTable_row}
+                onMouseEnter={() => this.props.onActiveIsinChange(bond.isin)}
+                onMouseLeave={() => this.props.onActiveIsinChange(null)}>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
@@ -129,7 +132,10 @@ class Movers extends Component {
         }
         else if(bond.moverType == 'decrease') {
           decrease.push(
-            <tr key={'marketmover_' + key } className={style.reportAsideMoversTable_row}>
+            <tr key={'marketmover_' + key }
+                className={style.reportAsideMoversTable_row}
+                onMouseEnter={() => this.props.onActiveIsinChange(bond.isin)}
+                onMouseLeave={() => this.props.onActiveIsinChange(null)}>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
@@ -153,7 +159,7 @@ class Movers extends Component {
           <div className={style.reportAsideMoversUnit}>
             <ButtonGroup
               buttons={this.state.unitList}
-              onButtonClick={this.handleUnitChange.bind(this)}
+              onButtonClick={this.onUnitChange.bind(this)}
               selectedButton={movers.selectedUnit}
             />
           </div>
@@ -161,7 +167,7 @@ class Movers extends Component {
           <div className={style.reportAsideMoversPeriod}>
             <ButtonGroup
               buttons={this.state.periodList}
-              onButtonClick={this.handlePeriodChange.bind(this)}
+              onButtonClick={this.onPeriodChange.bind(this)}
               selectedButton={movers.selectedPeriod}
             />
           </div>
@@ -207,7 +213,8 @@ class Movers extends Component {
 }
 
 Movers.propTypes = {
-  loadMovers: React.PropTypes.func.isRequired
+  loadMovers: React.PropTypes.func.isRequired,
+  onActiveIsinChange: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ movers: state.reports.market.movers });

@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as Data from '../../data/providers/Data';
 import Promise from 'rsvp';
-import BondHeader from './BondHeader/BondHeader';
-import BondGeneral from './BondGeneral/BondGeneral';
-import BondBidAskTable from './BondBidAskTable/BondBidAskTable';
+import BondHeader from '../../components/BondHeader/BondHeader';
+import BondGeneral from '../../components/BondGeneral/BondGeneral';
+import BondBidAskTable from '../../components/BondBidAskTable/BondBidAskTable';
+import BondRepaymentTable from '../../components/BondRepaymentTable/BondRepaymentTable';
 import ScatterPlot from '../../components/ScatterPlot';
 import style from './style.sass';
 
-const defaultDate = new Date('2017/02/14');
+const defaultDate = new Date('2017/02/17');
 
 class Bond extends Component {
 
@@ -47,7 +48,7 @@ class Bond extends Component {
   render(){
 
     const bond = this.state;
-
+    const date = this.state.date;
     if(this.state.loaded){
       return (
         <div className='skybondsWrap'>
@@ -60,6 +61,10 @@ class Bond extends Component {
             />
             <BondBidAskTable
               bond={bond}
+            />
+            <BondRepaymentTable
+              bond={bond}
+              date={date}
             />
           </div>
         </div>

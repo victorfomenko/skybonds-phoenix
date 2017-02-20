@@ -16,12 +16,12 @@ class Market extends Component {
     this.state = {
       reportName: 'Reports',
       totalIsins: [],
+      activeIsin: '',
       reportID: props.match.params.reportID
     };
     getSpaces().then(spaces=>{
-      console.log('market spaces:', spaces);  
     });
-    
+
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -57,10 +57,14 @@ class Market extends Component {
     return _.union(...isins).slice(0, 200);
   }
 
+  onActiveIsinChange(isin) {
+    this.setState({ activeIsin: isin });
+  }
+
   render(){
     return (
       <div className='skybondsWrap'>
-        <Header />
+        <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
         <div className={reportStyle.reportWrap}>
           <div className={reportStyle.reportHeader}>
             <Layers />
@@ -68,10 +72,15 @@ class Market extends Component {
           <div className={reportStyle.reportView}>
             <div className={reportStyle.reportViewScatterPlot}>
               <div className={reportStyle.reportView_content}>
-                <ScatterPlot isins={this.state.totalIsins} />
+                <ScatterPlot
+                  isins={this.state.totalIsins}
+                  activeIsin={this.state.activeIsin}
+                  onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
               <div className={reportStyle.reportView_aside}>
-                <Movers isins={this.state.totalIsins} />
+                <Movers
+                  isins={this.state.totalIsins}
+                  onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
             </div>
           </div>
@@ -82,5 +91,5 @@ class Market extends Component {
 }
 
 
-const mapStateToProps = state => ({ market: state.reports.market });
+const mapStateToProps = state => ({ user: state.user, market: state.reports.market });
 export default connect(mapStateToProps)(Market);

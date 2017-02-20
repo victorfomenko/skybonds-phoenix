@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import * as Rates from '../../../data/providers/Rates';
-import * as Market from '../../../data/providers/Market';
-import NumberFormatter from '../../../helpers/formatters/NumberFormatter';
-import DateFormatter from '../../../helpers/formatters/DateFormatter';
+import * as Rates from '../../data/providers/Rates';
+import * as Market from '../../data/providers/Market';
+import NumberFormatter from '../../helpers/formatters/NumberFormatter';
+import DateFormatter from '../../helpers/formatters/DateFormatter';
 import style from './style.sass';
 
 class BondBidAskTable extends Component {
@@ -12,14 +12,23 @@ class BondBidAskTable extends Component {
       'loaded': false
     }
     this._initValues()
-    this.localCurrency = 'RUB';
-    this.type = 'full'
   }
 
   componentWillMount() {
     this.initData(this.props.bond);
   }
 
+  _initValues() {
+    this.quotes = [];
+    this.priceBidMax = null;
+    this.priceAskMin = null;
+    this.totals = {};
+    this.localCurrency = 'RUB';
+    this.type = 'full'
+    this.timestamp = null;
+    this.currencyRate = null;
+    this.principal = null;
+  }
 
   async initData(bond = null) {
     if (bond.daily != null) {
@@ -28,27 +37,14 @@ class BondBidAskTable extends Component {
 
       let bondCurrency = bond.info.ccy;
 
-      let currencyRate =  (bond.info.ccy == this.localCurrency) ? 1 : rates[bondCurrency];
-      let principal = bond.daily.principal || bond.info.principal;
+      this.currencyRate =  (bond.info.ccy == this.localCurrency) ? 1 : rates[bondCurrency];
+      this.principal = bond.daily.principal || bond.info.principal;
 
       this._prepareData(market.data)
       this.setState({
         'loaded': true
       })
     }
-  }
-
-  _initValues() {
-    this.quotes = [];
-    this.priceBidMax = null;
-    this.priceAskMin = null;
-    this.totals = {};
-    let timestamp = null;
-    let localCurrency = 'RUB';
-    let currencyRate = null;
-    let principal = null;
-    let timeoutUpdate = null;
-
   }
 
   _prepareData(marketData) {
@@ -346,7 +342,7 @@ class BondBidAskTable extends Component {
       });
 
       return (
-        <div className={style.bondBidAskTable}>
+        <div className={style.bondBidAskTable} id="bidask">
           <div className={style.bondBidAskTable_wrap + ' ' + style.__full}>
             <div className={style.bondBidAskTable_title}>
               <span className={style.bondBidAskTable_part + ' ' + style.__bid}>Bid</span>
