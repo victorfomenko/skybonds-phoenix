@@ -5,7 +5,7 @@ import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
 import { getSpaces } from '../../data/providers/Spaces';
-import { isEqual, intersection } from 'lodash';
+import { isEqual, intersection, uniq } from 'lodash';
 
 import reportStyle from './style.sass';
 
@@ -37,28 +37,30 @@ class Market extends Component {
   }
 
   calcTotalIsins(layers){
+    let result = [];
 
-    const isins = [];
     for(const key in layers) {
-      const searchIsins = layers[key].dataComputed.search.bonds.map(bond=>{return bond.isin});
-      const filtersIsins = layers[key].dataComputed.filters.isins;
-
-      if(layers[key].viewMode != 'hidden'){
-        if(searchIsins.length && filtersIsins.length) {
-          isins.push(intersection(
-            filtersIsins,
-            searchIsins)
-          );
-        } else if (searchIsins.length) {
-          isins.push(searchIsins);
-        } else if (filtersIsins.length) {
-          isins.push(filtersIsins);
-        }
+      const layer = layers[key];
+      if(layer.viewMode == 'hidden'){
+        continue;
       }
-      else {
+
+      const searchQuery = layer.dataSource.search.query;
+      const searchIsins = layer.dataComputed.search.bonds.map(bond=>{return bond.isin});
+      const filtersIsins = layer.dataComputed.filters.isins;
+
+      if(filtersIsins.length) {
+        if(searchIsins.length) {
+          result = [...result, ...intersection(filtersIsins, searchIsins)]
+        } else if (searchQuery.length == 0) {
+          result = [...result, ...filtersIsins];
+        }
+      } else if (searchIsins.length) {
+        result = [...result, ...searchIsins];
       }
     }
-    return _.union(...isins).slice(0, 200);
+
+    return uniq(result);
   }
 
   onActiveIsinChange(isin) {

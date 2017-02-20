@@ -287,9 +287,6 @@ const layers = (state = initialState, action) => {
           [newId]: {
             id: newId,
             name: 'Empty set',
-            search: {
-              query: ''
-            },
             dataSource: {
               search: {
                 query: '',

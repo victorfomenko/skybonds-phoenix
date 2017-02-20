@@ -6,7 +6,7 @@ import * as DataProvider from '../data/providers/Data';
 export const homeSearchRequest = (query, date) => async (dispatch) => {
   dispatch({ type: actionTypes.HOME_SEARCH_REQUEST });
   try {
-    let bonds = await SearchProvider.search(query, date);
+    let bonds = await SearchProvider.searchBonds(query, date);
     dispatch({
       type: actionTypes.HOME_SEARCH_RESPONSE,
       query,
