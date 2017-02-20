@@ -13,15 +13,27 @@ import styles from './styles.sass';
 
 // const Home = () => <Async load={import('./Home')} />
 
+const PrivateRoute = ({ component, user, ...rest }) => (
+  <Route {...rest} render={props => (
+    user.token ? (
+      React.createElement(component, props)
+    ) : (
+      <Redirect to= '/login' />
+    )
+  )}/>
+)
+
 const App = ({ user }) => (
   <div className='skybonds'>
     <Switch>
-	    <Route path="/" exact={true} component={Home}/>
-	     {user.token ? <Route path="/reports" component={Reports} /> : null}
 	    <Route path="/login" component={Login} />
-	    <Route path="/bond/:isin" component={Bond} />
 	    <Route path="/logout" component={Logout} />
-	    <Redirect to="/" />
+
+        <PrivateRoute path="/" exact={true} component={Home} user={user}/>
+        <PrivateRoute path="/reports" component={Reports} user={user}/>
+        <PrivateRoute path="/bond/:isin" component={Bond} user={user}/>
+
+        <Redirect to="/" />
     </Switch>
   </div>
 );

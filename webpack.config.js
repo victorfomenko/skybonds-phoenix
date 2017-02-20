@@ -3,6 +3,8 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var combineLoaders = require('webpack-combine-loaders');
 
+// NB: devtool: 'eval' for some reason crashes Chrome Dev Tools when hovering over bonds
+// on a ScatterPlot, while 'inline-source-map' does not cause this
 module.exports = {
   devtool: 'eval',
   entry: [

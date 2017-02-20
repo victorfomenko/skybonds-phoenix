@@ -66,12 +66,12 @@ class Movers extends Component {
     return { startDate, endDate };
   }
 
-  handleUnitChange(unit) {
+  onUnitChange(unit) {
     let periods = this.getPeriodRange(this.props.movers.selectedPeriod);
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, this.props.movers.selectedPeriod, unit);
   }
 
-  handlePeriodChange(period) {
+  onPeriodChange(period) {
     let periods = this.getPeriodRange(period);
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, period, this.props.movers.selectedUnit);
   }
@@ -159,7 +159,7 @@ class Movers extends Component {
           <div className={style.reportAsideMoversUnit}>
             <ButtonGroup
               buttons={this.state.unitList}
-              onButtonClick={this.handleUnitChange.bind(this)}
+              onButtonClick={this.onUnitChange.bind(this)}
               selectedButton={movers.selectedUnit}
             />
           </div>
@@ -167,7 +167,7 @@ class Movers extends Component {
           <div className={style.reportAsideMoversPeriod}>
             <ButtonGroup
               buttons={this.state.periodList}
-              onButtonClick={this.handlePeriodChange.bind(this)}
+              onButtonClick={this.onPeriodChange.bind(this)}
               selectedButton={movers.selectedPeriod}
             />
           </div>

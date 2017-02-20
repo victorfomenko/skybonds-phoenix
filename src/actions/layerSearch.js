@@ -8,13 +8,14 @@ const SEARCH_LIMIT = 200;
 const SEARCH_FIELDS = ['maturityDate', 'finalDate', 'issueDate', 'status', 'ccy', 'ratingGroup'];
 const MIN_QUERY_LENGTH = 3;
 
-export const homeSearchRequest = (query, date) => async (dispatch) => {
-  dispatch({ type: actionTypes.HOME_SEARCH_REQUEST });
+export const layerSearchRequest = (id, query, date) => async (dispatch) => {
+  dispatch({ type: actionTypes.LAYER_SEARCH_REQUEST });
   // TODO { data: [] } (((
   if(query.length < MIN_QUERY_LENGTH) {
-    dispatch({ type: actionTypes.HOME_SEARCH_RESPONSE, query, data: [], isins: [] });
+    dispatch({ type: actionTypes.LAYER_SEARCH_RESPONSE, id, query, data: [], isins: [] });
   } else {
     try {
+
       // const filtersIsins = await DataProvider.filtersApply(filters);
       const response = await SearchProvider.search(query, SEARCH_LIMIT, SEARCH_FIELDS);
       const actualBonds = response.bonds.filter((bond)=>{
@@ -30,16 +31,16 @@ export const homeSearchRequest = (query, date) => async (dispatch) => {
           issuerName: response.issuers[i].name,
           bonds: []
         };
-        for(let b = 0; b < actualBonds.length; b++) {
-          if(actualBonds[b].issuerId == response.issuers[i].id) {
-            group.bonds.push(actualBonds[b]);
+        for(let b = 0; b < response.bonds.length; b++) {
+          if(response.bonds[b].issuerId == response.issuers[i].id) {
+            response.bonds[b].isActual = isBondActual(response.bonds[b], date);
+            group.bonds.push(response.bonds[b]);
           }
         }
-        if(group.bonds.length) {
-          data.push(group);
-        }
+        data.push(group);
       }
-      dispatch({ type: actionTypes.HOME_SEARCH_RESPONSE, query, data, isins: actualIsins });
+
+      dispatch({ type: actionTypes.LAYER_SEARCH_RESPONSE, id, query, data, isins: actualIsins });
 
       const attrs = ['yield', 'duration'];
       const dailyData = await DataProvider.getBondsDaily(actualIsins, date, attrs);
@@ -52,10 +53,10 @@ export const homeSearchRequest = (query, date) => async (dispatch) => {
           }
         }
       }
-      dispatch({ type: actionTypes.HOME_SEARCH_RESPONSE, query, data, isins: actualIsins });
+      dispatch({ type: actionTypes.LAYER_SEARCH_RESPONSE, id, query, data, isins: actualIsins });
     }
     catch (response) {
-      dispatch({ type: actionTypes.HOME_SEARCH_RESPONSE, response });
+      dispatch({ type: actionTypes.LAYER_SEARCH_RESPONSE, id, response });
     }
   }
 };

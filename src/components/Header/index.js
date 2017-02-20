@@ -8,7 +8,7 @@ class Header extends Component {
     return (
       <div className={styles.header}>
         <nav className={styles.headerNav}>
-          <Link className={styles.headerNav_home} to={'/home'}>Skybonds</Link>
+          <Link className={styles.headerNav_home} to={'/'}>Skybonds</Link>
           <ul className={styles.headerNav_list}>
             <li className={styles.headerNav_item}>
               <Link className={styles.headerNav_text} to={'/reports/market'}>Market report</Link>
@@ -17,7 +17,7 @@ class Header extends Component {
           <ul className={styles.headerNav_list + ' ' + styles.__aux}>
             <li className={styles.headerNav_item + ' ' + styles.__user}>
               <span className={styles.headerNav_text}>
-                {/*<span ng-bind="user.firstName + ' ' + user.lastName"></span>*/}
+                {this.props.firstName + ' ' + this.props.lastName}
                 <Icon className={styles.headerNav_icon}
                       glyph={GLYPHS.GEAR}
                       width="10" height="10" />
@@ -36,5 +36,11 @@ class Header extends Component {
     )
   }
 }
+
+
+Header.propTypes = {
+  firstName: React.PropTypes.string.isRequired,
+  lastName: React.PropTypes.string.isRequired,
+};
 
 export default Header;

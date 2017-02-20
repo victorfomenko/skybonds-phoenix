@@ -101,6 +101,22 @@ class ScatterPlot extends Component {
       this.dotsSetsPlugin
     ];
     this.chartDocument = new ChartDocument(chartDocumentConfig);
+
+    // TODO store zoom on change
+    this.chartDocument.on('change', (isin) => {
+      // console.log('change', this.chartDocument.props.zoom);
+    });
+    // TODO open bond info on click
+    this.chartDocument.on('bondDotClick', (isin) => {
+      // console.log('click', isin);
+    });
+    // TODO highlight bond on hover
+    // this.chartDocument.on('mouseEnter', () => {
+    //   console.log('me');
+    // });
+    // this.chartDocument.on('mouseLeave', () => {
+    //   console.log('ml');
+    // });
   }
 
   updateChart(isins = [], activeIsin) {
