@@ -250,8 +250,6 @@ const initialState = {
     1: {
       id : 1,
       name : 'Empty set',
-      totalIsins: [],
-      // dataSource and dataComputed are a reflection of a new spaces API
       dataSource: {
         search: {
           query: '',
@@ -292,8 +290,6 @@ const layers = (state = initialState, action) => {
             search: {
               query: ''
             },
-            totalIsins: [],
-            // dataSource and dataComputed are a reflection of a new spaces API
             dataSource: {
               search: {
                 query: '',
