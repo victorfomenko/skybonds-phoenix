@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { homeSearchRequest } from '../../actions';
 import Header from '../../components/Header';
 import Search from '../../components/Search';
-import { Link } from 'react-router-dom';
 import style from './style.sass';
 
 class Home extends Component {
@@ -11,14 +10,14 @@ class Home extends Component {
     super(props);
     this.state = {
       query: props.search.query,
-      results: props.search.results,
+      bonds: props.search.bonds,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       query: nextProps.search.query,
-      results: nextProps.search.results
+      bonds: nextProps.search.bonds
     });
   }
 
@@ -34,7 +33,7 @@ class Home extends Component {
         <div className={style.home_search}>
           <Search
             query={this.state.query}
-            results={this.state.results}
+            bonds={this.state.bonds}
             sendSearchRequest={this.sendSearchRequest.bind(this)}
           />
         </div>

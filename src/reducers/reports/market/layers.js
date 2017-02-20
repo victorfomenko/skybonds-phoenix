@@ -251,13 +251,32 @@ const initialState = {
       id : 1,
       name : 'Empty set',
       search: {
-        query: '',
-        results: []
+        query: ''
       },
       filters : cloneDeep(filters),
       searchIsins: [],
       filtersIsins: [],
       totalIsins: [],
+      // dataSource and dataComputed are a reflection of a new spaces API
+      dataSource: {
+        search: {
+          query: '',
+          peersFor: []
+        },
+        filters: [],
+        include: [],
+        exclude: []
+      },
+      dataComputed: {
+        search: {
+          bonds: []
+        },
+        filters: {
+          isins: [],
+          stats: []
+        },
+        isins: []
+      },
       'viewMode' : 'bonds'
     }
   },
@@ -277,13 +296,32 @@ const layers = (state = initialState, action) => {
             id: newId,
             name: 'Empty set',
             search: {
-              query: '',
-              results: []
+              query: ''
             },
             filters : cloneDeep(filters),
             searchIsins: [],
             filtersIsins: [],
             totalIsins: [],
+            // dataSource and dataComputed are a reflection of a new spaces API
+            dataSource: {
+              search: {
+                query: '',
+                peersFor: []
+              },
+              filters: [],
+              include: [],
+              exclude: []
+            },
+            dataComputed: {
+              search: {
+                bonds: []
+              },
+              filters: {
+                isins: [],
+                stats: []
+              },
+              isins: []
+            },
             'viewMode' : 'bonds',
           }
         },
@@ -328,7 +366,7 @@ const layers = (state = initialState, action) => {
       };
 
     case actionTypes.LAYER_SEARCH_REQUEST:
-      // should change state.query
+      // should change state.query, but before debounce, not after
       return state;
     // return {
     //   ...state,
@@ -344,8 +382,31 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            {...layer, searchIsins: action.isins, search: {...layer.search, query: action.query, results: action.data }} :
-            layer;
+            {...layer,
+              search: {...layer.search,
+                query: action.query
+              },
+              dataComputed: {...layer.dataComputed,
+                search: {...layer.dataComputed.search,
+                  bonds: action.bonds
+                },
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_SEARCH_DAILY:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                search: {...layer.dataComputed.search,
+                  bonds: action.bonds
+                },
+              }
+            } : layer;
         })
       };
 

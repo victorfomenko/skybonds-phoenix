@@ -1,7 +1,7 @@
 import * as DataApi from '../clients/DataApi';
 import * as PortfolioProvider from '../providers/Portfolio';
 import FiltersCaster from '../casters/FiltersCaster';
-import _ from 'lodash';
+import { keyBy, map, isArray, intersection } from 'lodash';
 
 
 export const filtersApply = (filters, stats, details) => {
@@ -14,7 +14,7 @@ export const filtersApply = (filters, stats, details) => {
 		}
 	});
 
-	if(_.isArray(filters.filters) && filters.filters.length){
+	if(isArray(filters.filters) && filters.filters.length){
 		filters.filters.push({
 			name: 'actual',
 			value: [true]
@@ -41,7 +41,7 @@ export const filtersApply = (filters, stats, details) => {
         	}
         	return resp
         })
-		const isins = _.intersection.apply(_, responses);
+		const isins = intersection.apply(_, responses);
 		return {
 			result: isins,
 			details,
@@ -57,6 +57,20 @@ export const getBondsInfo = (isins, attrs) => {
 
 export const getBondsDaily = (isins, date, attrs) => {
 	return DataApi.getBondsDaily(isins, date, attrs);
+};
+
+export const getBondsDailyForSearch = async (bonds, date) => {
+  if(bonds.length == 0) {
+    return bonds;
+  }
+  const isins = bonds.map((bond)=> { return bond.isin });
+  const attrs = ['yield', 'duration'];
+  let dailyData = await DataApi.getBondsDaily(isins, date, attrs);
+  let dailyDataMap = keyBy(dailyData, 'isin');
+  return bonds.map((bond)=>{
+    bond.daily = dailyDataMap[bond.isin].data || {};
+    return bond
+  });
 };
 
 export const getIssuersInfo = (ids, attrs) => {

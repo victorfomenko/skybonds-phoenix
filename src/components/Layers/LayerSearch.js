@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { layerSearchRequest } from '../../actions';
 import Search from '../Search';
-import styles from './styles.sass';
-
-const MIN_QUERY_LENGTH = 3;
-const defaultDate = new Date('2017/02/05');
 
 class LayerSearch extends Component {
 
@@ -13,14 +9,14 @@ class LayerSearch extends Component {
     super(props);
     this.state = {
       query: props.layer.search.query,
-      results: props.layer.search.results
+      bonds: props.layer.dataComputed.search.bonds
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       query: nextProps.layer.search.query,
-      results: nextProps.layer.search.results
+      bonds: nextProps.layer.dataComputed.search.bonds
     });
   }
 
@@ -29,12 +25,11 @@ class LayerSearch extends Component {
   }
 
   render() {
-
     return (
       <div>
         <Search
           query={this.state.query}
-          results={this.state.results}
+          bonds={this.state.bonds}
           sendSearchRequest={this.sendSearchRequest.bind(this)}
         />
       </div>
