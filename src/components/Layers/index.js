@@ -30,27 +30,23 @@ class Layers extends Component {
     this.props.deleteLayer(layerId);
   }
 
-  handleNewSet() {
+  onNewSet() {
     this.props.addLayer();
   }
 
-  handleClose(layerId) {
+  onLayerClose(layerId) {
     this._removeLayerSet(layerId);
   }
 
-  handleLayerClick(layerId) {
+  onLayerClick(layerId) {
     this.props.activateLayer(layerId);
   }
 
-  handleLayerRename(layerId, layerName) {
+  onLayerRename(layerId, layerName) {
     this.props.renameLayer(layerId, layerName);
   }
 
-  // handleFilterChange(isins, filtersState) {
-  //   this.props.filteredDataHandler(isins);
-  // }
-
-  handleLayerViewChange(layerId, viewMode) {
+  onLayerViewChange(layerId, viewMode) {
     this.props.changeLayerView(layerId, viewMode);
   }
 
@@ -63,10 +59,10 @@ class Layers extends Component {
                 id={layerById.id}
                 name={layerById.name}
                 active={(layerById.id == this.props.layers.activeLayer)? true: false}
-                onLayerClose={this.handleClose.bind(this)}
-                onLayerClick={this.handleLayerClick.bind(this)}
-                onLayerRename={this.handleLayerRename.bind(this)}
-                onLayerViewChange={this.handleLayerViewChange.bind(this)} />;
+                onLayerClose={this.onLayerClose.bind(this)}
+                onLayerClick={this.onLayerClick.bind(this)}
+                onLayerRename={this.onLayerRename.bind(this)}
+                onLayerViewChange={this.onLayerViewChange.bind(this)} />;
     }));
 
     if(this.state.loaded){
@@ -77,7 +73,7 @@ class Layers extends Component {
               {layers}
             </ul>
             <div className={layersStyle.reportLayersStrip_buttons}>
-              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.handleNewSet.bind(this)}>
+              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.onNewSet.bind(this)}>
                 set
               </span>
             </div>

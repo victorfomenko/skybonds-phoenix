@@ -1,3 +1,4 @@
+import SpaceCaster from '../casters/SpaceCaster';
 import { requestProvider, localStorageProvider } from '../helpers';
 import { USER_DATA } from '../constants';
 
@@ -21,7 +22,10 @@ export const getSpaceById = (spaceId) => {
 	if(!USER_ID || !spaceId) { return Promise.reject('spacesApi.getSpaceById: USER_ID or spaceId is undefined.') }
 	return requestProvider.get({
 		url: `${API_V1}/${USER_ID}/${spaceId}`
-	});
+	})
+	// .then(space => {
+	// 	return Promise.resolve(SpaceCaster.cast(space))
+	// });
 };
 
 export const getSpacesByIds = (ids=[]) => {
@@ -30,7 +34,11 @@ export const getSpacesByIds = (ids=[]) => {
 	return requestProvider.post({
 		url: `${API_V1}/${USER_ID}`,
 		body: ids
-	});
+	})
+	// .then(spaces => {
+	// 	const result = spaces.map(item=>{ return SpaceCaster.cast(item) })
+	// 	return Promise.resolve(result)
+	// });
 };
 
 export const add = (spaceId, space={}) => {

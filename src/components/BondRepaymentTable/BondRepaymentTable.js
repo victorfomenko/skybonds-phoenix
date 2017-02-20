@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import * as Data from '../../../data/providers/Data';
-import * as Rates from '../../../data/providers/Rates';
-import NumberFormatter from '../../../helpers/formatters/NumberFormatter';
+import * as Data from '../../data/providers/Data';
+import * as Rates from '../../data/providers/Rates';
+import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import style from './style.sass';
 
 
