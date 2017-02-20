@@ -10,6 +10,7 @@ export const auth = (email, pwd) => {
 };
 
 export const current = () => {
+  return Promise.resolve({"firstName":"test","lastName":"test","roles":null,"organizations":[],"portfolios":[{"name":""}],"middleName":"","id":"137","email":"test@sovcombank.ru"})
   return requestProvider.get({
     url: API_V1 + 'current'
   });
