@@ -1,0 +1,228 @@
+.bondPeersTableGeneral
+  display: block
+  width: calc(100% + 27px)
+  position: relative
+  left: -15px
+  margin-top: 10px
+
+.bondPeersTable
+  margin: 10px 0 0
+  clear: both
+  table-layout: fixed
+  width: 100%
+  font-size: 14px
+
+.bondPeersTable_thead
+  .bondPeersTable_row.__parent
+    background-color: #f5f5f5
+
+.bondPeersTable_tbody
+  .bondPeersTable_row:hover
+    cursor: pointer
+    background-color: #D0E2F4
+
+.bondPeersTable_cell
+  position: relative
+  padding: 5px 0 5px 10px
+  &:first-child
+    padding-left: 15px
+  &:last-child
+    padding-left: 10px
+    padding-right: 12px
+  &.__sortable
+    padding-left: 10px
+    cursor: pointer
+    position: relative
+    white-space: pre
+    vertical-align: top
+    &:before
+      position: absolute
+      left: 0
+      content: "↑"
+      visibility: hidden
+      width: 10px
+      text-align: center
+      font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+      font-size: 14px
+      color: #999
+  &:hover:before
+    visibility: visible
+  &.__sortable.__ascending
+    &:before
+      content: "↑"
+      visibility: visible
+    &:hover:before
+      content: "↑"
+  &.__sortable.__descending
+    &:before
+      content: "↓"
+      visibility: visible
+    &:hover:before
+      content: "↓"
+  &.__muted
+    opacity: .5
+  &.__name
+    width: auto
+  &.__icon
+    text-align: center
+    padding-top: 0
+    padding-bottom: 0
+    line-height: 34px
+  &.__check
+    width: 32px
+  &.__liquidity
+    width: 60px
+  &.__country
+    width: 80px
+  &.__rating
+    width: 65px
+  &.__coupon
+    width: 70px
+  &.__price
+    width: 80px
+  &.__yield
+    width: 70px
+  &.__delta
+    width: 90px
+  &.__duration
+    width: 75px
+  &.__tr
+    width: 80px
+  &.__discount
+    width: 85px
+  &.__roe
+    width: 70px
+  &.__industry
+    width: 120px
+  &.__number
+    text-align: right
+td.bondPeersTable_cell
+  line-height: 24px
+  &:empty:before
+    content: "NA"
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+    font-size: 12px
+    color: #CCC
+  &.__check:empty:before
+    content: ""
+  &.__text
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+  &.__number
+    font-family: monospace
+    font-size: 15px
+    letter-spacing: -.0625em
+
+.bondPeersTable_unit
+  display: block
+  font-size: 12px
+  font-weight: normal
+  color: #999
+
+
+.glyphicon
+  display: none
+  color: #fb0
+  cursor: pointer
+.bondPeersTable_icon
+  display: none
+  vertical-align: middle
+  width: 12px
+  height: 12px
+  //background: url("../images/triangle.png") no-repeat
+  background-size: contain
+  cursor: pointer
+
+.bondPeersTable_status
+  position: absolute
+  left: 0
+  &.__watchlist
+    .glyphicon-star
+      display: inline-block
+  &.__portfolio
+    .bondPeersTable_icon
+      display: inline-block
+  &.__watchlist.__portfolio
+    .glyphicon-star
+      display: none
+    .bondPeersTable_icon
+//background-image: url("../images/triangle-golden.png")
+
+.bondPeersTable_row:hover
+  .bondPeersTable_status
+    .glyphicon-star-empty
+      display: inline-block
+    &.__watchlist
+      .glyphicon-star-empty
+        display: none
+      .glyphicon-star
+        display: inline-block
+    &.__portfolio
+      .bondPeersTable_icon
+        display: none
+    &.__watchlist.__portfolio
+      .glyphicon-star
+        display: none
+      .bondPeersTable_icon
+        display: inline-block
+//background-image: url("../images/triangle-golden.png")
+
+.bondPeersTable_text
+  display: block
+  overflow: hidden
+  text-overflow: ellipsis
+
+.bondPeersTable_added
+  overflow: hidden
+  float: right
+  margin: 4px 0 0
+  background-color: #FBF2B3
+  line-height: 17px
+  border-radius: 3px
+  padding: 0
+  opacity: 0
+  max-width: 0
+
+.bondPeersTable_added.__watchlist.__should-animate
+  animation: bondPeersTableAdded 5s linear
+
+.bondPeersTable_check
+  pointer-events: none
+  margin-left: .25em
+  margin-right: .25em
+
+.bondPeersTableMore
+  display: block
+  padding: 2px 3px
+  border-radius: 3px
+  margin: 5px 0 10px
+  font-size: 14px
+  text-align: center
+  background-color: #ECF2F8
+  &:hover
+    background-color: #D0E2F4
+
+bond-icon
+  vertical-align: middle
+
+.bondPeersTable_tbody
+  bond-icon
+    opacity: .2
+  .bondPeersTable_row.__checked
+    bond-icon
+      opacity: 1
+
+@keyframes bondPeersTableAdded
+  0%
+    max-width: 100%
+    padding: 0 4px
+    opacity: 0
+  10%
+    opacity: 1
+  90%
+    opacity: 1
+  100%
+    max-width: 100%
+    padding: 0 4px
+    opacity: 0

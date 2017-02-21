@@ -261,7 +261,8 @@ const initialState = {
       },
       dataComputed: {
         search: {
-          bonds: []
+          bonds: [],
+          placeholderBonds: []
         },
         filters: {
           isins: [],
@@ -287,9 +288,6 @@ const layers = (state = initialState, action) => {
           [newId]: {
             id: newId,
             name: 'Empty set',
-            search: {
-              query: ''
-            },
             dataSource: {
               search: {
                 query: '',
@@ -301,7 +299,8 @@ const layers = (state = initialState, action) => {
             },
             dataComputed: {
               search: {
-                bonds: []
+                bonds: [],
+                placeholderBonds: []
               },
               filters: {
                 isins: [],
@@ -378,7 +377,7 @@ const layers = (state = initialState, action) => {
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
                   bonds: action.bonds
-                },
+                }
               }
             } : layer;
         })
@@ -393,7 +392,22 @@ const layers = (state = initialState, action) => {
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
                   bonds: action.bonds
-                },
+                }
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_GET_PLACEHOLDER_BONDS:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                search: {...layer.dataComputed.search,
+                  placeholderBonds: action.placeholderBonds
+                }
               }
             } : layer;
         })

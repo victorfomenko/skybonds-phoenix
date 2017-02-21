@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { layerSearchRequest } from '../../actions';
+import { layerSearchBonds } from '../../actions';
 import Search from '../Search';
 
 class LayerSearch extends Component {
@@ -9,19 +9,23 @@ class LayerSearch extends Component {
     super(props);
     this.state = {
       query: props.layer.dataSource.search.query,
-      bonds: props.layer.dataComputed.search.bonds
+      bonds: props.layer.dataComputed.search.bonds,
+      placeholderBonds: props.layer.dataComputed.search.placeholderBonds,
+      filtersIsins: props.layer.dataComputed.filters.isins
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       query: nextProps.layer.dataSource.search.query,
-      bonds: nextProps.layer.dataComputed.search.bonds
+      bonds: nextProps.layer.dataComputed.search.bonds,
+      placeholderBonds: nextProps.layer.dataComputed.search.placeholderBonds,
+      filtersIsins: nextProps.layer.dataComputed.filters.isins
     });
   }
 
-  sendSearchRequest(query, date) {
-    this.props.layerSearchRequest(this.props.layer.id, query, date);
+  async sendSearchRequest(query, date) {
+    await this.props.layerSearchBonds(this.props.layer.id, query, date, this.state.filtersIsins);
   }
 
   render() {
@@ -30,12 +34,12 @@ class LayerSearch extends Component {
         <Search
           query={this.state.query}
           bonds={this.state.bonds}
-          sendSearchRequest={this.sendSearchRequest.bind(this)}
-        />
+          placeholderBonds={this.state.placeholderBonds}
+          sendSearchRequest={this.sendSearchRequest.bind(this)} />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
-export default connect(mapStateToProps, { layerSearchRequest })(LayerSearch);
+export default connect(mapStateToProps, { layerSearchBonds })(LayerSearch);

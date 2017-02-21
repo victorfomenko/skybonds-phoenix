@@ -113,8 +113,8 @@ class Movers extends Component {
           increase.push(
             <tr key={'marketmover_' + key }
                 className={style.reportAsideMoversTable_row}
-                onMouseEnter={() => this.props.onActiveIsinChange(bond.isin)}
-                onMouseLeave={() => this.props.onActiveIsinChange(null)}>
+                onMouseEnter={()=>this.props.onActiveIsinChange(bond.isin)}
+                onMouseLeave={()=>this.props.onActiveIsinChange(null)}>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
@@ -134,8 +134,8 @@ class Movers extends Component {
           decrease.push(
             <tr key={'marketmover_' + key }
                 className={style.reportAsideMoversTable_row}
-                onMouseEnter={() => this.props.onActiveIsinChange(bond.isin)}
-                onMouseLeave={() => this.props.onActiveIsinChange(null)}>
+                onMouseEnter={()=>this.props.onActiveIsinChange(bond.isin)}
+                onMouseLeave={()=>this.props.onActiveIsinChange(null)}>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>

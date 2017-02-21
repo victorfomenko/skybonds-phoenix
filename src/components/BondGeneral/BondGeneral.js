@@ -193,7 +193,7 @@ class BondGeneral extends Component {
               <a href={issuer.websiteLink} className={'common-link' + ' ' + style.bondGeneralIissuer_link}>{this.getCleanWebLink(issuer.websiteLink)}</a>
             </li>
             <li className={style.bondGeneralIssuer_item}>
-              <a href={bond.info.onCBonds} className={'common-link' + ' ' + style.bondGeneralIissuer_link}>Issue on Cbonds</a>
+              <a href={bond.info.linkCbondsIssue} className={'common-link' + ' ' + style.bondGeneralIissuer_link}>Issue on Cbonds</a>
             </li>
             <li className={style.bondGeneralIssuer_item}>
               <span>{bond.info.sector}</span>

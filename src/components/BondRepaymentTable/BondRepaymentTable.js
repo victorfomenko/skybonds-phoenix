@@ -256,7 +256,7 @@ class BondRepaymentTable extends Component {
 
     if(this.state.repaymentSchedule.length) {
       return (
-        <div className={style.bondRepayment}>
+        <div className={style.bondRepayment} id="payments">
           { !repaymentSchedule.length ?
             <div>
               <div className={style.bondRepaymentTitle}> Payment schedule</div>
