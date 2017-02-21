@@ -16,7 +16,8 @@ class Search extends Component {
       query: props.query,
       bonds: props.bonds,
       placeholderBonds: props.placeholderBonds,
-      dropdownActive: false
+      dropdownActive: false,
+      pending: false
     };
   }
 
@@ -24,7 +25,8 @@ class Search extends Component {
     this.setState({
       query: nextProps.query,
       bonds: nextProps.bonds,
-      placeholderBonds: nextProps.placeholderBonds
+      placeholderBonds: nextProps.placeholderBonds,
+      pending: false
     });
   }
 
@@ -37,7 +39,7 @@ class Search extends Component {
   }, DEBOUNCE_DELAY);
 
   onSearchClear() {
-    this.setState({ query: '' });
+    this.setState({ query: '', bonds: [] });
     this.sendSearchRequest('', defaultDate);
   }
 
@@ -55,7 +57,7 @@ class Search extends Component {
 
   onInputChange(event) {
     let query = event.target.value;
-    this.setState({query: query});
+    this.setState({query: query, bonds: [], pending: true});
     this.sendSearchRequest(query, defaultDate);
   }
 
@@ -80,7 +82,13 @@ class Search extends Component {
       searchGroupsMap[bond.info.issuerId].bonds.push(bond);
     }
 
-    if(this.state.query.length < MIN_QUERY_LENGTH && !isPlaceholderVisible) {
+    if(this.state.query.length >= MIN_QUERY_LENGTH && this.state.pending) {
+      searchDropdown = <div className={styles.bondsSearch_status}>
+        Loading…
+      </div>;
+    }
+
+    else if(this.state.query.length < MIN_QUERY_LENGTH && !isPlaceholderVisible) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;
