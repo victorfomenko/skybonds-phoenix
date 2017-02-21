@@ -52,21 +52,27 @@ export const getMovers = (isins, startDate, endDate, paramName) => {
   });
 };
 
-export const getRepayment = (isin) => {
+export const getBondsSchedule = (isin) => {
   return requestProvider.get({
     url: API_V1 + 'bonds/schedule/' + isin
   });
 };
 
-export const getPutDates = (isin) => {
+export const getBondsSchedulePut = (isin) => {
   return requestProvider.get({
     url: API_V1 + 'bonds/schedule/' + isin + '/put'
   });
 };
 
-export const getCallDates = (isin) => {
+export const getBondsScheduleCall = (isin) => {
   return requestProvider.get({
     url: API_V1 + 'bonds/schedule/' + isin + '/call'
+  });
+};
+
+export const getRatesByDate = (date) => {
+  return requestProvider.get({
+    url: API_V1 + 'rates/date/' + date
   });
 };
 

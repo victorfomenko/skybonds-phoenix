@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as Data from '../../data/providers/Data';
-import * as Rates from '../../data/providers/Rates';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import style from './style.sass';
 
@@ -30,8 +29,8 @@ class BondRepaymentTable extends Component {
 
   async initData(bond = null) {
     if (bond.daily != null) {
-      const rates = await Rates.getByDate(bond.daily.date);
-      const repaymentsInfo = await Data.getRepayment(bond.isin);
+      const rates = await Data.getRatesByDate(bond.daily.date);
+      const repaymentsInfo = await Data.getBondsSchedule(bond.isin);
 
       let repayments = repaymentsInfo.data;
       let issueDate = new Date(this.parseDate(bond.info.issueDate));
