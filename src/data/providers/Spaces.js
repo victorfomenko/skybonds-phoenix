@@ -1,5 +1,5 @@
 import * as SpacesApi from '../clients/SpacesApi';
-import SpacesCaster from '../casters/SpacesCaster';
+import SpaceCaster from '../casters/SpaceCaster';
 
 export const getSpaces = () => {
 	return SpacesApi.getList()
@@ -8,7 +8,7 @@ export const getSpaces = () => {
 		return SpacesApi.getSpacesByIds(ids);
 	})
 	.then(spaces => {
-		const result = SpacesCaster.cast(spaces);
+		const result = spaces.map(item=>{return SpaceCaster.cast(item);})
 		return Promise.resolve(result);
 	})
 	.catch(err => {

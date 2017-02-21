@@ -1,14 +1,20 @@
 import { actionTypes } from '../actions/actionTypes';
+
 const initalState = {
     query: '',
-    results: []
-}
+    bonds: []
+};
+
 const home = (state = initalState, action) => {
 	switch (action.type) {
     case actionTypes.HOME_SEARCH_RESPONSE:
       return {
         query: action.query,
-        results: action.data
+        bonds: action.bonds
+      };
+    case actionTypes.HOME_SEARCH_DAILY:
+      return {...state,
+        bonds: action.bonds
       };
 		default:
 			return state;

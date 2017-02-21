@@ -5,7 +5,7 @@ import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
 import { getSpaces } from '../../data/providers/Spaces';
-import { isEqual, intersection } from 'lodash';
+import { isEqual, intersection, uniq } from 'lodash';
 
 import reportStyle from './style.sass';
 
@@ -15,7 +15,7 @@ class Market extends Component {
     super(props);
     this.state = {
       reportName: 'Reports',
-      totalIsins: [],
+      reportIsins: [],
       activeIsin: '',
       reportID: props.match.params.reportID
     };
@@ -32,29 +32,33 @@ class Market extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const totalIsins = this.calcTotalIsins(nextProps.market.layers.layersById);
-    this.setState({ totalIsins });
+    const reportIsins = this.getReportIsins(nextProps.market.layers.layersById);
+    this.setState({ reportIsins });
   }
 
-  calcTotalIsins(layers){
-    const isins = [];
+  getReportIsins(layers){
+    let result = [];
+
     for(const key in layers) {
-      if(layers[key].viewMode != 'hidden'){
-        if(layers[key].searchIsins.length && layers[key].filtersIsins.length) {
-          isins.push(intersection(
-            layers[key].filtersIsins,
-            layers[key].searchIsins)
-          );
-        } else if (layers[key].searchIsins.length) {
-          isins.push(layers[key].searchIsins);
-        } else if (layers[key].filtersIsins.length) {
-          isins.push(layers[key].filtersIsins);
-        }
+      const layer = layers[key];
+      if(layer.viewMode == 'hidden'){
+        continue;
       }
-      else {
+
+      const searchIsins = layer.dataComputed.search.bonds.map(bond=>{return bond.isin});
+      const searchQuery = layer.dataSource.search.query;
+      const filtersIsins = layer.dataComputed.filters.isins;
+
+      if (searchIsins.length && filtersIsins.length) {
+        result = [...result, ...intersection(searchIsins, filtersIsins)];
+      } else if (searchIsins.length) {
+        result = [...result, ...searchIsins];
+      } else if(filtersIsins.length && searchQuery.length == 0) {
+        result = [...result, ...filtersIsins];
       }
     }
-    return _.union(...isins).slice(0, 200);
+
+    return uniq(result);
   }
 
   onActiveIsinChange(isin) {
@@ -73,13 +77,13 @@ class Market extends Component {
             <div className={reportStyle.reportViewScatterPlot}>
               <div className={reportStyle.reportView_content}>
                 <ScatterPlot
-                  isins={this.state.totalIsins}
+                  isins={this.state.reportIsins}
                   activeIsin={this.state.activeIsin}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
               <div className={reportStyle.reportView_aside}>
                 <Movers
-                  isins={this.state.totalIsins}
+                  isins={this.state.reportIsins}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
             </div>

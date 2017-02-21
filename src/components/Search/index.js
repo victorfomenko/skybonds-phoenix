@@ -14,7 +14,8 @@ class Search extends Component {
     super(props);
     this.state = {
       query: props.query,
-      results: props.results,
+      bonds: props.bonds,
+      placeholderBonds: props.placeholderBonds,
       dropdownActive: false
     };
   }
@@ -22,7 +23,8 @@ class Search extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       query: nextProps.query,
-      results: nextProps.results,
+      bonds: nextProps.bonds,
+      placeholderBonds: nextProps.placeholderBonds
     });
   }
 
@@ -35,7 +37,8 @@ class Search extends Component {
   }, DEBOUNCE_DELAY);
 
   onSearchClear() {
-    this.setState({ query: '' })
+    this.setState({ query: '' });
+    this.sendSearchRequest('', defaultDate);
   }
 
   onDropdownMouseDown(e) {
@@ -58,21 +61,39 @@ class Search extends Component {
 
   render() {
     let searchDropdown;
+    let searchGroups = [];
+    let searchGroupsMap = {};
+    const isPlaceholderVisible =
+      this.state.bonds.length == 0 &&
+      this.state.placeholderBonds.length > 0;
+    let currentBonds = isPlaceholderVisible ? this.state.placeholderBonds : this.state.bonds;
 
-    if(this.state.query.length < MIN_QUERY_LENGTH) {
+    for(let bond of currentBonds) {
+      if(searchGroupsMap[bond.info.issuerId] == null) {
+        searchGroupsMap[bond.info.issuerId] = {
+          issuerId: bond.info.issuerId,
+          issuer: bond.info.issuer,
+          bonds: []
+        };
+        searchGroups.push(searchGroupsMap[bond.info.issuerId]);
+      }
+      searchGroupsMap[bond.info.issuerId].bonds.push(bond);
+    }
+
+    if(this.state.query.length < MIN_QUERY_LENGTH && !isPlaceholderVisible) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;
     }
 
-    else if(this.state.results.length == 0) {
+    else if(currentBonds.length == 0) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         No bonds found.
       </div>;
     }
 
     else {
-      let searchGroups = this.state.results.map((group, index)=> {
+      let searchGroupsTemplate = searchGroups.map((group, index)=> {
         let searchGroupBonds = group.bonds.map((bond, index)=> {
           return <li className={styles.bondsSearch_item + ' ' + styles.__body}
                      key={ 'search_result_item_key_' + index } >
@@ -81,21 +102,21 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
               <span className={styles.bondsSearch_link}>
-                <span className={styles.bondsSearch_main}>{bond.standardName}</span>
+                <span className={styles.bondsSearch_main}>{bond.info.standardName}</span>
               </span>
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__yield + ' ' + styles.__turn}>
-              {NumberFormatter(bond.yield, { placeholder: 'NA' })}
+              {NumberFormatter(bond.daily.yield, { placeholder: 'NA' })}
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__duration + ' ' + styles.__turn}>
-              {NumberFormatter(bond.duration, { placeholder: 'NA' })}
+              {NumberFormatter(bond.daily.duration, { placeholder: 'NA' })}
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__rating + ' ' + styles.__turn}
-            style={{color: getColor(bond.ratingGroup)}}>
-              {bond.ratingGroup}
+            style={{color: getColor(bond.info.ratingGroup)}}>
+              {bond.info.ratingGroup}
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__currency + ' ' + styles.__turn}>
-              {bond.ccy}
+              {bond.info.ccy}
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
               <a className={styles.bondsSearch_info} href={'/bond/' + bond.isin} target="_blank">
@@ -106,52 +127,45 @@ class Search extends Component {
           </li>;
         });
 
-        return <div className={styles.bondsSearch_group}
-                    onMouseDown={this.onDropdownMouseDown.bind(this)}
-                    key={ 'search_result_group_key_' + index }>
+        return <li className={styles.bondsSearch_group}
+                   onMouseDown={this.onDropdownMouseDown.bind(this)}
+                   key={ 'search_result_group_key_' + index }>
           <div className={styles.bondsSearch_item + ' ' + styles.__head }>
-          <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
-           {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
-           </span>
-            <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
-            <span className={styles.bondsSearch_link}>
-              <span className={styles.bondsSearch_main}>{group.issuerName}</span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
+              {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
             </span>
-          </span>
+            <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
+              <span className={styles.bondsSearch_link}>
+                <span className={styles.bondsSearch_main}>{group.issuer}</span>
+              </span>
+            </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
-            <a className={styles.bondsSearch_info} href={'/issuer/' + group.issuerId} target="_blank">
-              <Icon glyph={GLYPHS.INFO}
-                    width="14" height="14" />
-            </a>
-          </span>
+              <a className={styles.bondsSearch_info} href={'/issuer/' + group.issuerId} target="_blank">
+                <Icon glyph={GLYPHS.INFO}
+                      width="14" height="14" />
+              </a>
+            </span>
           </div>
           <ul>
             { searchGroupBonds }
           </ul>
-        </div>;
+        </li>;
       });
-
-      let actualBonds = 0;
-      for(let group of this.state.results) {
-        for(let bond of group.bonds) {
-          actualBonds++;
-        }
-      }
 
       searchDropdown =
         <div onMouseDown={this.onDropdownMouseDown.bind(this)}>
           <div className={styles.bondsSearch_status + ' ' + styles.__total}>
-            { actualBonds &&
+            { currentBonds.length > 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
                 {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
               </span>
             }
-            { actualBonds > 0 &&
+            { currentBonds.length > 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
-                  <span>{actualBonds} actual bonds found</span>
+                  <span>{currentBonds.length} actual bonds found</span>
               </span>
             }
-            { actualBonds == 0 &&
+            { currentBonds.length == 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>No actual bonds found.</span>
             }
             <span className={styles.bondsSearch_cell + ' ' + styles.__yield}>Yield</span>
@@ -160,7 +174,7 @@ class Search extends Component {
 
           <div className={styles.bondsSearch_content}>
             <ul className={styles.bondsSearch_list}>
-              { searchGroups }
+              { searchGroupsTemplate }
             </ul>
           </div>
         </div>;
@@ -192,5 +206,9 @@ class Search extends Component {
     );
   }
 }
+
+Search.defaultProps = {
+  placeholderBonds: []
+};
 
 export default Search;

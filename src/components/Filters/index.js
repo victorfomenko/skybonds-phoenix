@@ -2,22 +2,26 @@ import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
 import * as DataProvider from '../../data/providers/Data';
-import { changeFilters, changeFiltersIsins } from '../../actions';
+import { changeFilters, changeFiltersIsins, layerGetPlaceholderBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 
 class Filters extends Component {
   constructor(props) {
     super(props);
-    let filters = this.formatPortfolio(props.layer.filters, props.user)
-    this.state = { filters };
+    let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user)
+    this.state = {
+      filters: filters,
+      searchBonds: props.layer.dataComputed.search.bonds
+    };
     this.onFiltersChange = this.onFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    let filters = this.formatPortfolio(nextProps.layer.filters, this.props.user)
+    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user)
     this.setState({
-      filters: filters
+      filters: filters,
+      searchBonds: nextProps.layer.dataComputed.search.bonds
     });
   }
 
@@ -60,14 +64,14 @@ class Filters extends Component {
   }
 
   async onFiltersChange({ selected, all }) {
-    console.log('selected', selected);
     const filters = this.formatFilters(selected);
-    console.log('filters', filters);
-    //const { result, stats } = await DataProvider.filtersApply(filters, true);
-    //console.log('result', result);
-    //const newFilters = this.makeViewModel(stats, all);
-    //this.props.changeFilters(this.props.layer.id, newFilters);
-    //this.props.changeFiltersIsins(this.props.layer.id, result);
+    const { result, stats } = await DataProvider.filtersApply(filters, true);
+    const newFilters = this.makeViewModel(stats, all);
+    if(this.state.searchBonds.length == 0) {
+      this.props.layerGetPlaceholderBonds(this.props.layer.id, result, this.getDate());
+    }
+    this.props.changeFilters(this.props.layer.id, newFilters);
+    this.props.changeFiltersIsins(this.props.layer.id, result);
   }
 
 
@@ -144,4 +148,4 @@ Filters.propTypes = {
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
-export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, })(Filters);
+export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, layerGetPlaceholderBonds })(Filters);
