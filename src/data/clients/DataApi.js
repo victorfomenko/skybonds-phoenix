@@ -76,4 +76,11 @@ export const getRatesByDate = (date) => {
   });
 };
 
+export const getTimeSeries = (isin, dates) => {
+  return requestProvider.post({
+    url: API_V1 + 'bonds/timeseries/' + isin,
+    body: dates
+  });
+};
+
 // TODO: handle errors on base _request layer

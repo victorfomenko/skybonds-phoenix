@@ -113,6 +113,11 @@ export const getRatesByDate = (date) => {
   return DataApi.getRatesByDate(date);
 };
 
+export const getTimeSeries = (isin, dates) => {
+  return DataApi.getTimeSeries(isin, dates);
+};
+
+
 export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
 
   let _preformParentBondData = function(isin, date) {
