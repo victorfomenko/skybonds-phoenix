@@ -227,7 +227,7 @@ class BondPeersTable extends Component {
       })
 
       return (
-        <div className={style.bondPeersTableGeneral}>
+        <div className={style.bondPeersTableGeneral} id="peers">
           <table className={style.bondPeersTable}>
             <thead className={style.bondPeersTable_thead}>
               <tr className={style.bondPeersTable_row}>

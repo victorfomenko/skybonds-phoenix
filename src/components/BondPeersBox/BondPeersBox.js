@@ -30,7 +30,7 @@ class BondPeersBox extends Component {
     this.setState({
       'peersIsins': peersData.peers,
       'peersFilters': peersData.filters
-    })
+    });
     this.checkedIsins = [];
   }
 
