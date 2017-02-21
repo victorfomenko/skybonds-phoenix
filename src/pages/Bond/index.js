@@ -6,6 +6,7 @@ import BondHeader from '../../components/BondHeader/BondHeader';
 import BondGeneral from '../../components/BondGeneral/BondGeneral';
 import BondBidAskTable from '../../components/BondBidAskTable/BondBidAskTable';
 import BondRepaymentTable from '../../components/BondRepaymentTable/BondRepaymentTable';
+import BondPeersBox from '../../components/BondPeersBox/BondPeersBox';
 import ScatterPlot from '../../components/ScatterPlot';
 import style from './style.sass';
 
@@ -58,6 +59,10 @@ class Bond extends Component {
             />
             <BondGeneral
               bond={bond}
+            />
+            <BondPeersBox
+              bond={bond}
+              date={date}
             />
             <BondBidAskTable
               bond={bond}

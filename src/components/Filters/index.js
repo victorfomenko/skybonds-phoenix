@@ -60,11 +60,14 @@ class Filters extends Component {
   }
 
   async onFiltersChange({ selected, all }) {
+    console.log('selected', selected);
     const filters = this.formatFilters(selected);
-    const { result, stats } = await DataProvider.filtersApply(filters, true);
-    const newFilters = this.makeViewModel(stats, all);
-    this.props.changeFilters(this.props.layer.id, newFilters);
-    this.props.changeFiltersIsins(this.props.layer.id, result);
+    console.log('filters', filters);
+    //const { result, stats } = await DataProvider.filtersApply(filters, true);
+    //console.log('result', result);
+    //const newFilters = this.makeViewModel(stats, all);
+    //this.props.changeFilters(this.props.layer.id, newFilters);
+    //this.props.changeFiltersIsins(this.props.layer.id, result);
   }
 
 
