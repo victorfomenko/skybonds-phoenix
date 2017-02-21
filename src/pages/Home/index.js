@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { homeSearchRequest } from '../../actions';
+import { homeSearchBonds } from '../../actions';
 import Header from '../../components/Header';
 import Search from '../../components/Search';
 import style from './style.sass';
@@ -22,7 +22,7 @@ class Home extends Component {
   }
 
   sendSearchRequest(query, date) {
-    this.props.homeSearchRequest(query, date);
+    this.props.homeSearchBonds(query, date);
   }
 
   render () {
@@ -45,4 +45,4 @@ Home.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
 };
 const mapStateToProps = state => ({ user: state.user, search: state.home });
-export default connect(mapStateToProps, { homeSearchRequest})(Home);
+export default connect(mapStateToProps, { homeSearchBonds })(Home);

@@ -6,7 +6,7 @@ const SEARCH_LIMIT = 200;
 
 
 export const searchBonds = async (query, date) => {
-  const INFO_ATTRS = ['maturityDate', 'finalDate', 'issueDate', 'status', 'ccy', 'ratingGroup'];
+  const INFO_ATTRS = ['issuer', 'maturityDate', 'finalDate', 'issueDate', 'status', 'ccy', 'ratingGroup'];
   if(query.length < MIN_QUERY_LENGTH) {
     return []
   }

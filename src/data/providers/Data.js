@@ -64,12 +64,31 @@ export const getBondsDailyForSearch = async (bonds, date) => {
     return bonds;
   }
   const isins = bonds.map((bond)=> { return bond.isin });
-  const attrs = ['yield', 'duration'];
-  let dailyData = await DataApi.getBondsDaily(isins, date, attrs);
+  const DAILY_ATTRS = ['yield', 'duration'];
+  let dailyData = await DataApi.getBondsDaily(isins, date, DAILY_ATTRS);
   let dailyDataMap = keyBy(dailyData, 'isin');
   return bonds.map((bond)=>{
     bond.daily = dailyDataMap[bond.isin].data || {};
     return bond
+  });
+};
+
+export const getPlaceholderBondsForSearch = async (isins, date) => {
+  const INFO_ATTRS = ['issuerId', 'issuer', 'standardName', 'ratingGroup', 'ccy'];
+  const DAILY_ATTRS = ['yield', 'duration'];
+  return Promise.all([
+    DataApi.getBondsInfo(isins, INFO_ATTRS),
+    DataApi.getBondsDaily(isins, date, DAILY_ATTRS)
+  ]).then((response)=>{
+    let infoDataMap = keyBy(response[0], 'isin');
+    let dailyDataMap = keyBy(response[1], 'isin');
+    return isins.map((isin)=>{
+      return {
+        isin: isin,
+        info: infoDataMap[isin].data || {},
+        daily: dailyDataMap[isin].data || {}
+      }
+    });
   });
 };
 

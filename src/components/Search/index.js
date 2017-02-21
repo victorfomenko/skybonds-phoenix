@@ -15,6 +15,7 @@ class Search extends Component {
     this.state = {
       query: props.query,
       bonds: props.bonds,
+      placeholderBonds: props.placeholderBonds,
       dropdownActive: false
     };
   }
@@ -22,7 +23,8 @@ class Search extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       query: nextProps.query,
-      bonds: nextProps.bonds
+      bonds: nextProps.bonds,
+      placeholderBonds: nextProps.placeholderBonds
     });
   }
 
@@ -61,11 +63,16 @@ class Search extends Component {
     let searchDropdown;
     let searchGroups = [];
     let searchGroupsMap = {};
-    for(let bond of this.state.bonds) {
+    const isPlaceholderVisible =
+      this.state.bonds.length == 0 &&
+      this.state.placeholderBonds.length > 0;
+    let currentBonds = isPlaceholderVisible ? this.state.placeholderBonds : this.state.bonds;
+
+    for(let bond of currentBonds) {
       if(searchGroupsMap[bond.info.issuerId] == null) {
         searchGroupsMap[bond.info.issuerId] = {
           issuerId: bond.info.issuerId,
-          issuerName: bond.info.issuerName,
+          issuer: bond.info.issuer,
           bonds: []
         };
         searchGroups.push(searchGroupsMap[bond.info.issuerId]);
@@ -73,13 +80,13 @@ class Search extends Component {
       searchGroupsMap[bond.info.issuerId].bonds.push(bond);
     }
 
-    if(this.state.query.length < MIN_QUERY_LENGTH) {
+    if(this.state.query.length < MIN_QUERY_LENGTH && !isPlaceholderVisible) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;
     }
 
-    else if(this.state.bonds.length == 0) {
+    else if(currentBonds.length == 0) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         No bonds found.
       </div>;
@@ -129,7 +136,7 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
               <span className={styles.bondsSearch_link}>
-                <span className={styles.bondsSearch_main}>{group.issuerName}</span>
+                <span className={styles.bondsSearch_main}>{group.issuer}</span>
               </span>
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
@@ -148,17 +155,17 @@ class Search extends Component {
       searchDropdown =
         <div onMouseDown={this.onDropdownMouseDown.bind(this)}>
           <div className={styles.bondsSearch_status + ' ' + styles.__total}>
-            { this.state.bonds.length > 0 &&
+            { currentBonds.length > 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__check}>
                 {/*<input className={styles.bondsSearch_checkbox} checked type="checkbox"/>*/}
               </span>
             }
-            { this.state.bonds.length > 0 &&
+            { currentBonds.length > 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>
-                  <span>{this.state.bonds.length} actual bonds found</span>
+                  <span>{currentBonds.length} actual bonds found</span>
               </span>
             }
-            { this.state.bonds.length == 0 &&
+            { currentBonds.length == 0 &&
             <span className={styles.bondsSearch_cell + ' ' + styles.__name}>No actual bonds found.</span>
             }
             <span className={styles.bondsSearch_cell + ' ' + styles.__yield}>Yield</span>
@@ -199,5 +206,9 @@ class Search extends Component {
     );
   }
 }
+
+Search.defaultProps = {
+  placeholderBonds: []
+};
 
 export default Search;

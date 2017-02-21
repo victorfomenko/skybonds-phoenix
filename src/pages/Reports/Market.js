@@ -15,7 +15,7 @@ class Market extends Component {
     super(props);
     this.state = {
       reportName: 'Reports',
-      totalIsins: [],
+      reportIsins: [],
       activeIsin: '',
       reportID: props.match.params.reportID
     };
@@ -32,11 +32,11 @@ class Market extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const totalIsins = this.calcTotalIsins(nextProps.market.layers.layersById);
-    this.setState({ totalIsins });
+    const reportIsins = this.getReportIsins(nextProps.market.layers.layersById);
+    this.setState({ reportIsins });
   }
 
-  calcTotalIsins(layers){
+  getReportIsins(layers){
     let result = [];
 
     for(const key in layers) {
@@ -77,13 +77,13 @@ class Market extends Component {
             <div className={reportStyle.reportViewScatterPlot}>
               <div className={reportStyle.reportView_content}>
                 <ScatterPlot
-                  isins={this.state.totalIsins}
+                  isins={this.state.reportIsins}
                   activeIsin={this.state.activeIsin}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
               <div className={reportStyle.reportView_aside}>
                 <Movers
-                  isins={this.state.totalIsins}
+                  isins={this.state.reportIsins}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
             </div>
