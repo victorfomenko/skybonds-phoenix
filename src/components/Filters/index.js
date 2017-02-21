@@ -68,7 +68,8 @@ class Filters extends Component {
     const { result, stats } = await DataProvider.filtersApply(filters, true);
     const newFilters = this.makeViewModel(stats, all);
     if(this.state.searchBonds.length == 0) {
-      this.props.layerGetPlaceholderBonds(this.props.layer.id, result, this.getDate());
+      // TODO: slice by layerQuota, not by 200
+      this.props.layerGetPlaceholderBonds(this.props.layer.id, result.slice(0, 200), this.getDate());
     }
     this.props.changeFilters(this.props.layer.id, newFilters);
     this.props.changeFiltersIsins(this.props.layer.id, result);
