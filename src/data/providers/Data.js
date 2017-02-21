@@ -97,20 +97,20 @@ export const getIssuersInfo = (ids, attrs) => {
   return DataApi.getIssuersInfo(ids, attrs);
 };
 
-export const getRepayment = (isin) => {
-  return DataApi.getRepayment(isin);
+export const getBondsSchedule = (isin) => {
+  return DataApi.getBondsSchedule(isin);
 };
 
-export const getPutDates = (isin) => {
-  return DataApi.getPutDates(isin);
+export const getBondsSchedulePut = (isin) => {
+  return DataApi.getBondsSchedulePut(isin);
 };
 
-export const getCallDates = (isin) => {
-  return DataApi.getCallDates(isin);
+export const getBondsScheduleCall = (isin) => {
+  return DataApi.getBondsScheduleCall(isin);
 };
 
-export const getRates = (isin) => {
-  return DataApi.getCallDates(isin);
+export const getRatesByDate = (date) => {
+  return DataApi.getRatesByDate(date);
 };
 
 export const getTimeSeries = (isin, dates) => {

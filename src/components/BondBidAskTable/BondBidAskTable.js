@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as Rates from '../../data/providers/Rates';
+import * as Data from '../../data/providers/Data';
 import * as Market from '../../data/providers/Market';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
@@ -32,7 +32,7 @@ class BondBidAskTable extends Component {
 
   async initData(bond = null) {
     if (bond.daily != null) {
-      const rates = await Rates.getByDate(bond.daily.date);
+      const rates = await Data.getRatesByDate(bond.daily.date);
       const market = await Market.getMarket(bond.isin);
 
       let bondCurrency = bond.info.ccy;

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as Data from '../../data/providers/Data';
-import * as Rates from '../../data/providers/Rates';
 import { connect } from 'react-redux';
 import Promise from 'rsvp';
 import style from './style.sass';
@@ -31,10 +30,10 @@ class BondGeneral extends Component {
       let couponPeriod = null;
       let attrs = [ 'ratingGroupIssuer','linkCbondsIssuer','issuer','spIssuer','mdyIssuer','ftcIssuer','country','group','registrationForm','type','ogrn','inn','websiteLink' ];
       const issuerInfo = await Data.getIssuersInfo([bond.info.issuerId], attrs);
-      const repayment = await Data.getRepayment(bond.isin);
-      const putDates = await Data.getPutDates(bond.isin);
-      const callDates = await Data.getCallDates(bond.isin);
-      const rates = await Rates.getByDate(bond.daily.date);
+      const repayment = await Data.getBondsSchedule(bond.isin);
+      const putDates = await Data.getBondsSchedulePut(bond.isin);
+      const callDates = await Data.getBondsScheduleCall(bond.isin);
+      const rates = await Data.getRatesByDate(bond.daily.date);
 
       let currencyRate = rates[ bond.info.ccy ];
       if(isPortfolioScb(this.props.user)) {
