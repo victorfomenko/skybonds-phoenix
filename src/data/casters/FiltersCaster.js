@@ -110,6 +110,9 @@ export default {
 	},
 	cast: (stats) => {
 		let typeValues = {};
+    if (stats == null) {
+      return []
+    }
 		stats.forEach(function(arg, index) {
 		  var name, values;
 		  name = arg.name, values = arg.values;

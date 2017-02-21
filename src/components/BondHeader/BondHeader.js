@@ -9,7 +9,7 @@ class BondHeader extends Component {
 
   render(){
     return (
-      <div className={style.bondHeader}>
+      <div >
         <div className={style.bondHeaderWatchlist}>
           <div className={style.bondHeaderWatchlist_isin}>
             {this.props.bond.isin}
