@@ -113,6 +113,10 @@ export const getRates = (isin) => {
   return DataApi.getCallDates(isin);
 };
 
+export const getTimeSeries = (isin, dates) => {
+  return DataApi.getTimeSeries(isin, dates);
+};
+
 
 export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
 
