@@ -276,7 +276,7 @@ const initialState = {
   activeLayer: 1,
 };
 
-const layers = (state = initialState, action) => {
+const layers = (state = {}, action) => {
   switch (action.type) {
 
     case actionTypes.ADD_LAYER:
@@ -315,9 +315,9 @@ const layers = (state = initialState, action) => {
       };
 
     case actionTypes.DELETE_LAYER:
-      if(state.layers.length == 1) {
-        return initialState;
-      }
+      // if(state.layers.length == 1) {
+      //   return initialState;
+      // }
       return {
         ...state,
         layers: state.layers.filter(id => id !== action.id),

@@ -72,7 +72,7 @@ const castLayers = (value) => {
 
 
 const castLayer = ({ id, method, functions }) => {
-  	let layerData = {}
+  	let dataSource = {}
 
   	if(functions != null) {
 	  	functions.forEach(func => {
@@ -85,14 +85,14 @@ const castLayer = ({ id, method, functions }) => {
 		  			break;
 	  		}
 
-	  		layerData[func.name] = func.args
+	  		dataSource[func.name] = func.args
 	  	})	
   	}
   	
 	return {
 		id,
 		method,
-		...layerData
+		dataSource
 	}
 }
 

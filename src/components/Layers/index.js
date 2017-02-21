@@ -51,14 +51,18 @@ class Layers extends Component {
   }
 
   render(){
-    let layersState = this.props.layers;
-    let layers = ((layersState.layers || []).map((layer, index) => {
-      let layerById = layersState.layersById[layer];
+    let source = this.props.source;
+    let ui = this.props.ui;
+
+    let layers = ((source.layers || []).map((layer, index) => {
+      let sourceLayerByID = source.layersById[layer];
+      let uiLayerByID = ui.extensions.layers[index];
+
       return <Layer
                 key={'layer_key_' + index}
-                id={layerById.id}
-                name={layerById.name}
-                active={(layerById.id == this.props.layers.activeLayer)? true: false}
+                id={sourceLayerByID.id}
+                name={uiLayerByID.name}
+                active={(sourceLayerByID.id == this.props.ui.extensions.activeLayerId)? true: false}
                 onLayerClose={this.onLayerClose.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}
@@ -80,7 +84,7 @@ class Layers extends Component {
           </div>
           <div className={layersStyle.reportLayerSettings}>
             <div className={layersStyle.reportLayerSettings_search}>
-              <LayerSearch layer={layersState.layersById[layersState.activeLayer]} />
+              <LayerSearch layer={source.layersById[ui.extensions.activeLayerId]} />
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
               <Filters layer={layersState.layersById[layersState.activeLayer]} />
@@ -98,14 +102,14 @@ class Layers extends Component {
 
 
 Layers.propTypes = {
-  layers: React.PropTypes.object.isRequired,
+  source: React.PropTypes.object.isRequired,
   addLayer: React.PropTypes.func.isRequired,
   deleteLayer: React.PropTypes.func.isRequired,
   renameLayer: React.PropTypes.func.isRequired,
   changeLayerView: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers });
+const mapStateToProps = state => ({ source: state.reports.market.source, ui: state.reports.market.ui });
 export default connect(mapStateToProps, {
     addLayer, deleteLayer, activateLayer, renameLayer, changeLayerView
   })(Layers);
