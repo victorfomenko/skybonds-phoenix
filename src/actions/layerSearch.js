@@ -8,7 +8,8 @@ export const layerSearchBonds = (id, query, date, filtersIsins) => async (dispat
     type: actionTypes.LAYER_SEARCH_REQUEST
   });
   try {
-    let bonds = await SearchProvider.searchBondsAndFilter(query, date, filtersIsins);
+    let bonds = await SearchProvider.searchBonds(query, date);
+    bonds = SearchProvider.filterSearch(bonds, filtersIsins);
     dispatch({
       type: actionTypes.LAYER_SEARCH_RESPONSE,
       id,
@@ -30,6 +31,15 @@ export const layerSearchBonds = (id, query, date, filtersIsins) => async (dispat
       response
     });
   }
+};
+
+export const layerFilterSearchBonds = (id, bonds, filtersIsins) => async (dispatch) => {
+  bonds = SearchProvider.filterSearch(bonds, filtersIsins);
+  dispatch({
+    type: actionTypes.LAYER_SEARCH_DAILY,
+    id,
+    bonds
+  });
 };
 
 export const layerGetPlaceholderBonds = (id, isins, date) => async (dispatch) => {
