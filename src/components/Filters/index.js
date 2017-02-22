@@ -5,11 +5,13 @@ import * as DataProvider from '../../data/providers/Data';
 import { changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
+const MAX_ISINS_PER_LAYER = 200;
+
 
 class Filters extends Component {
   constructor(props) {
     super(props);
-    let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user)
+    let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user);
     this.state = {
       filters: filters,
       searchBonds: props.layer.dataComputed.search.bonds
@@ -18,7 +20,7 @@ class Filters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user)
+    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user);
     this.setState({
       filters: filters,
       searchBonds: nextProps.layer.dataComputed.search.bonds
@@ -47,7 +49,7 @@ class Filters extends Component {
     for (const key in selectedFilters) {
       //TODO Remove when it will optimise. Or move to filterFormatters
       if(key === 'range') {
-        const values = selectedFilters[key]
+        const values = selectedFilters[key];
         values.forEach(filter=>{
           const name = filter.name;
           const value = filter.values;
@@ -65,11 +67,13 @@ class Filters extends Component {
 
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
-    // TODO take stats right here if we don't have search isins to get stats by
-    const { result } = await DataProvider.filtersApply(filters, true);
+    const needFilteredStats = this.props.layer.dataComputed.search.isins.length == 0;
+    let { result, stats } = await DataProvider.filtersApply(filters, needFilteredStats);
     this.props.changeFiltersIsins(this.props.layer.id, result);
-    const stats = await DataProvider.filtersStats(filters, this.props.layer.dataComputed.isins);
-    this.props.changeLayersBonds(this.props.layer.id, this.props.layer.dataComputed.isins, filters.date);
+    if(!needFilteredStats) {
+      stats = await DataProvider.filtersStats(filters, this.props.layer.dataComputed.isins);
+    }
+    this.props.changeLayersBonds(this.props.layer.id, this.props.layer.dataComputed.isins.slice(0, MAX_ISINS_PER_LAYER), filters.date);
     this.props.changeFilters(this.props.layer.id, this.makeViewModel(stats, all));
   }
 
