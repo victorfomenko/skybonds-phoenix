@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
-import * as DataProvider from '../../data/providers/Data';
-import { changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
+import { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 const MAX_ISINS_PER_LAYER = 200;
@@ -14,7 +13,8 @@ class Filters extends Component {
     this.state = {
       stats: props.layer.data.filters.stats,
       values: props.layer.source.filters,
-      searchBonds: props.layer.data.search.bonds
+      searchBonds: props.layer.data.search.bonds,
+      searchIsins: props.layer.data.search.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
   }
@@ -23,7 +23,8 @@ class Filters extends Component {
     this.setState({
       stats: nextProps.layer.data.filters.stats,
       values: nextProps.layer.source.filters,
-      searchBonds: nextProps.layer.data.search.bonds
+      searchBonds: nextProps.layer.data.search.bonds,
+      searchIsins: nextProps.layer.data.search.isins
     });
   }
 
@@ -57,16 +58,13 @@ class Filters extends Component {
 
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
-    const needFilteredStats = this.props.layer.data.search.isins.length == 0;
-    let { result, stats } = await DataProvider.filtersApply(filters, needFilteredStats);
-    this.props.changeFiltersIsins(this.props.layer.id, result);
-    if(!needFilteredStats) {
-      stats = await DataProvider.filtersStats(filters, this.props.layer.data.isins);
+    const needStatsFromFilters = this.state.searchIsins.length == 0;
+    await this.props.layerFilterBonds(this.props.layer.id, filters, needStatsFromFilters);
+    if(!needStatsFromFilters) {
+      await this.props.layerGetFilterStats(this.props.layer.id, filters, this.state.isins);
     }
-    this.props.changeLayersBonds(this.props.layer.id, this.props.layer.data.isins.slice(0, MAX_ISINS_PER_LAYER), filters.date);
-    this.props.changeFilters(this.props.layer.id, this.makeViewModel(stats, all));
+    this.props.changeLayersBonds(this.props.layer.id, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), this.state.filters.date);
   }
-
 
   getDefaultFilters() {
     let filters = {
@@ -325,7 +323,7 @@ class Filters extends Component {
     for (const name in viewModel) {
       const defaultFilter =   viewModel[name];
       let values =  defaultFilter.values;
-        
+
       //Add selected values
       const selectedValues =  valuesViewModel[name] ? valuesViewModel[name].values : null;
       if(selectedValues && selectedValues.length) {
@@ -436,10 +434,11 @@ class Filters extends Component {
 
 Filters.propTypes = {
   layer: React.PropTypes.object.isRequired,
+  layerFilterBonds: React.PropTypes.func.isRequired,
   changeFilters: React.PropTypes.func.isRequired,
   changeFiltersIsins: React.PropTypes.func.isRequired,
   changeLayersBonds: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
-export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, changeLayersBonds })(Filters);
+export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds })(Filters);

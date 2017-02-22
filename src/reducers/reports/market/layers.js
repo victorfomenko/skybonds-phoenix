@@ -68,7 +68,7 @@ const layers = (state = {}, action) => {
               ...layer,
               ui: {
                 ...layer.ui,
-                name: action.name 
+                name: action.name
               }
             } : layer;
         })
@@ -87,18 +87,6 @@ const layers = (state = {}, action) => {
             } : layer;
         })
       };
-
-    case actionTypes.LAYER_SEARCH_REQUEST:
-      // should change state.query, but before debounce, not after
-      return state;
-    // return {
-    //   ...state,
-    //   layersById: mapValues(state.layersById, (layer) => {
-    //     return layer.id === action.id ?
-    //       {...layer, search: {...layer.search, query: action.query}} :
-    //       layer
-    //   })
-    // };
 
     case actionTypes.LAYER_SEARCH_ISINS_CHANGE:
       return {
@@ -132,8 +120,6 @@ const layers = (state = {}, action) => {
       };
 
     case actionTypes.LAYER_FILTERS_ISINS_CHANGE:
-      if(!action.id) { return state; }
-
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -151,9 +137,40 @@ const layers = (state = {}, action) => {
             {...layer,
               dataComputed: {...layer.dataComputed,
                 filters: {...layer.dataComputed.filters,
-                  isins: action.isins
+                  isins: action.isins,
+                  stats: action.stats
                 },
                 isins: layerIsins
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_FILTERS_STATS_CHANGE:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                filters: {...layer.dataComputed.filters,
+                  stats: action.stats
+                }
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_FILTERS_CHANGE:
+      if(!action.id) { return state; }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              dataSource: {...layer.dataSource,
+                filters: action.filters
               }
             } : layer;
         })
@@ -167,24 +184,6 @@ const layers = (state = {}, action) => {
             {...layer,
               dataComputed: {...layer.dataComputed,
                 bonds: action.bonds
-              }
-            } : layer;
-        })
-      };
-
-    case actionTypes.LAYER_SEARCH_ERROR:
-      return state;
-
-    case actionTypes.FILTERS_CHANGE:
-      if(!action.id) { return state; }
-
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
-            {...layer,
-              dataSource: {...layer.dataSource,
-                filters: action.filters
               }
             } : layer;
         })
