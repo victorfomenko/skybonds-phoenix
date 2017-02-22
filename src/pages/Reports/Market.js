@@ -32,8 +32,11 @@ class Market extends Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.market && nextProps.market.id) {
-      //const reportIsins = this.getReportIsins(nextProps.market.layers.layersById);
-      this.setState({ market: nextProps.market });
+      const reportIsins = this.getReportIsins(nextProps.market.layers.layersById);
+      this.setState({
+        reportIsins: reportIsins,
+        market: nextProps.market
+      });
     }
   }
 
