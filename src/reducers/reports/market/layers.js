@@ -351,18 +351,6 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
-    case actionTypes.LAYER_SEARCH_REQUEST:
-      // should change state.query, but before debounce, not after
-      return state;
-    // return {
-    //   ...state,
-    //   layersById: mapValues(state.layersById, (layer) => {
-    //     return layer.id === action.id ?
-    //       {...layer, search: {...layer.search, query: action.query}} :
-    //       layer
-    //   })
-    // };
-
     case actionTypes.LAYER_SEARCH_ISINS_CHANGE:
       return {
         ...state,
@@ -395,8 +383,6 @@ const layers = (state = initialState, action) => {
       };
 
     case actionTypes.LAYER_FILTERS_ISINS_CHANGE:
-      if(!action.id) { return state; }
-
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
@@ -422,23 +408,7 @@ const layers = (state = initialState, action) => {
         })
       };
 
-    case actionTypes.LAYER_BONDS_UPDATE:
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
-            {...layer,
-              dataComputed: {...layer.dataComputed,
-                bonds: action.bonds
-              }
-            } : layer;
-        })
-      };
-
-    case actionTypes.LAYER_SEARCH_ERROR:
-      return state;
-
-    case actionTypes.FILTERS_CHANGE:
+    case actionTypes.LAYER_FILTERS_CHANGE:
       if(!action.id) { return state; }
 
       return {
@@ -448,6 +418,19 @@ const layers = (state = initialState, action) => {
             {...layer,
               dataSource: {...layer.dataSource,
                 filters: action.filters
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_BONDS_UPDATE:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                bonds: action.bonds
               }
             } : layer;
         })

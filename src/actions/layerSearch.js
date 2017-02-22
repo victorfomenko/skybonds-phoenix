@@ -1,13 +1,13 @@
 import { actionTypes } from './actionTypes';
 import * as SearchProvider from '../data/providers/Search';
-import * as DataProvider from '../data/providers/Data';
 
 
-export const layerSearchBonds = (id, query, date, filtersIsins) => async (dispatch) => {
+export const layerSearchBonds = (id, query, date) => async (dispatch) => {
   dispatch({
     type: actionTypes.LAYER_SEARCH_REQUEST
   });
   try {
+    // TODO FIX THAT DAMN SILENT CODE FAILING WHEN WE MISS THAT DAMN 'LET' ON THE NEXT LINE
     let searchBonds = await SearchProvider.searchBonds(query, date);
     let isins = searchBonds.map((bond)=>{return bond.isin});
     dispatch({
@@ -15,14 +15,6 @@ export const layerSearchBonds = (id, query, date, filtersIsins) => async (dispat
       id,
       query,
       isins
-    });
-
-    // TODO FIX THAT DAMN SILENT CODE FAILING UNLESS WE HAVE THATH DAMN 'LET' ON THE NEXT LINE
-    let layerBonds = await DataProvider.getLayerBondsData(isins, date);
-    dispatch({
-      type: actionTypes.LAYER_BONDS_UPDATE,
-      id,
-      bonds: layerBonds
     });
   }
   catch (response) {

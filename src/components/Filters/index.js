@@ -14,16 +14,15 @@ class Filters extends Component {
     let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user);
     this.state = {
       filters: filters,
-      searchBonds: props.layer.dataComputed.search.bonds
+      isins: props.layer.dataComputed.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user);
     this.setState({
-      filters: filters,
-      searchBonds: nextProps.layer.dataComputed.search.bonds
+      filters: this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user),
+      isins: nextProps.layer.dataComputed.isins
     });
   }
 
@@ -73,10 +72,9 @@ class Filters extends Component {
     if(!needFilteredStats) {
       stats = await DataProvider.filtersStats(filters, this.props.layer.dataComputed.isins);
     }
-    this.props.changeLayersBonds(this.props.layer.id, this.props.layer.dataComputed.isins.slice(0, MAX_ISINS_PER_LAYER), filters.date);
+    this.props.changeLayersBonds(this.props.layer.id, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), filters.date);
     this.props.changeFilters(this.props.layer.id, this.makeViewModel(stats, all));
   }
-
 
   makeViewModel(stats, filters) {
     let viewModel = Object.assign({}, filters);
