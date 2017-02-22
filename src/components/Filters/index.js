@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
 import * as DataProvider from '../../data/providers/Data';
-import { changeFilters, changeFiltersIsins } from '../../actions';
+import { changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 
@@ -69,6 +69,7 @@ class Filters extends Component {
     const { result } = await DataProvider.filtersApply(filters, true);
     this.props.changeFiltersIsins(this.props.layer.id, result);
     const stats = await DataProvider.filtersStats(filters, this.props.layer.dataComputed.isins);
+    this.props.changeLayersBonds(this.props.layer.id, this.props.layer.dataComputed.isins, filters.date);
     this.props.changeFilters(this.props.layer.id, this.makeViewModel(stats, all));
   }
 
@@ -142,8 +143,9 @@ class Filters extends Component {
 Filters.propTypes = {
   layer: React.PropTypes.object.isRequired,
   changeFilters: React.PropTypes.func.isRequired,
-  changeFiltersIsins: React.PropTypes.func.isRequired
+  changeFiltersIsins: React.PropTypes.func.isRequired,
+  changeLayersBonds: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
-export default connect(mapStateToProps, { changeFilters, changeFiltersIsins })(Filters);
+export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, changeLayersBonds })(Filters);
