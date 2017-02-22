@@ -83,7 +83,7 @@ class Search extends Component {
       </div>;
     }
 
-    else if(this.state.query.length < MIN_QUERY_LENGTH) {
+    else if(this.state.query.length < MIN_QUERY_LENGTH && currentBonds.length == 0) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;

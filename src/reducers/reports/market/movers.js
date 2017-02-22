@@ -1,5 +1,4 @@
 import { actionTypes } from '../../../actions/actionTypes';
-import NumberCaster from '../../../data/casters/NumberCaster';
 
 const initialState = {
   selectedPeriod: '7D',
