@@ -5,81 +5,74 @@ import FiltersCaster from '../casters/FiltersCaster';
 import { keyBy, map, isArray, intersection } from 'lodash';
 
 
-export const filtersApply = (filters, stats, details) => {
-	let isPortfolio = false;
-	filters.filters = FiltersCaster.format(filters.filters);
+export const filtersApply = (filters, stats) => {
+  let isPortfolio = false;
+  filters.filters = FiltersCaster.format(filters.filters);
 
-	filters.filters.forEach(filter=>{
-		if(filter.name === 'portfolio') {
-			isPortfolio = true;
-		}
-	});
+  filters.filters.forEach(filter=>{
+    if(filter.name === 'portfolio') {
+      isPortfolio = true;
+    }
+  });
 
-	if(isArray(filters.filters) && filters.filters.length){
-		filters.filters.push({
-			name: 'actual',
-			value: [true]
-		});
-	}
+  if(isArray(filters.filters) && filters.filters.length){
+    filters.filters.push({
+      name: 'actual',
+      value: [true]
+    });
+  }
 
-	let promises = [];
-	if(filters.filters.length) {
-		promises.push(DataApi.filtersApply(filters, stats, details))
-	}
-	if(isPortfolio){
-		promises.push(PortfolioProvider.getIsinsByDate(filters.date))
-	}
+  let promises = [];
+  if(filters.filters.length) {
+    promises.push(DataApi.filtersApply(filters, stats))
+  }
+  if(isPortfolio){
+    promises.push(PortfolioProvider.getIsinsByDate(filters.date))
+  }
 
-	return Promise.all(promises)
-	.then((responses) => {
-		let details = []
-        let stats = []
-        responses = responses.map(resp=> {
-        	if(resp.result != null) {
-        		details = resp.details || []
-        		stats = FiltersCaster.cast(resp.stats) || []
-        		return resp.result
-        	}
-        	return resp
-        })
-		const isins = intersection.apply(_, responses);
-		return {
-			result: isins,
-			details,
-			stats,
-		};
-	});
+  return Promise.all(promises)
+    .then((responses) => {
+      let stats = [];
+      responses = responses.map(resp=> {
+        if(resp.result != null) {
+          stats = FiltersCaster.cast(resp.stats) || [];
+          return resp.result
+        }
+        return resp
+      });
+      const isins = intersection.apply(_, responses);
+      return {
+        result: isins,
+        stats,
+      };
+    });
 };
 
+export const filtersStats = (filters, isins) => {
+  filters.filters = FiltersCaster.format(filters.filters);
+  // if(isArray(filters.filters) && filters.filters.length){
+  //   filters.filters.push({
+  //     name: 'actual',
+  //     value: [true]
+  //   });
+  // }
+  return DataApi.filtersStats(filters, isins).then((response)=>{
+    return FiltersCaster.cast(response) || [];
+  })
+};
 
 export const getBondsInfo = (isins, attrs) => {
-	return DataApi.getBondsInfo(isins, attrs);
+  return DataApi.getBondsInfo(isins, attrs);
 };
 
 export const getBondsDaily = (isins, date, attrs) => {
-	return DataApi.getBondsDaily(isins, date, attrs);
+  return DataApi.getBondsDaily(isins, date, attrs);
 };
 
-export const getBondsDailyForSearch = async (bonds, date) => {
-  if(bonds.length == 0) {
-    return bonds;
-  }
-  const isins = bonds.map((bond)=> { return bond.isin });
-  const DAILY_ATTRS = ['yield', 'duration'];
-  let dailyData = await DataApi.getBondsDaily(isins, date, DAILY_ATTRS);
-  let dailyDataMap = keyBy(dailyData, 'isin');
-  return bonds.map((bond)=>{
-    bond.daily = dailyDataMap[bond.isin].data || {};
-    return bond
-  });
-};
-
-export const getPlaceholderBondsForSearch = async (isins, date) => {
-  const INFO_ATTRS = ['issuerId', 'issuer', 'standardName', 'ratingGroup', 'ccy'];
-  const DAILY_ATTRS = ['yield', 'duration'];
+export const getBondsData = (isins, date, infoAttrs, dailyAttrs) => {
   return Promise.all([
-    DataApi.getBondsInfo(isins, INFO_ATTRS),
-    DataApi.getBondsDaily(isins, date, DAILY_ATTRS)
+    DataApi.getBondsInfo(isins, infoAttrs),
+    DataApi.getBondsDaily(isins, date, dailyAttrs)
   ]).then((response)=>{
     let infoDataMap = keyBy(response[0], 'isin');
     let dailyDataMap = keyBy(response[1], 'isin');
@@ -90,6 +83,30 @@ export const getPlaceholderBondsForSearch = async (isins, date) => {
         daily: dailyDataMap[isin].data || {}
       }
     });
+  });
+};
+
+export const getLayerBondsData = async (isins, date) => {
+  const INFO_ATTRS = ['issuerId', 'issuer', 'standardName', 'ratingGroup', 'ccy'];
+  const DAILY_ATTRS = ['yield', 'duration'];
+  let bondsData = await getBondsData(isins, date, INFO_ATTRS, DAILY_ATTRS);
+  return bondsData;
+};
+
+export const getSearchBondsData = async (bonds, date) => {
+  if(bonds.length == 0) {
+    return bonds;
+  }
+  const isins = bonds.map((bond)=> { return bond.isin });
+  const DAILY_ATTRS = ['yield', 'duration'];
+  let dailyData = await DataApi.getBondsDaily(isins, date, DAILY_ATTRS);
+  let dailyDataMap = keyBy(dailyData, 'isin');
+  return bonds.map((bond)=>{
+    return {
+      isin: bond.isin,
+      info: bond.info,
+      daily: dailyDataMap[bond.isin].data || {}
+    };
   });
 };
 
@@ -136,15 +153,15 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
     isConvertible = parentBond["info"].isConvertible;
     isSubordinated = parentBond["info"].isSubordinated;
     bondTypes = !isFloater && !isConvertible && !isSubordinated ? {
-      "Regular": true
-    } : isFloater ? {
-      "Floaters": true
-    } : isConvertible && !isFloater && !isSubordinated ? {
-      "Convertibles": true,
-      "Regular": true
-    } : isSubordinated ? {
-      "Subord": true
-    } : void 0;
+        "Regular": true
+      } : isFloater ? {
+        "Floaters": true
+      } : isConvertible && !isFloater && !isSubordinated ? {
+        "Convertibles": true,
+        "Regular": true
+      } : isSubordinated ? {
+        "Subord": true
+      } : void 0;
     currency = parentBond["info"].ccy;
     country = parentBond["info"].country;
     rating = parentBond["info"].ratingGroup;

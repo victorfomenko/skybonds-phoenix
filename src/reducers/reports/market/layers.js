@@ -1,5 +1,5 @@
 import { actionTypes } from '../../../actions/actionTypes';
-import { omit, mapValues, assign, cloneDeep } from 'lodash';
+import { omit, mapValues, assign, cloneDeep, intersection } from 'lodash';
 
 
 const filters = {
@@ -261,14 +261,14 @@ const initialState = {
       },
       dataComputed: {
         search: {
-          bonds: [],
-          placeholderBonds: []
+          isins: []
         },
         filters: {
           isins: [],
           stats: []
         },
-        isins: []
+        isins: [],
+        bonds: []
       },
       'viewMode' : 'bonds'
     }
@@ -299,14 +299,14 @@ const layers = (state = initialState, action) => {
             },
             dataComputed: {
               search: {
-                bonds: [],
-                placeholderBonds: []
+                isins: []
               },
               filters: {
                 isins: [],
                 stats: []
               },
-              isins: []
+              isins: [],
+              bonds: []
             },
             'viewMode' : 'bonds',
           }
@@ -363,10 +363,20 @@ const layers = (state = initialState, action) => {
     //   })
     // };
 
-    case actionTypes.LAYER_SEARCH_RESPONSE:
+    case actionTypes.LAYER_SEARCH_ISINS_CHANGE:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
+          const searchIsins = action.isins;
+          const filtersIsins = layer.dataComputed.filters.isins;
+          let layerIsins = [];
+          if (searchIsins.length && filtersIsins.length) {
+            layerIsins = intersection(searchIsins, filtersIsins);
+          } else if (searchIsins.length) {
+            layerIsins = searchIsins;
+          } else if(filtersIsins.length) {
+            layerIsins = filtersIsins;
+          }
           return layer.id === action.id ?
             {...layer,
               dataSource: {...layer.dataSource,
@@ -376,42 +386,57 @@ const layers = (state = initialState, action) => {
               },
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
-                  bonds: action.bonds
-                }
+                  isins: action.isins
+                },
+                isins: layerIsins
               }
             } : layer;
         })
       };
 
-    case actionTypes.LAYER_SEARCH_DAILY:
+    case actionTypes.LAYER_FILTERS_ISINS_CHANGE:
+      if(!action.id) { return state; }
+
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          const searchIsins = layer.dataComputed.search.isins;
+          const filtersIsins = action.isins;
+          let layerIsins = [];
+          if (searchIsins.length && filtersIsins.length) {
+            layerIsins = intersection(searchIsins, filtersIsins);
+          } else if (searchIsins.length) {
+            layerIsins = searchIsins;
+          } else if(filtersIsins.length) {
+            layerIsins = filtersIsins;
+          }
+          return layer.id === action.id ?
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                filters: {...layer.dataComputed.filters,
+                  isins: action.isins
+                },
+                isins: layerIsins
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_BONDS_UPDATE:
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
               dataComputed: {...layer.dataComputed,
-                search: {...layer.dataComputed.search,
-                  bonds: action.bonds
-                }
+                bonds: action.bonds
               }
             } : layer;
         })
       };
 
-    case actionTypes.LAYER_GET_PLACEHOLDER_BONDS:
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
-            {...layer,
-              dataComputed: {...layer.dataComputed,
-                search: {...layer.dataComputed.search,
-                  placeholderBonds: action.placeholderBonds
-                }
-              }
-            } : layer;
-        })
-      };
+    case actionTypes.LAYER_SEARCH_ERROR:
+      return state;
 
     case actionTypes.FILTERS_CHANGE:
       if(!action.id) { return state; }
@@ -423,23 +448,6 @@ const layers = (state = initialState, action) => {
             {...layer,
               dataSource: {...layer.dataSource,
                 filters: action.filters
-              }
-            } : layer;
-        })
-      };
-
-    case actionTypes.FILTERS_ISINS_CHANGE:
-      if(!action.id) { return state; }
-
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
-            {...layer,
-              dataComputed: {...layer.dataComputed,
-                filters: {...layer.dataComputed.filters,
-                  isins: action.isins
-                },
               }
             } : layer;
         })

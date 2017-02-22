@@ -38,31 +38,17 @@ class Market extends Component {
     this.setState({ reportIsins });
   }
 
-  getLayerIsins(layer){
-    const searchIsins = layer.dataComputed.search.bonds.map(bond=>{return bond.isin});
-    const searchQuery = layer.dataSource.search.query;
-    const filtersIsins = layer.dataComputed.filters.isins;
-
-    if (searchIsins.length && filtersIsins.length) {
-      return intersection(searchIsins, filtersIsins);
-    } else if (searchIsins.length) {
-      return searchIsins;
-    } else if(filtersIsins.length && searchQuery.length == 0) {
-      return filtersIsins;
-    } else {
-      return []
-    }
-  }
-
   getReportIsins(layers){
-    let layersIsins = [];
+    let nonEmptyLayers = [];
     for(let key in layers) {
-      layersIsins.push(this.getLayerIsins(layers[key]));
+      const layerIsins = layers[key].dataComputed.isins;
+      if(layerIsins.length) {
+        nonEmptyLayers.push(layerIsins);
+      }
     }
-    layersIsins = layersIsins.sort((a,b)=>{
+    nonEmptyLayers = nonEmptyLayers.sort((a,b)=>{
       return a.length - b.length;
     });
-    let nonEmptyLayers = layersIsins.filter((isins)=>{ return isins.length });
     let maxIsinsPerLayer = Math.floor(REPORT_ISINS_QUOTA / nonEmptyLayers.length);
     let remainingQuota = REPORT_ISINS_QUOTA;
     let layersIsinsByQuota = [];
@@ -74,7 +60,6 @@ class Market extends Component {
         maxIsinsPerLayer = Math.floor(remainingQuota / (nonEmptyLayers.length - index - 1));
       }
     });
-
     return union(...layersIsinsByQuota);
   }
 

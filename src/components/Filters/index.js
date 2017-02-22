@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
 import * as DataProvider from '../../data/providers/Data';
-import { changeFilters, changeFiltersIsins, layerGetPlaceholderBonds, layerFilterSearchBonds } from '../../actions';
+import { changeFilters, changeFiltersIsins } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 
@@ -65,17 +65,11 @@ class Filters extends Component {
 
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
-    const { result, stats } = await DataProvider.filtersApply(filters, true);
-    const newFilters = this.makeViewModel(stats, all);
-    let date = this.getDate();
-    if(this.state.searchBonds.length == 0) {
-      // TODO: slice by layerQuota, not by 200
-      this.props.layerGetPlaceholderBonds(this.props.layer.id, result.slice(0, 200), date);
-    } else {
-      this.props.layerFilterSearchBonds(this.props.layer.id, this.props.layer.dataComputed.search.bonds, result);
-    }
-    this.props.changeFilters(this.props.layer.id, newFilters);
+    // TODO take stats right here if we don't have search isins to get stats by
+    const { result } = await DataProvider.filtersApply(filters, true);
     this.props.changeFiltersIsins(this.props.layer.id, result);
+    const stats = await DataProvider.filtersStats(filters, this.props.layer.dataComputed.isins);
+    this.props.changeFilters(this.props.layer.id, this.makeViewModel(stats, all));
   }
 
 
@@ -152,4 +146,4 @@ Filters.propTypes = {
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
-export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, layerGetPlaceholderBonds, layerFilterSearchBonds })(Filters);
+export default connect(mapStateToProps, { changeFilters, changeFiltersIsins })(Filters);

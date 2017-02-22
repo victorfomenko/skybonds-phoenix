@@ -8,45 +8,28 @@ export const layerSearchBonds = (id, query, date, filtersIsins) => async (dispat
     type: actionTypes.LAYER_SEARCH_REQUEST
   });
   try {
-    let bonds = await SearchProvider.searchBonds(query, date);
-    bonds = SearchProvider.filterSearch(bonds, filtersIsins);
+    let searchBonds = await SearchProvider.searchBonds(query, date);
+    let isins = searchBonds.map((bond)=>{return bond.isin});
     dispatch({
-      type: actionTypes.LAYER_SEARCH_RESPONSE,
+      type: actionTypes.LAYER_SEARCH_ISINS_CHANGE,
       id,
       query,
-      bonds
+      isins
     });
 
-    bonds = await DataProvider.getBondsDailyForSearch(bonds, date);
+    // TODO FIX THAT DAMN SILENT CODE FAILING UNLESS WE HAVE THATH DAMN 'LET' ON THE NEXT LINE
+    let layerBonds = await DataProvider.getLayerBondsData(isins, date);
     dispatch({
-      type: actionTypes.LAYER_SEARCH_DAILY,
+      type: actionTypes.LAYER_BONDS_UPDATE,
       id,
-      bonds
+      bonds: layerBonds
     });
   }
   catch (response) {
     dispatch({
-      type: actionTypes.LAYER_SEARCH_RESPONSE,
+      type: actionTypes.LAYER_SEARCH_ERROR,
       id,
       response
     });
   }
-};
-
-export const layerFilterSearchBonds = (id, bonds, filtersIsins) => async (dispatch) => {
-  bonds = SearchProvider.filterSearch(bonds, filtersIsins);
-  dispatch({
-    type: actionTypes.LAYER_SEARCH_DAILY,
-    id,
-    bonds
-  });
-};
-
-export const layerGetPlaceholderBonds = (id, isins, date) => async (dispatch) => {
-  let placeholderBonds = await DataProvider.getPlaceholderBondsForSearch(isins, date);
-  dispatch({
-    type: actionTypes.LAYER_GET_PLACEHOLDER_BONDS,
-    id,
-    placeholderBonds
-  });
 };
