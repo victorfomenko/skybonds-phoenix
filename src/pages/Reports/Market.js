@@ -71,7 +71,6 @@ class Market extends Component {
   }
 
   render(){
-    console.log(this.state)
     const { market } = this.state;
     return (
       <div className='skybondsWrap'>

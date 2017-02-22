@@ -22,7 +22,7 @@ export default {
   },
 
   cast:  (value)=> {
-	const { ids, layersById } = castLayers(value.source.layers || [], value.ui.extensions.web.layers || [])
+	const { ids, layersById } = castLayers(value.source.layers || [], value.ui.extensions.web.layers || [], value.ui.extensions.web.activeLayerId)
 	
   	return {
   		id: value.id,
@@ -33,7 +33,6 @@ export default {
   		},
   		include: value.source.include,
 		exclude: value.source.exclude,
-		activeLayerId: value.ui.extensions.web.activeLayerId,
   		ui: {
   			...value.ui,
   			extensions: {
@@ -62,12 +61,12 @@ const formatLayer = (value) => {
 }
 
 
-const castLayers = (sourceLayers, uiLayers) => {
+const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
 	let ids = [];
 	let layersById = {};
 
 	sourceLayers.forEach((layer, index) => {
-		const ui = uiLayers[index] ? castUiLayer(uiLayers[index]) : {};
+		const ui = uiLayers[index] ? castUiLayer(uiLayers[index], activeLayerId) : {};
 		const source = castSourceLayer(layer);
 		const data = {
 			search: {
@@ -81,16 +80,17 @@ const castLayers = (sourceLayers, uiLayers) => {
 	        bonds: []
 		}
 
-		ids.push(layer.id);
+		ids.push(String(layer.id));
 		layersById[layer.id] = { source, ui, data }
 	})
 	return { ids, layersById }
 }
 
 
-const castUiLayer = ({ name, viewMode }) => {
+const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
 	if(name == null) return {}
-	return Object.assign({}, { name, viewMode })
+	const active = String(id) === activeLayerId;
+	return Object.assign({}, { name, viewMode, active })
 }
 
 const castSourceLayer = ({ id, method, functions }) => {

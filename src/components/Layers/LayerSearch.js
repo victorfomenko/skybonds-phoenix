@@ -8,15 +8,15 @@ class LayerSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: props.layer.dataSource.search.query,
-      bonds: props.layer.dataComputed.bonds
+      query: props.layer.source.search.query,
+      bonds: props.layer.data.bonds
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      query: nextProps.layer.dataSource.search.query,
-      bonds: nextProps.layer.dataComputed.bonds
+      query: nextProps.layer.source.search.query,
+      bonds: nextProps.layer.data.bonds
     });
   }
 

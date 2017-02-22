@@ -70,6 +70,7 @@ const market = (state = initState, action) => {
 		default: 
 			return {
 			 ...state,
+			 layers: layers(state.layers, action),
 			 movers: movers(state.movers, action) 
 			}
 	};

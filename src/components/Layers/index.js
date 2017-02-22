@@ -61,7 +61,7 @@ class Layers extends Component {
                 key={'layer_key_' + index}
                 id={layerID}
                 name={layer.ui.name}
-                active={(layerID == this.props.activeLayerId)? true: false}
+                active={layer.ui.active}
                 onLayerClose={this.onLayerClose.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}
@@ -83,7 +83,7 @@ class Layers extends Component {
           </div>
           <div className={layersStyle.reportLayerSettings}>
             <div className={layersStyle.reportLayerSettings_search}>
-              {/*<LayerSearch layer={layersState.layersById[activeLayerId]} /> */}
+              <LayerSearch layer={layersState.layersById[activeLayerId]} />
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
               <Filters layer={layersState.layersById[activeLayerId]} />
