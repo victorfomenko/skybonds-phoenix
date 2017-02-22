@@ -23,7 +23,6 @@ export default {
 
   cast:  (value)=> {
 	const { ids, layersById } = castLayers(value.source.layers || [], value.ui.extensions.web.layers || [], value.ui.extensions.web.activeLayerId)
-	
   	return {
   		id: value.id,
   		version: value.version,
@@ -36,8 +35,8 @@ export default {
   		ui: {
   			...value.ui,
   			extensions: {
-  				calendar: value.ui.extensions.web.calendar
-  			}
+  				calendar: value.ui.extensions.web.calendar 
+  			},
   		},
 		addons: value.addons
   	}

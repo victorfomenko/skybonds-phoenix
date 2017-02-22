@@ -11,7 +11,6 @@ const MAX_ISINS_PER_LAYER = 200;
 class Filters extends Component {
   constructor(props) {
     super(props);
-    //let filters = this.formatPortfolio(props.layer.source.filters, props.user);
     this.state = {
       stats: props.layer.data.filters.stats,
       values: props.layer.source.filters,
@@ -21,22 +20,11 @@ class Filters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    //let filters = this.formatPortfolio(nextProps.layer.source.filters, this.props.user);
     this.setState({
       stats: nextProps.layer.data.filters.stats,
       values: nextProps.layer.source.filters,
       searchBonds: nextProps.layer.data.search.bonds
     });
-  }
-
-  formatPortfolio(filters, user) {
-    if(filters['portfolio'] != null) {return filters}
-    if(isPortfolioScb(user)) {
-      filters['portfolio'] = {
-        values: [{name: 'Portfolio'}]
-      }
-    }
-    return filters;
   }
 
   getDate(){
@@ -69,7 +57,7 @@ class Filters extends Component {
 
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
-    const needFilteredStats = this.props.layer.dataComputed.search.isins.length == 0;
+    const needFilteredStats = this.props.layer.data.search.isins.length == 0;
     let { result, stats } = await DataProvider.filtersApply(filters, needFilteredStats);
     this.props.changeFiltersIsins(this.props.layer.id, result);
     if(!needFilteredStats) {
@@ -81,7 +69,7 @@ class Filters extends Component {
 
 
   getDefaultFilters() {
-    return {
+    let filters = {
       industry:{
         values: [
           {name: 'Agency'},
@@ -322,22 +310,39 @@ class Filters extends Component {
         ]
       }
     };
+    if(isPortfolioScb(this.props.user)) {
+      filters['portfolio'] = {
+        values: [{name: 'Portfolio'}]
+      }
+    }
+    return filters
   }
 
   makeViewModel1(stats, values) {
     const viewModel = this.getDefaultFilters();
     const valuesViewModel = this.valuesViewModel(values);
-    //const statsModel = this.statsViewModel(stats);
 
     for (const name in viewModel) {
       const defaultFilter =   viewModel[name];
-      const selectedValues =  valuesViewModel[name] ? valuesViewModel[name].values : null;
       let values =  defaultFilter.values;
         
       //Add selected values
+      const selectedValues =  valuesViewModel[name] ? valuesViewModel[name].values : null;
       if(selectedValues && selectedValues.length) {
         values.forEach((item, index)=>{
           selectedValues.forEach(value=> {
+            if(item.name === value.name) {
+              item.selected = true;
+            }
+          })
+        })
+      }
+
+      //Add stats values
+      console.log(stats);
+      if(stats && stats.length) {
+        values.forEach((item, index)=>{
+          stats.forEach(value=> {
             if(item.name === value.name) {
               item.selected = true;
             }
@@ -357,14 +362,13 @@ class Filters extends Component {
         values: values
       };
     }
-    console.log(result);
     return result;
   }
 
   statsViewModel(stats) {
-    const filters = this.getDefaultFilters();
-    let viewModel = Object.assign({}, filters);
-    let typeValues = {};
+    // const filters = this.getDefaultFilters();
+    // let viewModel = Object.assign({}, filters);
+    // let typeValues = {};
 
     stats.forEach(item => {
       switch(item.name){
@@ -388,29 +392,29 @@ class Filters extends Component {
       }
     })
 
-    stats.forEach(item => {
-      if(filters[item.name]){
-        let values = filters[item.name].values;
-        if(!values.length) return;
-        values.forEach(value=>{
-          value.tag = null;
-          if(Object.keys(item.values).length) {
-            value.disabled = true;
-          }
-          if(Object.keys(item.values).length === 0){
-            value.disabled = false;
-          }
-          Object.keys(item.values).forEach(_value=>{
-            if(value.name == _value){
-              value.disabled = !Number(item.values[_value]);
-              value.tag = item.values[_value];
-            }
-          });
-        });
-        viewModel[item.name] = { values };
-      }
-    });
-    return viewModel;
+    // stats.forEach(item => {
+    //   if(filters[item.name]){
+    //     let values = filters[item.name].values;
+    //     if(!values.length) return;
+    //     values.forEach(value=>{
+    //       value.tag = null;
+    //       if(Object.keys(item.values).length) {
+    //         value.disabled = true;
+    //       }
+    //       if(Object.keys(item.values).length === 0){
+    //         value.disabled = false;
+    //       }
+    //       Object.keys(item.values).forEach(_value=>{
+    //         if(value.name == _value){
+    //           value.disabled = !Number(item.values[_value]);
+    //           value.tag = item.values[_value];
+    //         }
+    //       });
+    //     });
+    //     viewModel[item.name] = { values };
+    //   }
+    // });
+    // return viewModel;
   }
 
   render() {

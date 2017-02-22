@@ -27,7 +27,7 @@ const initState = {
 			},
 			filters: {
 			  isins: [],
-			  stats: {}
+			  stats: []
 			},
 			isins: [],
 			bonds: []
