@@ -8,30 +8,32 @@ class LayerSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: props.layer.source.search.query,
-      bonds: props.layer.data.bonds
+      searchQuery: props.layer.source.search.query,
+      layerIsins: props.layer.data.isins,
+      layerBonds: props.layer.data.bonds
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      query: nextProps.layer.source.search.query,
-      bonds: nextProps.layer.data.bonds
+      searchQuery: nextProps.layer.source.search.query,
+      layerIsins: nextProps.layer.data.isins,
+      layerBonds: nextProps.layer.data.bonds
     });
   }
 
   async sendSearchRequest(query, date) {
     await this.props.layerSearchBonds(this.props.layer.id, query, date);
-    await this.props.layerGetFilterStats(this.props.layer.id, this.props.layer.dataSource.filters, this.state.isins);
-    this.props.changeLayersBonds(this.props.layer.id, this.state.isins, date);
+    await this.props.layerGetFilterStats(this.props.layer.id, this.props.layer.dataSource.filters, this.state.layerIsins);
+    this.props.changeLayersBonds(this.props.layer.id, this.state.layerIsins, date);
   }
 
   render() {
     return (
       <div>
         <Search
-          query={this.state.query}
-          bonds={this.state.bonds}
+          query={this.state.searchQuery}
+          bonds={this.state.layerBonds}
           sendSearchRequest={this.sendSearchRequest.bind(this)} />
       </div>
     );

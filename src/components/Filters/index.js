@@ -11,9 +11,9 @@ class Filters extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stats: props.layer.data.filters.stats,
-      values: props.layer.source.filters,
-      searchBonds: props.layer.data.search.bonds,
+      filtersValues: props.layer.source.filters,
+      filtersStats: props.layer.data.filters.stats,
+      isins: props.layer.data.isins,
       searchIsins: props.layer.data.search.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
@@ -21,9 +21,9 @@ class Filters extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      stats: nextProps.layer.data.filters.stats,
-      values: nextProps.layer.source.filters,
-      searchBonds: nextProps.layer.data.search.bonds,
+      filtersValues: nextProps.layer.source.filters,
+      filtersStats: nextProps.layer.data.filters.stats,
+      isins: nextProps.layer.data.isins,
       searchIsins: nextProps.layer.data.search.isins
     });
   }
@@ -49,7 +49,7 @@ class Filters extends Component {
 
       }
     }
-    delete selectedFilters['range']
+    delete selectedFilters['range'];
     let filtersProviderParams = {'filters': selectedFilters};
     filtersProviderParams['date'] = this.getDate();
 
@@ -353,9 +353,9 @@ class Filters extends Component {
   }
 
   valuesViewModel(val){
-    let result = {}
+    let result = {};
     for(let key in val) {
-      const values = val[key].map(item => { return {name: item} })
+      const values = val[key].map(item => { return {name: item} });
       result[key] = {
         values: values
       };
@@ -388,7 +388,7 @@ class Filters extends Component {
             return filter
           })
       }
-    })
+    });
 
     // stats.forEach(item => {
     //   if(filters[item.name]){
@@ -416,8 +416,8 @@ class Filters extends Component {
   }
 
   render() {
-    const { stats, values } = this.state;
-    const filters = this.makeViewModel1(stats, values)
+    const { filtersStats, filtersValues } = this.state;
+    const filters = this.makeViewModel1(filtersStats, filtersValues);
 
     return (
       <UIFilters
