@@ -7,6 +7,7 @@ import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import style from './styles.sass';
 
 import { loadMovers } from '../../actions';
+import { openBondInfo } from '../../actions';
 
 class Movers extends Component {
 
@@ -22,6 +23,8 @@ class Movers extends Component {
                       {value: 'M'},
                       {value: '3M'}];
     this.state = { unitList, periodList, isLoaded: true};
+
+    this.onClickByMover = this.onClickByMover.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,6 +79,10 @@ class Movers extends Component {
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, period, this.props.movers.selectedUnit);
   }
 
+  onClickByMover(isin) {
+    this.props.openBondInfo(isin)
+  }
+
   render() {
     var movers = this.props.movers;
     let increase = [];
@@ -114,7 +121,9 @@ class Movers extends Component {
             <tr key={'marketmover_' + key }
                 className={style.reportAsideMoversTable_row}
                 onMouseEnter={()=>this.props.onActiveIsinChange(bond.isin)}
-                onMouseLeave={()=>this.props.onActiveIsinChange(null)}>
+                onMouseLeave={()=>this.props.onActiveIsinChange(null)}
+                onClick={ () => this.onClickByMover(bond.isin) }
+            >
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>
@@ -214,8 +223,9 @@ class Movers extends Component {
 
 Movers.propTypes = {
   loadMovers: React.PropTypes.func.isRequired,
+  openBondInfo: React.PropTypes.func.isRequired,
   onActiveIsinChange: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ movers: state.reports.market.movers });
-export default connect(mapStateToProps, { loadMovers })(Movers);
+export default connect(mapStateToProps, { loadMovers, openBondInfo })(Movers);

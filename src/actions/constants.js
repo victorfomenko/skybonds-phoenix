@@ -36,3 +36,8 @@ export const LOAD_MOVERS_FAILURE = 'LOAD_MOVERS_FAILURE';
 //Filters
 export const FILTERS_CHANGE = 'FILTERS_CHANGE';
 export const FILTERS_ISINS_CHANGE = 'FILTERS_ISINS_CHANGE';
+
+
+//Bond Info
+export const OPEN_BOND_INFO = 'OPEN_BOND_INFO';
+export const CLOSE_BOND_INFO = 'CLOSE_BOND_INFO';

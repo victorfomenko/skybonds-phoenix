@@ -10,6 +10,7 @@ const initialState = {
 const movers = (state = initialState, action) => {
 	switch (action.type) {
 		case actionTypes.LOAD_MOVERS_SUCCESS:
+      console.log('action', action);
       return {
         ...state,
         selectedPeriod: action.selectedPeriod,

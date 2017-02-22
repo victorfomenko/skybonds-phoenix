@@ -1,0 +1,184 @@
+@import '~@skybonds/ui-styles/vars'
+
+.reportAsideBondGeneral
+  display: block
+  position: absolute
+  z-index: 3
+  width: 420px
+  left: 0
+  transform: translateX(440px)
+  top: 10px
+  bottom: 10px
+  background-color: #ffffff
+  border: 1px solid $colorBorder
+  border-radius: 3px
+  @include dropdownShadow
+  transition: transform 200ms ease-out
+  will-change: transform
+  &.__active
+    transform: translateX(20px)
+
+.reportAsideBond
+  display: flex
+  flex-direction: column
+
+.reportAsideBond_link
+  color: $colorLink
+  border-bottom: 1px solid transparentize($colorLink,0.75)
+  text-decoration: none
+  cursor: pointer
+  &:hover
+    color: $colorLoudHover
+
+.reportAsideBond_close
+  position: absolute
+  z-index: 1000
+  right: 10px
+  top: 10px
+  border: none
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMS40MTQgMTBMMjAgMS40MTRWMGgtMS40MTRMMTAgOC41ODYgMS40MTQgMEgwdjEuNDE0TDguNTg2IDEwIDAgMTguNTg2VjIwaDEuNDE0TDEwIDExLjQxNCAxOC41ODYgMjBIMjB2LTEuNDE0eiIvPjwvc3ZnPg==')
+  width: 20px
+  height: 20px
+  zoom: 0.5
+  display: inline-block
+  margin: 0 0 0 20px
+  color: #999
+  cursor: pointer
+
+
+.reportAsideBondHeader
+  padding: 5px 36px 5px 20px
+
+.reportAsideBondHeader_list
+
+.reportAsideBondHeader_line
+  margin-top: 4px
+  &:first-child
+    margin-top: 0
+
+.reportAsideBondHeader_item
+  display: inline-block
+  margin-top: 2px
+  margin-right: 10px
+  white-space: nowrap
+  &:last-child
+    margin-right: 0
+
+.reportAsideBondHeader_item__issuer
+  position: relative
+
+.reportAsideBondHeader_title
+  font-weight: bold
+  font-size: 24px
+  line-height: 30px
+
+.reportAsideBondHeader_excluded
+  position: absolute
+
+.reportAsideBondHeader_excluded.__bond
+  left: 4px
+  top: 12px
+
+.reportAsideBondHeader_excluded.__issuer
+  left: -16px
+  top: -2px
+
+
+.reportAsideBondHeader_outlook
+  color: $colorMuted
+
+.reportAsideBondContent
+  display: flex
+  position: relative
+  overflow: hidden
+  @include scrollShadows
+.reportAsideBondContent_wrap
+  padding: 0 20px
+  overflow: auto
+.reportAsideBondContent_section
+  margin: 20px 0
+.reportAsideBondContent_table
+  & + .reportAsideBondContent_table
+    margin-top: 10px
+.reportAsideBondContent_row
+.reportAsideBondContent_cell
+  padding: 3px 0 3px 1em
+  &:first-child
+    padding-left: 0
+  &.__header
+    font-weight: bold
+  &.__number
+    text-align: right
+    &:empty:before
+      content: "NA"
+      color: $colorBorder
+      font-size: 10px
+  &.__unit
+    vertical-align: middle
+    padding-left: 4px
+    color: $colorMuted
+    font-size: 10px
+.reportAsideBondContent_list
+.reportAsideBondContent_item
+  padding: 3px 0 3px
+.reportAsideBondContent_tooltip
+  border-bottom: 1px dashed transparentize($colorLink,0.75)
+  cursor: help
+
+
+.reportAsideBondPortfolio
+  margin: 20px 0
+  border: 1px solid $colorLink
+  padding: 10px
+  border-radius: 3px
+.reportAsideBondPortfolio_title
+  font-size: 14px
+  color: $colorLink
+  margin: 0 0 6px
+.reportAsideBondPortfolio_icon
+  margin: 0 6px 0 0
+.reportAsideBondPortfolio_type
+  font-weight: bold
+.reportAsideBondPortfolio_table
+  margin: 0 0 6px
+.reportAsideBondPortfolio_thead
+  .reportAsideBondPortfolio_row
+    border-bottom: 1px solid $colorBorder
+.reportAsideBondPortfolio_cell
+  padding: 3px 0 3px 1em
+  &.__number
+    text-align: right
+  &:first-child
+    padding-left: 0
+.reportAsideBondPortfolio_thead
+  .reportAsideBondPortfolio_cell
+    color: $colorMuted
+    font-size: 10px
+    font-weight: normal
+    &:first-child
+      color: $colorText
+      font-size: 12px
+      font-weight: bold
+.reportAsideBondPortfolio_limit
+  margin: 0 4px 0 0
+  vertical-align: top
+  &.__80-100
+    color: $colorLimit80-100
+    fill: $colorLimit80-100
+    stroke: $colorLimit80-100
+  &.__60-80
+    color: $colorLimit60-80
+    fill: $colorLimit60-80
+    stroke: $colorLimit60-80
+  &.__40-60
+    color: $colorLimit40-60
+    fill: $colorLimit40-60
+    stroke: $colorLimit40-60
+  &.__20-40
+    color: $colorLimit20-40
+    fill: $colorLimit20-40
+    stroke: $colorLimit20-40
+  &.__0-20
+    color: $colorLimit0-20
+    fill: $colorLimit0-20
+    stroke: $colorLimit0-20

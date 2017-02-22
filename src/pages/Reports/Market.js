@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
+import BondInfo from '../../components/BondInfo';
 import Movers from '../../components/Movers';
 import { getSpaces } from '../../data/providers/Spaces';
 import { isEqual, intersection, uniq, union } from 'lodash';
@@ -102,6 +103,9 @@ class Market extends Component {
                 <Movers
                   isins={this.state.reportIsins}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
+                <BondInfo
+                  date={'2017/02/17'}
+                  />
               </div>
             </div>
           </div>
