@@ -144,7 +144,8 @@ class Movers extends Component {
             <tr key={'marketmover_' + key }
                 className={style.reportAsideMoversTable_row}
                 onMouseEnter={()=>this.props.onActiveIsinChange(bond.isin)}
-                onMouseLeave={()=>this.props.onActiveIsinChange(null)}>
+                onMouseLeave={()=>this.props.onActiveIsinChange(null)}
+                onClick={ () => this.onClickByMover(bond.isin) }>
               <td className={style.reportAsideMoversTable_cell + ' ' + style.__symbol}>
                 {(bond.inBondPortfolio) ? portfolioIcon : ''}
               </td>

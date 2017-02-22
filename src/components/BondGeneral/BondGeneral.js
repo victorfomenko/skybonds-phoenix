@@ -6,6 +6,7 @@ import style from './style.sass';
 import { getColor, getSynonym } from '../../helpers/BondRating';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
+import { getLabel } from '../../helpers/BondOutlook';
 import BondTSChart from '../BondTSChart';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
@@ -115,26 +116,6 @@ class BondGeneral extends Component {
     }
     return date
   }
-  getOutlookLabel(outlook) {
-    if ( typeof outlook === 'string') {
-      switch (outlook.toLowerCase()) {
-        case 'positive':
-        case 'pos':
-          return 'Positive ↑';
-        case 'negative':
-        case 'neg':
-          return 'Negative ↓';
-        case 'stable':
-        case 'sta':
-          return 'Stable ≈';
-        default:
-          return 'NA outlook';
-      }
-    } else
-    {
-      return 'NA outlook';
-    }
-  };
 
   parseDate(str) {
     if(!/^(\d){8}$/.test(str)) return 'invalid date';
@@ -169,7 +150,9 @@ class BondGeneral extends Component {
   }
 
   getCleanWebLink(link) {
-    return link.replace(/https?\:\/\/|\/$/ig, '')
+    if (link != null) {
+      return link.replace(/https?\:\/\/|\/$/ig, '')
+    }
   }
 
   render(){
@@ -209,9 +192,9 @@ class BondGeneral extends Component {
                 </span>
 
                 <span className={style.bondGeneralValues_value}>
-                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.fitch)}</div>
-                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.sp)}</div>
-                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.moodys)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{getLabel(bond.info.fitch)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{getLabel(bond.info.sp)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{getLabel(bond.info.moodys)}</div>
                 </span>
                 <span className={style.bondGeneralValues_value}>
                   <div className={style.bondGeneralValues_row + ' ' + style.__rating} style={{color: getColor(bond.info.ratingGroup)}}>{bond.info.ratingGroup}</div>

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { getColor } from '../../helpers/BondRating';
 import { connect } from 'react-redux';
 import * as Data from '../../data/providers/Data';
+import DateFormatter from '../../helpers/formatters/DateFormatter';
+import { getLabel } from '../../helpers/BondOutlook';
 import { closeBondInfo } from '../../actions';
 import style from './style.sass';
 
@@ -32,7 +34,7 @@ class BondInfo extends Component {
   initBond(isin = null, date = null) {
 
     let dailyAttrs = ['coupon'];
-    let infoAttrs = ['isin', 'standardName', 'maturityDate', 'issuerId', 'issuerName', 'sector', 'outlook', 'rating'];
+    let infoAttrs = ['isin', 'standardName', 'maturityDate', 'issuerId', 'issuer', 'sector', 'outlook', 'ratingGroup'];
     if(isin != null && date != null ) {
       Promise.all([
         Data.getBondsInfo([isin], infoAttrs),
@@ -41,9 +43,13 @@ class BondInfo extends Component {
       ]).then((response) => {
         this.setState({
           'loaded': true,
-          'info': response[0][0].data,
-          'daily': response[1][0].data,
-          'putDate': this.getPutCallDate(response[2].data)
+          'bond': {
+            'info': response[0][0].data,
+            'daily': response[1][0].data,
+            'isin': isin,
+            'putDate': this.getPutCallDate(response[2].data)
+          }
+
         });
 
       });
@@ -97,8 +103,7 @@ class BondInfo extends Component {
   }
 
   render(){
-    const bond = this.state;
-    console.log('bond', bond);
+    const bond = this.state.bond;
     if(this.state.loaded) {
       return (
         <div className={style.reportAsideBondGeneral + ' ' + (this.props.bondInfo.show ? style.__active : '')}>
@@ -118,7 +123,7 @@ class BondInfo extends Component {
                   <ul className={style.reportAsideBondHeader_list}>
                     <li className={style.reportAsideBondHeader_item}>
                       <span>Maturity date </span>
-                      <span>{bond.info.maturityDate}</span>
+                      <span>{DateFormatter(this.parseDate(bond.info.maturityDate))}</span>
                     </li>
                     <li className={style.reportAsideBondHeader_item}>
                       <span>Coupon </span>
@@ -126,7 +131,7 @@ class BondInfo extends Component {
                     </li>
                     { bond.putDate ?
                       <li className={style.reportAsideBondHeader_item}>
-                        <span>{bond.putDate})</span>
+                        <span>({DateFormatter(this.parseDate(bond.putDate))})</span>
                       </li>
                       : ''
                     }
@@ -141,15 +146,15 @@ class BondInfo extends Component {
                                    onClick={this.toggleExcludeIssuer()}/>
                           */}
                           <a href={'/issuer/' + bond.info.issuerId }
-                             className={style.reportAsideBond_link}>{bond.info.issuerName}</a>
+                             className={style.reportAsideBond_link}>{bond.info.issuer}</a>
                         </li>
                         <li className={style.reportAsideBondHeader_item}>
                           <a href="" className={style.reportAsideBond_link} onClick={this.addSetOfSimilarBonds()}></a>
                           <span>{bond.info.sector}, </span>
-                          <span style={{color: getColor(bond.info.ratingGroup)}}>{bond.info.rating}</span>
+                          <span style={{color: getColor(bond.info.ratingGroup)}}>{bond.info.ratingGroup}</span>
                         </li>
                         <li className={style.reportAsideBondHeader_item + ' ' + style.reportAsideBondHeader_outlook}>
-                          <span>{bond.info.outlook}</span>
+                          <span>{ getLabel(bond.info.outlook) }</span>
                         </li>
                       </ul>
                     </li>
@@ -157,7 +162,7 @@ class BondInfo extends Component {
                 </li>
                 <li className={style.reportAsideBondHeader_line}>
                   <ul className={style.reportAsideBondHeader_list}>
-                    <li className={style.reportAsideBondHeader_item}>{bond.info.isin}</li>
+                    <li className={style.reportAsideBondHeader_item}>{bond.isin}</li>
                   </ul>
                 </li>
               </ul>
@@ -166,7 +171,7 @@ class BondInfo extends Component {
         </div>
       );
     } else {
-      return(<div>Loading...</div>);
+      return <span></span>;
     }
   }
 }
