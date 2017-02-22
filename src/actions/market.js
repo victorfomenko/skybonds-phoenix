@@ -1,12 +1,12 @@
 import { actionTypes } from './actionTypes';
-import { getSpaces } from '../data/providers/Spaces';
+import { getMarketSpaces } from '../data/providers/Spaces';
 
 export const loadReports = (reportID) => async (dispatch) => {
 
   dispatch({ type: actionTypes.MARKET_REPORTS_FETCH_REQUEST });
 
   try {
-    const reports = await getSpaces();
+    const reports = await getMarketSpaces();
     dispatch({type: actionTypes.MARKET_REPORTS_FETCH_SUCCESS, reports, reportID});
   }
   catch(error) {

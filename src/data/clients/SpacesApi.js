@@ -23,9 +23,9 @@ export const getSpaceById = (spaceId) => {
 	return requestProvider.get({
 		url: `${API_V1}/${USER_ID}/${spaceId}`
 	})
-	// .then(space => {
-	// 	return Promise.resolve(SpaceCaster.cast(space))
-	// });
+	.then(space => {
+		return Promise.resolve(SpaceCaster.cast(space))
+	});
 };
 
 export const getSpacesByIds = (ids=[]) => {
@@ -35,10 +35,10 @@ export const getSpacesByIds = (ids=[]) => {
 		url: `${API_V1}/${USER_ID}`,
 		body: ids
 	})
-	// .then(spaces => {
-	// 	const result = spaces.map(item=>{ return SpaceCaster.cast(item) })
-	// 	return Promise.resolve(result)
-	// });
+	.then(spaces => {
+		const result = spaces.map(item=>{ return SpaceCaster.cast(item) })
+		return Promise.resolve(result)
+	});
 };
 
 export const add = (spaceId, space={}) => {

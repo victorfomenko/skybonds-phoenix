@@ -22,20 +22,23 @@ export default {
   },
 
   cast:  (value)=> {
-	const { layers, layersById } = castLayers(value.source.layers || [])
+	const { ids, layersById } = castLayers(value.source.layers || [], value.ui.extensions.web.layers || [])
 	
   	return {
   		id: value.id,
   		version: value.version,
-  		source: {
-  			layers: layers,
-  			layersById: layersById,
-  			include: value.source.include,
-  			exclude: value.source.exclude
+  		layers: {
+  			ids: ids,
+  			layersById: layersById
   		},
+  		include: value.source.include,
+		exclude: value.source.exclude,
+		activeLayerId: value.ui.extensions.web.activeLayerId,
   		ui: {
   			...value.ui,
-  			extensions: value.ui.extensions.web
+  			extensions: {
+  				calendar: value.ui.extensions.web.calendar
+  			}
   		},
 		addons: value.addons
   	}
@@ -59,29 +62,34 @@ const formatLayer = (value) => {
 }
 
 
-const castLayers = (value) => {
-	let layers = [];
+const castLayers = (sourceLayers, uiLayers) => {
+	let ids = [];
 	let layersById = {};
 
-	value.forEach((layer, index) => {
-		layers.push(layer.id);
-		layersById[layer.id] = castLayer(layer);
+	sourceLayers.forEach((layer, index) => {
+		const ui = uiLayers[index] ? castUiLayer(uiLayers[index]) : {};
+		const source = castSourceLayer(layer);
+
+		ids.push(layer.id);
+		layersById[layer.id] = { source, ui }
 	})
-	return { layers, layersById }
+	return { ids, layersById }
 }
 
 
-const castLayer = ({ id, method, functions }) => {
+const castUiLayer = ({ name, viewMode }) => {
+	if(name == null) return {}
+	return Object.assign({}, { name, viewMode })
+}
+
+const castSourceLayer = ({ id, method, functions }) => {
   	let dataSource = {}
 
   	if(functions != null) {
 	  	functions.forEach(func => {
 	  		switch(func.name) {
 	  			case 'filters':
-		  			func.args = {
-		  				...func.args,
-		  				filters: castFilters(func.args.filters)
-		  			}
+		  			func.args = castFilters(func.args.filters)
 		  			break;
 	  		}
 
@@ -90,9 +98,8 @@ const castLayer = ({ id, method, functions }) => {
   	}
   	
 	return {
-		id,
 		method,
-		dataSource
+		...dataSource
 	}
 }
 
