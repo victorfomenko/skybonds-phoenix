@@ -63,7 +63,7 @@ class Filters extends Component {
     if(!needStatsFromFilters) {
       await this.props.layerGetFilterStats(this.props.layer.id, filters, this.state.isins);
     }
-    this.props.changeLayersBonds(this.props.layer.id, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), this.state.filters.date);
+    this.props.changeLayersBonds(this.props.layer.id, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), this.getDate());
   }
 
   getDefaultFilters() {

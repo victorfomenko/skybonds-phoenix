@@ -93,7 +93,7 @@ const layers = (state = {}, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           const searchIsins = action.isins;
-          const filtersIsins = layer.dataComputed.filters.isins;
+          const filtersIsins = layer.data.filters.isins;
           let layerIsins = [];
           if (searchIsins.length && filtersIsins.length) {
             layerIsins = intersection(searchIsins, filtersIsins);
@@ -104,13 +104,13 @@ const layers = (state = {}, action) => {
           }
           return layer.id === action.id ?
             {...layer,
-              dataSource: {...layer.dataSource,
-                search: {...layer.dataSource.search,
+              source: {...layer.source,
+                search: {...layer.source.search,
                   query: action.query
                 },
               },
-              dataComputed: {...layer.dataComputed,
-                search: {...layer.dataComputed.search,
+              data: {...layer.data,
+                search: {...layer.data.search,
                   isins: action.isins
                 },
                 isins: layerIsins
@@ -123,7 +123,7 @@ const layers = (state = {}, action) => {
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
-          const searchIsins = layer.dataComputed.search.isins;
+          const searchIsins = layer.data.search.isins;
           const filtersIsins = action.isins;
           let layerIsins = [];
           if (searchIsins.length && filtersIsins.length) {
@@ -135,8 +135,8 @@ const layers = (state = {}, action) => {
           }
           return layer.id === action.id ?
             {...layer,
-              dataComputed: {...layer.dataComputed,
-                filters: {...layer.dataComputed.filters,
+              data: {...layer.data,
+                filters: {...layer.data.filters,
                   isins: action.isins,
                   stats: action.stats
                 },
@@ -152,8 +152,8 @@ const layers = (state = {}, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
-              dataComputed: {...layer.dataComputed,
-                filters: {...layer.dataComputed.filters,
+              data: {...layer.data,
+                filters: {...layer.data.filters,
                   stats: action.stats
                 }
               }
@@ -169,7 +169,7 @@ const layers = (state = {}, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
-              dataSource: {...layer.dataSource,
+              source: {...layer.source,
                 filters: action.filters
               }
             } : layer;
@@ -182,7 +182,7 @@ const layers = (state = {}, action) => {
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
-              dataComputed: {...layer.dataComputed,
+              data: {...layer.data,
                 bonds: action.bonds
               }
             } : layer;

@@ -24,7 +24,7 @@ class LayerSearch extends Component {
 
   async sendSearchRequest(query, date) {
     await this.props.layerSearchBonds(this.props.layer.id, query, date);
-    await this.props.layerGetFilterStats(this.props.layer.id, this.props.layer.dataSource.filters, this.state.layerIsins);
+    await this.props.layerGetFilterStats(this.props.layer.id, this.props.layer.source.filters, this.state.layerIsins);
     this.props.changeLayersBonds(this.props.layer.id, this.state.layerIsins, date);
   }
 

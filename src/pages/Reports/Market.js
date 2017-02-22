@@ -44,7 +44,7 @@ class Market extends Component {
   getReportIsins(layers){
     let nonEmptyLayers = [];
     for(let key in layers) {
-      const layerIsins = layers[key].dataComputed.isins;
+      const layerIsins = layers[key].data.isins;
       if(layerIsins.length) {
         nonEmptyLayers.push(layerIsins);
       }

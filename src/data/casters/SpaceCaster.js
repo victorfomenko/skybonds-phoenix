@@ -36,7 +36,7 @@ export default {
   		ui: {
   			...value.ui,
   			extensions: {
-  				calendar: value.ui.extensions.web.calendar 
+  				calendar: value.ui.extensions.web.calendar
   			},
   		},
 		addons: value.addons
@@ -94,7 +94,7 @@ const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
 }
 
 const castSourceLayer = ({ id, method, functions }) => {
-  	let dataSource = {
+  	let source = {
   		search: {
   			query: ''
   		},
@@ -109,13 +109,13 @@ const castSourceLayer = ({ id, method, functions }) => {
 		  			break;
 	  		}
 
-	  		dataSource[func.name] = func.args
-	  	})	
+	  		source[func.name] = func.args
+	  	})
   	}
-  	
+
 	return {
 		method,
-		...dataSource
+		...source
 	}
 }
 
