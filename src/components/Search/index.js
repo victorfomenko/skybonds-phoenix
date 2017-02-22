@@ -15,7 +15,6 @@ class Search extends Component {
     this.state = {
       query: props.query,
       bonds: props.bonds,
-      placeholderBonds: props.placeholderBonds,
       dropdownActive: false,
       pending: false
     };
@@ -25,7 +24,6 @@ class Search extends Component {
     this.setState({
       query: nextProps.query,
       bonds: nextProps.bonds,
-      placeholderBonds: nextProps.placeholderBonds,
       pending: false
     });
   }
@@ -65,10 +63,7 @@ class Search extends Component {
     let searchDropdown;
     let searchGroups = [];
     let searchGroupsMap = {};
-    const isPlaceholderVisible =
-      this.state.bonds.length == 0 &&
-      this.state.placeholderBonds.length > 0;
-    let currentBonds = isPlaceholderVisible ? this.state.placeholderBonds : this.state.bonds;
+    let currentBonds = this.state.bonds;
 
     for(let bond of currentBonds) {
       if(searchGroupsMap[bond.info.issuerId] == null) {
@@ -88,7 +83,7 @@ class Search extends Component {
       </div>;
     }
 
-    else if(this.state.query.length < MIN_QUERY_LENGTH && !isPlaceholderVisible) {
+    else if(this.state.query.length < MIN_QUERY_LENGTH && currentBonds.length == 0) {
       searchDropdown = <div className={styles.bondsSearch_status}>
         Enter 3+ characters…
       </div>;
@@ -214,9 +209,5 @@ class Search extends Component {
     );
   }
 }
-
-Search.defaultProps = {
-  placeholderBonds: []
-};
 
 export default Search;

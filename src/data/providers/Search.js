@@ -22,12 +22,3 @@ export const searchBonds = async (query, date) => {
   });
   return actualBonds;
 };
-
-export const filterSearch = (bonds, filtersIsins) => {
-  if(filtersIsins.length == 0) {
-    return bonds;
-  }
-  return bonds.filter((bond)=>{
-    return filtersIsins.indexOf(bond.isin) != -1;
-  });
-};

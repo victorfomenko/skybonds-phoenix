@@ -13,7 +13,7 @@ export const homeSearchBonds = (query, date) => async (dispatch) => {
       bonds
     });
 
-    bonds = await DataProvider.getBondsDailyForSearch(bonds, date);
+    bonds = await DataProvider.getSearchBondsData(bonds, date);
     dispatch({
       type: actionTypes.HOME_SEARCH_DAILY,
       bonds

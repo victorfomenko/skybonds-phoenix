@@ -1,27 +1,30 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
-import * as DataProvider from '../../data/providers/Data';
-import { changeFilters, changeFiltersIsins, layerGetPlaceholderBonds, layerFilterSearchBonds } from '../../actions';
+import { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
+
+const MAX_ISINS_PER_LAYER = 200;
 
 
 class Filters extends Component {
   constructor(props) {
     super(props);
-    let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user)
     this.state = {
-      filters: filters,
-      searchBonds: props.layer.dataComputed.search.bonds
+      filters: this.formatPortfolio(props.layer.dataSource.filters, props.user),
+      stats: props.layer.dataComputed.filters.stats,
+      isins: props.layer.dataComputed.isins,
+      searchIsins: props.layer.dataComputed.search.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user)
     this.setState({
-      filters: filters,
-      searchBonds: nextProps.layer.dataComputed.search.bonds
+      filters: this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user),
+      stats: nextProps.layer.dataComputed.filters.stats,
+      isins: nextProps.layer.dataComputed.isins,
+      searchIsins: nextProps.layer.dataComputed.search.isins
     });
   }
 
@@ -47,7 +50,7 @@ class Filters extends Component {
     for (const key in selectedFilters) {
       //TODO Remove when it will optimise. Or move to filterFormatters
       if(key === 'range') {
-        const values = selectedFilters[key]
+        const values = selectedFilters[key];
         values.forEach(filter=>{
           const name = filter.name;
           const value = filter.values;
@@ -65,19 +68,13 @@ class Filters extends Component {
 
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
-    const { result, stats } = await DataProvider.filtersApply(filters, true);
-    const newFilters = this.makeViewModel(stats, all);
-    let date = this.getDate();
-    if(this.state.searchBonds.length == 0) {
-      // TODO: slice by layerQuota, not by 200
-      this.props.layerGetPlaceholderBonds(this.props.layer.id, result.slice(0, 200), date);
-    } else {
-      this.props.layerFilterSearchBonds(this.props.layer.id, this.props.layer.dataComputed.search.bonds, result);
+    const needStatsFromFilters = this.state.searchIsins.length == 0;
+    await this.props.layerFilterBonds(this.props.layer.id, filters, needStatsFromFilters);
+    if(!needStatsFromFilters) {
+      await this.props.layerGetFilterStats(this.props.layer.id, filters, this.state.isins);
     }
-    this.props.changeFilters(this.props.layer.id, newFilters);
-    this.props.changeFiltersIsins(this.props.layer.id, result);
+    this.props.changeLayersBonds(this.props.layer.id, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), this.state.filters.date);
   }
-
 
   makeViewModel(stats, filters) {
     let viewModel = Object.assign({}, filters);
@@ -132,10 +129,11 @@ class Filters extends Component {
   }
 
   render(){
+    const filtersViewModel = this.makeViewModel(this.state.stats, this.state.filters);
     return (
       <UIFilters
-        filters={this.state.filters}
-        onStateChange={state=>{
+        filters={filtersViewModel}
+        onStateChange={(state)=>{
           this.onFiltersChange({selected: state.selected, all: state.all});
         }}
       />
@@ -147,9 +145,11 @@ class Filters extends Component {
 
 Filters.propTypes = {
   layer: React.PropTypes.object.isRequired,
+  layerFilterBonds: React.PropTypes.func.isRequired,
   changeFilters: React.PropTypes.func.isRequired,
-  changeFiltersIsins: React.PropTypes.func.isRequired
+  changeFiltersIsins: React.PropTypes.func.isRequired,
+  changeLayersBonds: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
-export default connect(mapStateToProps, { changeFilters, changeFiltersIsins, layerGetPlaceholderBonds, layerFilterSearchBonds })(Filters);
+export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds })(Filters);

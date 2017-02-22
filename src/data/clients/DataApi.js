@@ -21,6 +21,20 @@ export const filtersApply = (filters={}, stats=false, details=false) => {
   });
 };
 
+export const filtersStats = (filters, isins) => {
+  if(filters.date != null){
+    filters = {
+      ...filters,
+      date: DateDayCaster.format(filters.date),
+      isins
+    }
+  }
+  return requestProvider.post({
+    url: API_V2 + 'filters/stats',
+    body: filters,
+  });
+};
+
 export const getBondsInfo = (isins, attrs = []) => {
   return requestProvider.post({
     url: API_V1 + 'bonds/info',

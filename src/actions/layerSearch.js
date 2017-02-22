@@ -1,52 +1,27 @@
 import { actionTypes } from './actionTypes';
 import * as SearchProvider from '../data/providers/Search';
-import * as DataProvider from '../data/providers/Data';
 
 
-export const layerSearchBonds = (id, query, date, filtersIsins) => async (dispatch) => {
+export const layerSearchBonds = (id, query, date) => async (dispatch) => {
   dispatch({
     type: actionTypes.LAYER_SEARCH_REQUEST
   });
   try {
-    let bonds = await SearchProvider.searchBonds(query, date);
-    bonds = SearchProvider.filterSearch(bonds, filtersIsins);
+    // TODO FIX THAT DAMN SILENT CODE FAILING WHEN WE MISS THAT DAMN 'LET' ON THE NEXT LINE
+    let searchBonds = await SearchProvider.searchBonds(query, date);
+    let isins = searchBonds.map((bond)=>{return bond.isin});
     dispatch({
-      type: actionTypes.LAYER_SEARCH_RESPONSE,
+      type: actionTypes.LAYER_SEARCH_ISINS_CHANGE,
       id,
       query,
-      bonds
-    });
-
-    bonds = await DataProvider.getBondsDailyForSearch(bonds, date);
-    dispatch({
-      type: actionTypes.LAYER_SEARCH_DAILY,
-      id,
-      bonds
+      isins
     });
   }
   catch (response) {
     dispatch({
-      type: actionTypes.LAYER_SEARCH_RESPONSE,
+      type: actionTypes.LAYER_SEARCH_ERROR,
       id,
       response
     });
   }
-};
-
-export const layerFilterSearchBonds = (id, bonds, filtersIsins) => async (dispatch) => {
-  bonds = SearchProvider.filterSearch(bonds, filtersIsins);
-  dispatch({
-    type: actionTypes.LAYER_SEARCH_DAILY,
-    id,
-    bonds
-  });
-};
-
-export const layerGetPlaceholderBonds = (id, isins, date) => async (dispatch) => {
-  let placeholderBonds = await DataProvider.getPlaceholderBondsForSearch(isins, date);
-  dispatch({
-    type: actionTypes.LAYER_GET_PLACEHOLDER_BONDS,
-    id,
-    placeholderBonds
-  });
 };
