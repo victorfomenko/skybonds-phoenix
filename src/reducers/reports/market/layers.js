@@ -400,9 +400,25 @@ const layers = (state = initialState, action) => {
             {...layer,
               dataComputed: {...layer.dataComputed,
                 filters: {...layer.dataComputed.filters,
-                  isins: action.isins
+                  isins: action.isins,
+                  stats: action.stats
                 },
                 isins: layerIsins
+              }
+            } : layer;
+        })
+      };
+
+    case actionTypes.LAYER_FILTERS_STATS_CHANGE:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              dataComputed: {...layer.dataComputed,
+                filters: {...layer.dataComputed.filters,
+                  stats: action.stats
+                }
               }
             } : layer;
         })
