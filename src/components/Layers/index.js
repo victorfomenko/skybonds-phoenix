@@ -61,7 +61,7 @@ class Layers extends Component {
                 key={'layer_key_' + index}
                 id={layerID}
                 name={layer.ui.name}
-                active={layer.ui.active}
+                active={(layerID == activeLayerId)? true: false}
                 onLayerClose={this.onLayerClose.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}

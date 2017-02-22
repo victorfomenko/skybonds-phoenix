@@ -13,8 +13,7 @@ const defaultLayer = {
   },
   ui: {
     name: 'Empty set',
-    viewMode : 'bonds',
-    active: false
+    viewMode : 'bonds'
   },
   data: {
     search: {
@@ -51,10 +50,6 @@ const layers = (state = {}, action) => {
           layersById: {
             ['1']: {
               ...defaultLayer,
-              ui: {
-                ...defaultLayer.ui,
-                active: true
-              }
             }
           }
         };
@@ -90,26 +85,6 @@ const layers = (state = {}, action) => {
                 viewMode: action.viewMode
               }
             } : layer;
-        })
-      };
-
-    case actionTypes.ACTIVATE_LAYER:
-      return {
-        ...state,
-        layersById: mapValues(state.layersById, (layer, id) => {
-          return id === action.id ? {
-              ...layer,
-              ui: {
-                ...layer.ui,
-                active: true
-              }
-            } : {
-              ...layer,
-              ui: {
-                ...layer.ui,
-                active: false
-              }
-            };
         })
       };
 

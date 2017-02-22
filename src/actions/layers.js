@@ -6,6 +6,8 @@ export const addLayer = () => (dispatch, getState) => {
 
 export const deleteLayer = (id) => (dispatch, getState) => {
   dispatch({ type: actionTypes.DELETE_LAYER, id});
+  const ativeLayerId = getState().reports.market.layers.ids[0]
+  dispatch({ type: actionTypes.ACTIVATE_LAYER, id: ativeLayerId});
 };
 
 export const activateLayer = (id) => (dispatch, getState) => {

@@ -32,6 +32,7 @@ export default {
   		},
   		include: value.source.include,
 		exclude: value.source.exclude,
+		activeLayerId: value.ui.extensions.web.activeLayerId,
   		ui: {
   			...value.ui,
   			extensions: {
@@ -93,7 +94,12 @@ const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
 }
 
 const castSourceLayer = ({ id, method, functions }) => {
-  	let dataSource = {}
+  	let dataSource = {
+  		search: {
+  			query: ''
+  		},
+  		filters: {}
+  	}
 
   	if(functions != null) {
 	  	functions.forEach(func => {

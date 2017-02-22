@@ -67,6 +67,12 @@ const market = (state = initState, action) => {
 			}
 			break;
 
+		case actionTypes.ACTIVATE_LAYER:
+			return {
+				...state,
+				activeLayerId: action.id
+			}
+
 		default: 
 			return {
 			 ...state,

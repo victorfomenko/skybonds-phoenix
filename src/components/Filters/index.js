@@ -339,7 +339,7 @@ class Filters extends Component {
       }
 
       //Add stats values
-      console.log(stats);
+      console.log('stats:', stats);
       if(stats && stats.length) {
         values.forEach((item, index)=>{
           stats.forEach(value=> {
