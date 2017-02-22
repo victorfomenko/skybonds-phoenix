@@ -9,7 +9,8 @@ import { isPortfolioScb } from '../../helpers/portfolio';
 class Filters extends Component {
   constructor(props) {
     super(props);
-    let filters = this.formatPortfolio(props.layer.dataSource.filters, props.user)
+    console.log(props)
+    let filters = this.formatPortfolio(props.layer.source.filters, props.user)
     this.state = {
       filters: filters,
       searchBonds: props.layer.dataComputed.search.bonds
@@ -18,7 +19,7 @@ class Filters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let filters = this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user)
+    let filters = this.formatPortfolio(nextProps.source.layer.filters, this.props.user)
     this.setState({
       filters: filters,
       searchBonds: nextProps.layer.dataComputed.search.bonds

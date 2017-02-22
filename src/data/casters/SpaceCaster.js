@@ -69,9 +69,20 @@ const castLayers = (sourceLayers, uiLayers) => {
 	sourceLayers.forEach((layer, index) => {
 		const ui = uiLayers[index] ? castUiLayer(uiLayers[index]) : {};
 		const source = castSourceLayer(layer);
+		const data = {
+			search: {
+	          isins: []
+	        },
+	        filters: {
+	          isins: [],
+	          stats: []
+	        },
+	        isins: [],
+	        bonds: []
+		}
 
 		ids.push(layer.id);
-		layersById[layer.id] = { source, ui }
+		layersById[layer.id] = { source, ui, data }
 	})
 	return { ids, layersById }
 }

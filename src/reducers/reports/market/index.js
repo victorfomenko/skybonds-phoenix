@@ -20,7 +20,18 @@ const initState = {
 	      ui: {
 			name : 'Empty set',
 			viewMode : 'bonds'
-	      }
+	      },
+	      data: {
+			search: {
+			  isins: []
+			},
+			filters: {
+			  isins: [],
+			  stats: []
+			},
+			isins: [],
+			bonds: []
+			}
 	    }
 	  }
 	},
@@ -32,17 +43,7 @@ const initState = {
         spaceName: 'New report',
         viewMode: 'scatterPlot',
 	},
-	data: {
-		search: {
-			bonds: [],
-			placeholderBonds: []
-		},
-		filters: {
-			isins: [],
-			stats: []
-		},
-		isins: []
-	}
+	data: {}
 };
 
 const market = (state = initState, action) => {
