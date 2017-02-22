@@ -13,7 +13,7 @@ const initState = {
           		query: '',
           		peersFor: []
 	        },
-	        filters: [],
+	        filters: {},
 	        include: [],
 	        exclude: []
 	      },
@@ -27,7 +27,7 @@ const initState = {
 			},
 			filters: {
 			  isins: [],
-			  stats: []
+			  stats: {}
 			},
 			isins: [],
 			bonds: []
