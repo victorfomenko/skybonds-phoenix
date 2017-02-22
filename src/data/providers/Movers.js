@@ -1,6 +1,5 @@
 import * as DataApi from '../clients/DataApi';
 import * as PortfolioApi from '../clients/PortfolioApi';
-import NumberCaster from '../casters/NumberCaster';
 import {sortBy} from 'lodash';
 
 const moversLimitList = 5;
@@ -21,7 +20,7 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
 	      if ((item != null ? item.isin : void 0) && map.hasOwnProperty(item.isin)) {
 	        results.push({
 	          isin: item.isin,
-	          change: NumberCaster.cast(item.change)
+	          change: item.change
 	        });
 	      }
 	    }
