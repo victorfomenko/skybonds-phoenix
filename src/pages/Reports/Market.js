@@ -6,7 +6,6 @@ import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
 import { isEqual, intersection, uniq, union } from 'lodash';
 import { loadReports } from '../../actions';
-
 import reportStyle from './style.sass';
 
 const REPORT_ISINS_QUOTA = 200;
