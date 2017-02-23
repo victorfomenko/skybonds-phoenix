@@ -5,6 +5,7 @@ import * as Data from '../../data/providers/Data';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import { getLabel } from '../../helpers/BondOutlook';
 import { closeBondInfo } from '../../actions';
+import { Icon, GLYPHS } from '../../components/Icon';
 import style from './style.sass';
 
 class BondInfo extends Component {
@@ -23,6 +24,7 @@ class BondInfo extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.date = new Date(this.props.date);
+    console.log('this.props', this.props);
     let isin = nextProps.bondInfo.isin;
 
     if (isin != null ) {
@@ -109,7 +111,10 @@ class BondInfo extends Component {
         <div className={style.reportAsideBondGeneral + ' ' + (this.props.bondInfo.show ? style.__active : '')}>
           <div className={style.reportAsideBond}>
             <span className={style.reportAsideBond_link + ' ' + style.reportAsideBond_close}
-                  onClick={ () => this.onClickClose()}></span>
+                  onClick={ () => this.onClickClose()}>
+            <Icon glyph={GLYPHS.CLOSE}
+                  width="30" height="30" />
+            </span>
             <div className={style.reportAsideBondHeader}>
               <ul className={style.reportAsideBondHeader_rows}>
                 <li className={style.reportAsideBondHeader_line}>

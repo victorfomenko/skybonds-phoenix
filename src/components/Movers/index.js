@@ -6,8 +6,7 @@ import { Icon, GLYPHS } from '../../components/Icon';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import style from './styles.sass';
 
-import { loadMovers } from '../../actions';
-import { openBondInfo } from '../../actions';
+import { loadMovers, openBondInfo } from '../../actions';
 
 class Movers extends Component {
 
@@ -79,8 +78,8 @@ class Movers extends Component {
     this.loadMovers(this.props.isins, periods.startDate, periods.endDate, period, this.props.movers.selectedUnit);
   }
 
-  onClickByMover(isin) {
-    this.props.openBondInfo(isin)
+  async onClickByMover(isin) {
+    await this.props.openBondInfo(isin, this.getLastDate())
   }
 
   render() {
