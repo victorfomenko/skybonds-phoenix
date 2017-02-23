@@ -2,27 +2,28 @@ import { actionTypes } from '../../../actions/actionTypes';
 
 const initialState = {
   isin: null,
-  bond: null,
-  show: false
+  info: null,
+  daily: null,
+  putDates: null,
+  show: false,
+  date: null
 };
 
 const bondInfo = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.OPEN_BOND_INFO:
-      console.log('action', action);
       return {
         ...state,
         isin: action.isin,
-        bond: action.bond,
+        info: action.info,
+        daily: action.daily,
+        putDates: action.putDates,
+        date: action.date,
         show: true
       };
 
     case actionTypes.CLOSE_BOND_INFO:
-      return {
-        ...state,
-        isin: null,
-        show: false
-      };
+      return initialState;
 
     default:
       return state;

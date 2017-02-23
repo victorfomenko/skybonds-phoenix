@@ -79,7 +79,7 @@ class Movers extends Component {
   }
 
   async onClickByMover(isin) {
-    await this.props.openBondInfo(isin, this.getLastDate())
+    this.props.openBondInfo(isin, this.getLastDate())
   }
 
   render() {
