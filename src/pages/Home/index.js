@@ -23,13 +23,13 @@ class Home extends Component {
   }
 
   searchQueryChange(query) {
+    this.setState({
+      pending: true
+    });
     this.props.homeSearchQueryChange(query);
   }
 
   async searchRequest(query, date) {
-    this.setState({
-      pending: true
-    });
     await this.props.homeSearchRequest(query, date);
     this.setState({
       pending: false
