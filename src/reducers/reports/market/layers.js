@@ -356,6 +356,25 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
+    case actionTypes.LAYER_SEARCH_QUERY_CHANGE:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              autoName: getAutoName(
+                {...layer.dataSource.search,
+                  query: action.query
+                }, layer.dataSource.filters),
+              dataSource: {...layer.dataSource,
+                search: {...layer.dataSource.search,
+                  query: action.query
+                }
+              }
+            } : layer;
+        })
+      };
+
     case actionTypes.LAYER_SEARCH_ISINS_CHANGE:
       return {
         ...state,
@@ -372,15 +391,6 @@ const layers = (state = initialState, action) => {
           }
           return layer.id === action.id ?
             {...layer,
-              autoName: getAutoName(
-                {...layer.dataSource.search,
-                  query: action.query
-                }, layer.dataSource.filters),
-              dataSource: {...layer.dataSource,
-                search: {...layer.dataSource.search,
-                  query: action.query
-                },
-              },
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
                   isins: action.isins
