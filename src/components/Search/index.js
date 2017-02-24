@@ -123,8 +123,7 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
               <a className={styles.bondsSearch_info} href={'/bond/' + bond.isin} target="_blank">
-                <Icon glyph={GLYPHS.INFO}
-              width="14" height="14" />
+                <Icon glyph={GLYPHS.INFO} width="14" height="14" />
               </a>
             </span>
           </li>;
@@ -144,8 +143,7 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
               <a className={styles.bondsSearch_info} href={'/issuer/' + group.issuerId} target="_blank">
-                <Icon glyph={GLYPHS.INFO}
-                      width="14" height="14" />
+                <Icon glyph={GLYPHS.INFO} width="14" height="14" />
               </a>
             </span>
           </div>

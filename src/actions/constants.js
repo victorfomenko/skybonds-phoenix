@@ -11,8 +11,9 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 //Layers
-export const ADD_LAYER = 'ADD_LAYER';
-export const DELETE_LAYER = 'DELETE_LAYER';
+export const ADD_SET = 'ADD_SET';
+export const ADD_SPREAD = 'ADD_SPREAD';
+export const REMOVE_LAYER = 'REMOVE_LAYER';
 export const ACTIVATE_LAYER = 'ACTIVATE_LAYER';
 export const RENAME_LAYER = 'RENAME_LAYER';
 export const CHANGE_LAYER_VIEW = 'CHANGE_LAYER_VIEW';

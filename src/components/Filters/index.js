@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
-import { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
+import { layerFilterBonds, layerGetFilterStats, changeLayersBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 const MAX_ISINS_PER_LAYER = 200;
@@ -69,7 +69,7 @@ class Filters extends Component {
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
     const needStatsFromFilters = this.state.searchIsins.length == 0;
-    await this.props.layerFilterBonds(this.props.layer.id, filters, needStatsFromFilters);
+    await this.props.layerFilterBonds(this.props.layer.id, filters, all, needStatsFromFilters);
     if(!needStatsFromFilters) {
       await this.props.layerGetFilterStats(this.props.layer.id, filters, this.state.isins);
     }
@@ -146,10 +146,8 @@ class Filters extends Component {
 Filters.propTypes = {
   layer: React.PropTypes.object.isRequired,
   layerFilterBonds: React.PropTypes.func.isRequired,
-  changeFilters: React.PropTypes.func.isRequired,
-  changeFiltersIsins: React.PropTypes.func.isRequired,
   changeLayersBonds: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
-export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds })(Filters);
+export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeLayersBonds })(Filters);
