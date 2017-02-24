@@ -4,11 +4,17 @@ import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
+import { Icon, GLYPHS } from '../../components/Icon';
 import { getSpaces } from '../../data/providers/Spaces';
 import { isEqual, intersection, uniq, union } from 'lodash';
-import reportStyle from './style.sass';
+import styles from './styles.sass';
 
 const REPORT_ISINS_QUOTA = 200;
+const VIEW_MODES = {
+  SCATTERPLOT: 'scatterplot',
+  TIMESERIES: 'timeseries',
+  TABLE: 'table'
+};
 
 
 class Market extends Component {
@@ -19,11 +25,13 @@ class Market extends Component {
       reportName: 'Reports',
       reportIsins: [],
       activeIsin: '',
+      viewMode: VIEW_MODES.SCATTERPLOT,
+      date: '',
       reportID: props.match.params.reportID
     };
     getSpaces().then(spaces=>{
     });
-
+    this.onViewModeChange = this.onViewModeChange.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -67,23 +75,40 @@ class Market extends Component {
     this.setState({ activeIsin: isin });
   }
 
+  onDateChange(event) {
+    this.setState(event.target.value)
+  }
+
+  onViewModeChange(viewMode) {
+    // console.log('view mode change', viewMode);
+  }
+
   render(){
     return (
       <div className='skybondsWrap'>
         <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
-        <div className={reportStyle.reportWrap}>
-          <div className={reportStyle.reportHeader}>
+        <div className={styles.reportWrap}>
+          <div className={styles.reportHeader}>
             <Layers />
+            <div className={styles.reportDate}><input type="date" value={this.state.date} onChange={this.onDateChange.bind(this)}/></div>
+            <div className={styles.reportViewMode}>
+              <ul className={styles.reportViewMode_list}>
+                <li className={styles.reportViewMode_item + (this.state.viewMode === VIEW_MODES.SCATTERPLOT ? ' ' + styles.__active : '')} onClick={()=>this.onViewModeChange(VIEW_MODES.SCATTERPLOT)}>
+                  <Icon glyph={GLYPHS.VIEW_SCATTERPLOT} width="13" height="11" />
+                  <span>Scatter plot</span>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className={reportStyle.reportView}>
-            <div className={reportStyle.reportViewScatterPlot}>
-              <div className={reportStyle.reportView_content}>
+          <div className={styles.reportView}>
+            <div className={styles.reportViewScatterPlot}>
+              <div className={styles.reportView_content}>
                 <ScatterPlot
                   isins={this.state.reportIsins}
                   activeIsin={this.state.activeIsin}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
               </div>
-              <div className={reportStyle.reportView_aside}>
+              <div className={styles.reportView_aside}>
                 <Movers
                   isins={this.state.reportIsins}
                   onActiveIsinChange={this.onActiveIsinChange.bind(this)} />

@@ -6,8 +6,8 @@ export const addLayer = () => (dispatch) => {
   dispatch({ type: actionTypes.ADD_LAYER });
 };
 
-export const deleteLayer = (id) => (dispatch) => {
-  dispatch({ type: actionTypes.DELETE_LAYER, id});
+export const removeLayer = (id) => (dispatch) => {
+  dispatch({ type: actionTypes.REMOVE_LAYER, id});
 };
 
 export const activateLayer = (id) => (dispatch) => {

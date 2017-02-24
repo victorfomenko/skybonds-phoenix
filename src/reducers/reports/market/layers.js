@@ -314,7 +314,7 @@ const layers = (state = initialState, action) => {
         activeLayer: newId,
       };
 
-    case actionTypes.DELETE_LAYER:
+    case actionTypes.REMOVE_LAYER:
       if(state.layers.length == 1) {
         return initialState;
       }
@@ -330,8 +330,9 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            assign({}, layer, { name: action.name }) :
-            layer;
+            {...layer,
+              name: action.name
+            } : layer;
         })
       };
 
