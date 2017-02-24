@@ -101,7 +101,6 @@ const FILTER_NAME_SEPARATOR = ', ';
 
 
 export const getAutoName = (layerSearch, layerFilters) => {
-  console.log(layerSearch, layerFilters);
   let result = [];
   addStringToResult(result, layerSearch.query);
   addArrayToResult(result, collectionToArray(layerFilters.industry.values));

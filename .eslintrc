@@ -11,6 +11,7 @@
   "rules": {
     "semi": 0,
     "eqeqeq": 1,
+    "no-console": 1,
     "quotes": [1, "single"],
     "strict": [2, "never"],
     "react/jsx-uses-react": 2,
