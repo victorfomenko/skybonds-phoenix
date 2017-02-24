@@ -1,5 +1,6 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection } from 'lodash';
+import { getAutoName } from '../../../helpers/LayerAutoName';
 import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
 
 
@@ -250,7 +251,8 @@ const initialState = {
   layersById: {
     1: {
       id : 1,
-      name : 'Empty set',
+      name: '',
+      autoName: 'Empty set',
       dataSource: {
         search: {
           query: '',
@@ -280,7 +282,7 @@ const initialState = {
 const layers = (state = initialState, action) => {
   switch (action.type) {
 
-    case actionTypes.ADD_LAYER:
+    case actionTypes.ADD_SET:
       let newId = state.layers[state.layers.length-1] + 1;
       return {
         layers: state.layers.concat(newId),
@@ -288,7 +290,8 @@ const layers = (state = initialState, action) => {
           ...state.layersById,
           [newId]: {
             id: newId,
-            name: 'Empty set',
+            name: '',
+            autoName: 'Empty set',
             dataSource: {
               search: {
                 query: '',
@@ -369,6 +372,10 @@ const layers = (state = initialState, action) => {
           }
           return layer.id === action.id ?
             {...layer,
+              autoName: getAutoName(
+                {...layer.dataSource.search,
+                  query: action.query
+                }, layer.dataSource.filters),
               dataSource: {...layer.dataSource,
                 search: {...layer.dataSource.search,
                   query: action.query
@@ -428,12 +435,15 @@ const layers = (state = initialState, action) => {
 
     case actionTypes.LAYER_FILTERS_CHANGE:
       if(!action.id) { return state; }
-
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
+              autoName: getAutoName(layer.dataSource.search,
+                {...layer.dataSource.filters,
+                  filters
+                }),
               dataSource: {...layer.dataSource,
                 filters: action.filters
               }

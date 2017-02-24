@@ -8,7 +8,8 @@ import Filters from '../Filters';
 import layersStyle from './styles.sass';
 
 import {
-  addLayer,
+  addSet,
+  addSpread,
   removeLayer,
   activateLayer,
   renameLayer,
@@ -27,7 +28,11 @@ class Layers extends Component {
   }
 
   onNewSet() {
-    this.props.addLayer();
+    this.props.addSet();
+  }
+
+  onNewSpread() {
+    this.props.addSpread();
   }
 
   onLayerClick(layerId) {
@@ -53,7 +58,7 @@ class Layers extends Component {
       return <Layer
                 key={'layer_key_' + index}
                 id={layerById.id}
-                name={layerById.name}
+                name={layerById.name ? layerById.name : layerById.autoName}
                 active={(layerById.id == this.props.layers.activeLayer)? true: false}
                 viewMode={layerById.viewMode}
                 onLayerRemove={this.onLayerRemove.bind(this)}
@@ -73,6 +78,10 @@ class Layers extends Component {
               <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set}
                     onClick={this.onNewSet.bind(this)}>
                 set
+              </span>
+              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set}
+                    onClick={this.onNewSpread.bind(this)}>
+                spread
               </span>
             </div>
           </div>
@@ -97,7 +106,8 @@ class Layers extends Component {
 
 Layers.propTypes = {
   layers: React.PropTypes.object.isRequired,
-  addLayer: React.PropTypes.func.isRequired,
+  addSet: React.PropTypes.func.isRequired,
+  addSpread: React.PropTypes.func.isRequired,
   removeLayer: React.PropTypes.func.isRequired,
   renameLayer: React.PropTypes.func.isRequired,
   changeLayerView: React.PropTypes.func.isRequired
@@ -105,5 +115,5 @@ Layers.propTypes = {
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
-    addLayer, removeLayer, activateLayer, renameLayer, changeLayerView
+    addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerView
   })(Layers);

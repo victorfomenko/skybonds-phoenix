@@ -7,10 +7,15 @@ import styles from './styles.sass';
 class Layer extends Component {
   constructor(props) {
     super(props);
-    this.state = {'renameMode': false};
+    this.state = {
+      renameMode: false
+    };
   }
 
   onLayerClick() {
+    if(this.props.active && !this.state.renameMode){
+      this.setState({renameMode: true});
+    }
     this.props.onLayerClick(this.props.id);
   }
 
@@ -19,13 +24,16 @@ class Layer extends Component {
     this.props.onLayerRemove(this.props.id);
   }
 
-  onLayerDblClick() {
-    this.setState({renameMode: !this.state.renameMode});
+  onBlur() {
+    this.setState({renameMode: false});
   }
 
   onLayerRename(e) {
+    this.props.onLayerRename(this.props.id, e.target.value);
+  }
+
+  onKeyUp(e) {
     if (e.key === 'Enter') {
-      this.props.onLayerRename(this.props.id, e.target.value);
       this.setState({renameMode: false});
     }
   }
@@ -39,7 +47,7 @@ class Layer extends Component {
   }
 
   render(){
-    let readonly = (this.state.renameMode) ? false : true;
+    let readonly = !this.state.renameMode;
     let icon;
     switch(this.props.viewMode) {
       case LAYER_SET_VIEW_MODES.BONDS:
@@ -101,10 +109,12 @@ class Layer extends Component {
             <input
               type='text'
               key={'layer_input_'+this.props.id}
-              defaultValue={this.props.name}
+              value={this.props.name}
               className={styles.reportLayersStrip_name}
-              onKeyUp={this.onLayerRename.bind(this)}
-              onClick={this.onLayerDblClick.bind(this)}
+              onChange={this.onLayerRename.bind(this)}
+              onKeyUp={this.onKeyUp.bind(this)}
+              onBlur={this.onBlur.bind(this)}
+              onClick={this.onLayerClick.bind(this)}
               size={this.props.name.length + 1}
               readOnly={readonly} />
             <Icon className={styles.reportLayersStrip_remove}
