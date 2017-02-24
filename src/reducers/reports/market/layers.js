@@ -1,5 +1,6 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection } from 'lodash';
+import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
 
 
 const filters = {
@@ -270,7 +271,7 @@ const initialState = {
         isins: [],
         bonds: []
       },
-      'viewMode' : 'bonds'
+      viewMode : LAYER_SET_VIEW_MODES.BONDS
     }
   },
   activeLayer: 1,
@@ -308,7 +309,7 @@ const layers = (state = initialState, action) => {
               isins: [],
               bonds: []
             },
-            'viewMode' : 'bonds',
+            viewMode : LAYER_SET_VIEW_MODES.BONDS
           }
         },
         activeLayer: newId,

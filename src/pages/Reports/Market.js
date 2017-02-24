@@ -5,16 +5,12 @@ import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
 import { Icon, GLYPHS } from '../../components/Icon';
+import { MARKET_REPORT_VIEW_MODES } from '../../data/constants';
 import { getSpaces } from '../../data/providers/Spaces';
 import { isEqual, intersection, uniq, union } from 'lodash';
 import styles from './styles.sass';
 
 const REPORT_ISINS_QUOTA = 200;
-const VIEW_MODES = {
-  SCATTERPLOT: 'scatterplot',
-  TIMESERIES: 'timeseries',
-  TABLE: 'table'
-};
 
 
 class Market extends Component {
@@ -25,7 +21,7 @@ class Market extends Component {
       reportName: 'Reports',
       reportIsins: [],
       activeIsin: '',
-      viewMode: VIEW_MODES.SCATTERPLOT,
+      viewMode: MARKET_REPORT_VIEW_MODES.SCATTERPLOT,
       date: '',
       reportID: props.match.params.reportID
     };
@@ -93,7 +89,7 @@ class Market extends Component {
             <div className={styles.reportDate}><input type="date" value={this.state.date} onChange={this.onDateChange.bind(this)}/></div>
             <div className={styles.reportViewMode}>
               <ul className={styles.reportViewMode_list}>
-                <li className={styles.reportViewMode_item + (this.state.viewMode === VIEW_MODES.SCATTERPLOT ? ' ' + styles.__active : '')} onClick={()=>this.onViewModeChange(VIEW_MODES.SCATTERPLOT)}>
+                <li className={styles.reportViewMode_item + (this.state.viewMode === MARKET_REPORT_VIEW_MODES.SCATTERPLOT ? ' ' + styles.__active : '')} onClick={()=>this.onViewModeChange(MARKET_REPORT_VIEW_MODES.SCATTERPLOT)}>
                   <Icon glyph={GLYPHS.VIEW_SCATTERPLOT} width="13" height="11" />
                   <span>Scatter plot</span>
                 </li>
