@@ -47,7 +47,7 @@ class Layers extends Component {
     this.props.renameLayer(layerId, layerName);
   }
 
-  onLayerViewChange(layerId, viewMode) {
+  onLayerViewModeChange(layerId, viewMode) {
     this.props.changeLayerViewMode(layerId, viewMode);
   }
 
@@ -64,7 +64,7 @@ class Layers extends Component {
                 onLayerRemove={this.onLayerRemove.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}
-                onLayerViewChange={this.onLayerViewChange.bind(this)} />;
+                onLayerViewModeChange={this.onLayerViewModeChange.bind(this)} />;
     }));
 
     if(this.state.loaded){

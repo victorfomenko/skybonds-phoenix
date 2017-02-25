@@ -7,11 +7,8 @@ import Movers from '../../components/Movers';
 import { Icon, GLYPHS } from '../../components/Icon';
 import { MARKET_REPORT_VIEW_MODES } from '../../data/constants';
 import { getSpaces } from '../../data/providers/Spaces';
-import { map, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import styles from './styles.sass';
-
-const REPORT_ISINS_QUOTA = 200;
-
 
 class Market extends Component {
 
