@@ -13,14 +13,17 @@ class Layer extends Component {
   }
 
   onLayerClick() {
-    if(this.props.active && !this.state.renameMode){
-      this.setState({renameMode: true});
-    }
     this.props.onLayerClick(this.props.id);
   }
 
-  onLayerRemove(event) {
-    event.stopPropagation();
+  onLayerInputClick() {
+    if(this.props.active && !this.state.renameMode){
+      this.setState({renameMode: true});
+    }
+  }
+
+  onLayerRemove(e) {
+    e.stopPropagation();
     this.props.onLayerRemove(this.props.id);
   }
 
@@ -114,7 +117,7 @@ class Layer extends Component {
               onChange={this.onLayerRename.bind(this)}
               onKeyUp={this.onKeyUp.bind(this)}
               onBlur={this.onBlur.bind(this)}
-              onClick={this.onLayerClick.bind(this)}
+              onClick={this.onLayerInputClick.bind(this)}
               size={this.props.name.length + 1}
               readOnly={readonly} />
             <Icon className={styles.reportLayersStrip_remove}
