@@ -91,7 +91,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
 const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
   if(name == null) return {}
   const active = String(id) === activeLayerId;
-  return Object.assign({}, { name, autoName: '', viewMode, active })
+  return Object.assign({}, { name, autoName: 'Empty set', viewMode, active })
 }
 
 const castSourceLayer = ({ id, method, functions }) => {
