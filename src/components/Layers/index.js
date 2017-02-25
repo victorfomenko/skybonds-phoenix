@@ -53,14 +53,17 @@ class Layers extends Component {
 
   render(){
     let layersState = this.props.layers;
-    let layers = ((layersState.layers || []).map((layer, index) => {
-      let layerById = layersState.layersById[layer];
+    let { activeLayerId } = this.props;
+
+    let layers = ((layersState.ids || []).map((layerID, index) => {
+      let layer = layersState.layersById[layerID];
+
       return <Layer
                 key={'layer_key_' + index}
-                id={layerById.id}
-                name={layerById.name ? layerById.name : layerById.autoName}
-                active={(layerById.id == this.props.layers.activeLayer)? true: false}
-                viewMode={layerById.viewMode}
+                id={layerID}
+                name={layer.ui.name ? layer.ui.name : layer.ui.autoName}
+                active={layerID === activeLayerId}
+                viewMode={layer.ui.viewMode}
                 onLayerRemove={this.onLayerRemove.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}
@@ -87,10 +90,10 @@ class Layers extends Component {
           </div>
           <div className={layersStyle.reportLayerSettings}>
             <div className={layersStyle.reportLayerSettings_search}>
-              <LayerSearch layer={layersState.layersById[layersState.activeLayer]} />
+              <LayerSearch layer={layersState.layersById[activeLayerId]} />
             </div>
             <div className={layersStyle.reportLayerSettings_filters}>
-              <Filters layer={layersState.layersById[layersState.activeLayer]} />
+              <Filters layer={layersState.layersById[activeLayerId]} />
             </div>
           </div>
         </div>
@@ -113,7 +116,7 @@ Layers.propTypes = {
   changeLayerViewMode: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers });
+const mapStateToProps = state => ({ layers: state.reports.market.layers, activeLayerId: state.reports.market.activeLayerId });
 export default connect(mapStateToProps, {
     addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerViewMode
   })(Layers);

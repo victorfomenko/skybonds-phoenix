@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+
 import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
 import { Icon, GLYPHS } from '../../components/Icon';
+
 import { MARKET_REPORT_VIEW_MODES } from '../../data/constants';
 import { getSpaces } from '../../data/providers/Spaces';
-import { isEqual } from 'lodash';
+import { loadReports } from '../../actions';
+
 import styles from './styles.sass';
 
 class Market extends Component {
@@ -22,8 +26,6 @@ class Market extends Component {
       date: '',
       reportID: props.match.params.reportID
     };
-    getSpaces().then(spaces=>{
-    });
     this.onViewModeChange = this.onViewModeChange.bind(this);
   }
 
@@ -32,7 +34,16 @@ class Market extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ reportIsins: nextProps.market.layers.allLayersIsinsByQuotaVisible });
+    if(nextProps.market && nextProps.market.id) {
+      this.setState({
+        reportIsins: nextProps.market.data.allLayersIsinsByQuotaVisible,
+        market: nextProps.market
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.props.loadReports(this.state.reportID);
   }
 
   onActiveIsinChange(isin) {
@@ -48,43 +59,51 @@ class Market extends Component {
   }
 
   render(){
+    const { market } = this.state;
     return (
       <div className='skybondsWrap'>
         <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
-        <div className={styles.reportWrap}>
-          <div className={styles.reportHeader}>
-            <Layers />
-            <div className={styles.reportDate}><input type="date" value={this.state.date} onChange={this.onDateChange.bind(this)}/></div>
-            <div className={styles.reportViewMode}>
-              <ul className={styles.reportViewMode_list}>
-                <li className={styles.reportViewMode_item + (this.state.viewMode === MARKET_REPORT_VIEW_MODES.SCATTERPLOT ? ' ' + styles.__active : '')} onClick={()=>this.onViewModeChange(MARKET_REPORT_VIEW_MODES.SCATTERPLOT)}>
-                  <Icon glyph={GLYPHS.VIEW_SCATTERPLOT} width="13" height="11" />
-                  <span>Scatter plot</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className={styles.reportView}>
-            <div className={styles.reportViewScatterPlot}>
-              <div className={styles.reportView_content}>
-                <ScatterPlot
-                  isins={this.state.reportIsins}
-                  activeIsin={this.state.activeIsin}
-                  onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
-              </div>
-              <div className={styles.reportView_aside}>
-                <Movers
-                  isins={this.state.reportIsins}
-                  onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
+        { market ?
+          <div className={styles.reportWrap}>
+            <div className={styles.reportHeader}>
+              <Layers />
+              <div className={styles.reportDate}><input type="date" value={this.state.date} onChange={this.onDateChange.bind(this)}/></div>
+              <div className={styles.reportViewMode}>
+                <ul className={styles.reportViewMode_list}>
+                  <li className={styles.reportViewMode_item + (this.state.viewMode === MARKET_REPORT_VIEW_MODES.SCATTERPLOT ? ' ' + styles.__active : '')} onClick={()=>this.onViewModeChange(MARKET_REPORT_VIEW_MODES.SCATTERPLOT)}>
+                    <Icon glyph={GLYPHS.VIEW_SCATTERPLOT} width="13" height="11" />
+                    <span>Scatter plot</span>
+                  </li>
+                </ul>
               </div>
             </div>
+            <div className={styles.reportView}>
+              <div className={styles.reportViewScatterPlot}>
+                <div className={styles.reportView_content}>
+                  <ScatterPlot
+                    isins={this.state.reportIsins}
+                    activeIsin={this.state.activeIsin}
+                    onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
+                </div>
+                <div className={styles.reportView_aside}>
+                  <Movers
+                    isins={this.state.reportIsins}
+                    onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+          : <div>Loading...</div> }
       </div>
     );
   }
 }
 
+Market.propTypes = {
+  user: React.PropTypes.shape({}).isRequired,
+  market: React.PropTypes.object.isRequired,
+  loadReports: React.PropTypes.func.isRequired
+};
 
 const mapStateToProps = state => ({ user: state.user, market: state.reports.market });
-export default connect(mapStateToProps)(Market);
+export default connect(mapStateToProps, { loadReports })(Market);

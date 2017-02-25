@@ -8,16 +8,16 @@ class LayerSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: props.layer.dataSource.search.query,
-      bonds: props.layer.dataComputed.bonds,
+      query: props.layer.source.search.query,
+      bonds: props.layer.data.bonds,
       pending: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      query: nextProps.layer.dataSource.search.query,
-      bonds: nextProps.layer.dataComputed.bonds
+      query: nextProps.layer.source.search.query,
+      bonds: nextProps.layer.data.bonds
     });
   }
 
@@ -25,14 +25,14 @@ class LayerSearch extends Component {
     this.setState({
       pending: true
     });
-    this.props.layerSearchQueryChange(this.props.layer.id, query);
+    this.props.layerSearchQueryChange(this.props.activeLayerId, query);
   }
 
   async searchRequest(query, date) {
-    await this.props.layerSearchRequest(this.props.layer.id, query, date);
-    if(this.props.layer.dataComputed.isinsAll.length) {
-      await this.props.layerGetFilterStats(this.props.layer.id, this.props.layer.dataSource.filters, this.props.layer.dataComputed.isinsAll);
-      await this.props.changeLayersBonds(this.props.layer.id, this.props.layer.dataComputed.isinsAll, date);
+    await this.props.layerSearchRequest(this.props.activeLayerId, query, date);
+    if(this.props.layer.data.isinsAll.length) {
+      // await this.props.layerGetFilterStats(this.props.activeLayerId, this.props.layer.source.filters, this.props.layer.data.isinsAll);
+      await this.props.changeLayersBonds(this.props.activeLayerId, this.props.layer.data.isinsAll, date);
     }
     this.setState({
       pending: false
@@ -53,5 +53,5 @@ class LayerSearch extends Component {
   }
 }
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers });
+const mapStateToProps = state => ({ layers: state.reports.market.layers, activeLayerId: state.reports.market.activeLayerId });
 export default connect(mapStateToProps, { layerSearchQueryChange, layerSearchRequest, layerGetFilterStats, changeLayersBonds })(LayerSearch);

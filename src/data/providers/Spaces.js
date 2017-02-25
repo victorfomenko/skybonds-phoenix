@@ -7,11 +7,23 @@ export const getSpaces = () => {
 		const ids = spaces.map(item=>{ return item.id });
 		return SpacesApi.getSpacesByIds(ids);
 	})
-	.then(spaces => {
-		const result = spaces.map(item=>{return SpaceCaster.cast(item);})
-		return Promise.resolve(result);
-	})
 	.catch(err => {
 		console.warn(err);
+	})
+};
+
+export const getMarketSpaces = () => {
+	return getSpaces()
+	.then(spaces => {
+		const result = spaces.filter(item=>{return item.ui.type === 'market' })
+		return Promise.resolve(result);
+	})
+};
+
+export const getPortfolioSpaces = () => {
+	return getSpaces()
+	.then(spaces => {
+		const result = spaces.filter(item=>{return item.ui.type === 'portfolio' })
+		return Promise.resolve(result);
 	})
 };

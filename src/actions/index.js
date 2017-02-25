@@ -4,5 +4,6 @@ export * from './layers';
 export * from './layerSearch';
 export * from './filters';
 export * from './movers';
+export * from './market';
 export * from './bond';
 

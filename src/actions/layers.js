@@ -14,10 +14,15 @@ export const addSpread = () => (dispatch) => {
   });
 };
 
-export const removeLayer = (id) => (dispatch) => {
+export const removeLayer = (id) => (dispatch, getState) => {
   dispatch({
     type: actionTypes.REMOVE_LAYER,
     id
+  });
+  const ativeLayerId = getState().reports.market.layers.ids[0]
+  dispatch({
+    type: actionTypes.ACTIVATE_LAYER,
+    id: ativeLayerId
   });
   dispatch({
     type: actionTypes.ALL_LAYERS_ISINS_UPDATE

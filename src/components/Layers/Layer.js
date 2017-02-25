@@ -129,7 +129,7 @@ class Layer extends Component {
 
 
 Layer.propTypes = {
-  id: React.PropTypes.number.isRequired,
+  id: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
   active: React.PropTypes.bool.isRequired,
   onLayerClick: React.PropTypes.func.isRequired,
