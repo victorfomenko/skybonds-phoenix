@@ -6,7 +6,7 @@ import style from './style.sass';
 import { getColor, getSynonym } from '../../helpers/BondRating';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
-import BondTSChart from '../BondTSChart';
+import BondTimeSeries from '../BondTimeSeries';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 class BondGeneral extends Component {
@@ -434,15 +434,15 @@ class BondGeneral extends Component {
           <div className={style.bondTimeseries}>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Price</div>
-              <BondTSChart bond={this.props.bond} yAxis='price' />
+              <BondTimeSeries bond={this.props.bond} yAxis='price' />
             </div>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Yield</div>
-              <BondTSChart bond={this.props.bond} yAxis='yield' />
+              <BondTimeSeries bond={this.props.bond} yAxis='yield' />
             </div>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Spread to benchmark curve</div>
-              <BondTSChart bond={this.props.bond} yAxis='spreadToBMK' />
+              <BondTimeSeries bond={this.props.bond} yAxis='spreadToBMK' />
             </div>
           </div>
         </div>
