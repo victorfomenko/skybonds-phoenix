@@ -2,12 +2,16 @@ import { actionTypes } from './actionTypes';
 import * as DataProvider from '../data/providers/Data';
 
 
-export const addLayer = () => (dispatch) => {
-  dispatch({ type: actionTypes.ADD_LAYER });
+export const addSet = () => (dispatch) => {
+  dispatch({ type: actionTypes.ADD_SET });
 };
 
-export const deleteLayer = (id) => (dispatch) => {
-  dispatch({ type: actionTypes.DELETE_LAYER, id});
+export const addSpread = () => (dispatch) => {
+  dispatch({ type: actionTypes.ADD_SPREAD });
+};
+
+export const removeLayer = (id) => (dispatch) => {
+  dispatch({ type: actionTypes.REMOVE_LAYER, id});
 };
 
 export const activateLayer = (id) => (dispatch) => {
