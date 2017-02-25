@@ -6,8 +6,7 @@ import style from './style.sass';
 import { getColor, getSynonym } from '../../helpers/BondRating';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
-import { getLabel } from '../../helpers/BondOutlook';
-import BondTSChart from '../BondTSChart';
+import BondTimeSeries from '../BondTimeSeries';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 class BondGeneral extends Component {
@@ -116,6 +115,26 @@ class BondGeneral extends Component {
     }
     return date
   }
+  getOutlookLabel(outlook) {
+    if ( typeof outlook === 'string') {
+      switch (outlook.toLowerCase()) {
+        case 'positive':
+        case 'pos':
+          return 'Positive ↑';
+        case 'negative':
+        case 'neg':
+          return 'Negative ↓';
+        case 'stable':
+        case 'sta':
+          return 'Stable ≈';
+        default:
+          return 'NA outlook';
+      }
+    } else
+    {
+      return 'NA outlook';
+    }
+  };
 
   parseDate(str) {
     if(!/^(\d){8}$/.test(str)) return 'invalid date';
@@ -192,9 +211,9 @@ class BondGeneral extends Component {
                 </span>
 
                 <span className={style.bondGeneralValues_value}>
-                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{getLabel(bond.info.fitch)}</div>
-                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{getLabel(bond.info.sp)}</div>
-                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{getLabel(bond.info.moodys)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.fitch)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.sp)}</div>
+                  <div className={style.bondGeneralValues_row + ' ' + style.__outlook}>{this.getOutlookLabel(bond.info.moodys)}</div>
                 </span>
                 <span className={style.bondGeneralValues_value}>
                   <div className={style.bondGeneralValues_row + ' ' + style.__rating} style={{color: getColor(bond.info.ratingGroup)}}>{bond.info.ratingGroup}</div>
@@ -417,15 +436,15 @@ class BondGeneral extends Component {
           <div className={style.bondTimeseries}>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Price</div>
-              <BondTSChart bond={this.props.bond} yAxis='price' />
+              <BondTimeSeries bond={this.props.bond} yAxis='price' />
             </div>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Yield</div>
-              <BondTSChart bond={this.props.bond} yAxis='yield' />
+              <BondTimeSeries bond={this.props.bond} yAxis='yield' />
             </div>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Spread to benchmark curve</div>
-              <BondTSChart bond={this.props.bond} yAxis='spreadToBMK' />
+              <BondTimeSeries bond={this.props.bond} yAxis='spreadToBMK' />
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { homeSearchBonds } from '../../actions';
+import { homeSearchQueryChange, homeSearchRequest } from '../../actions';
 import Header from '../../components/Header';
 import Search from '../../components/Search';
 import style from './style.sass';
@@ -11,6 +11,7 @@ class Home extends Component {
     this.state = {
       query: props.search.query,
       bonds: props.search.bonds,
+      pending: false
     };
   }
 
@@ -21,8 +22,18 @@ class Home extends Component {
     });
   }
 
-  sendSearchRequest(query, date) {
-    this.props.homeSearchBonds(query, date);
+  searchQueryChange(query) {
+    this.setState({
+      pending: true
+    });
+    this.props.homeSearchQueryChange(query);
+  }
+
+  async searchRequest(query, date) {
+    await this.props.homeSearchRequest(query, date);
+    this.setState({
+      pending: false
+    });
   }
 
   render () {
@@ -33,7 +44,9 @@ class Home extends Component {
           <Search
             query={this.state.query}
             bonds={this.state.bonds}
-            sendSearchRequest={this.sendSearchRequest.bind(this)} />
+            pending={this.state.pending}
+            searchQueryChange={this.searchQueryChange.bind(this)}
+            searchRequest={this.searchRequest.bind(this)} />
         </div>
       </div>
     );
@@ -45,4 +58,4 @@ Home.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
 };
 const mapStateToProps = state => ({ user: state.user, search: state.home });
-export default connect(mapStateToProps, { homeSearchBonds })(Home);
+export default connect(mapStateToProps, { homeSearchQueryChange, homeSearchRequest })(Home);

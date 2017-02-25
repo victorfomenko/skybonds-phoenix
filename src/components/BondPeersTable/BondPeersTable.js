@@ -3,6 +3,7 @@ import * as Data from '../../data/providers/Data';
 import { isPortfolioScb } from '../../helpers/portfolio';
 import { connect } from 'react-redux';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
+import { addPeerToChart, removePeerFromChart, toggleBenchmark } from '../../actions';
 import style from './style.sass';
 
 const Defaults = {
@@ -19,7 +20,8 @@ class BondPeersTable extends Component {
     this._initValues()
     this.state = {
       'peersBonds': [],
-      'checkedIsins': this.props.checkedIsins
+      'benchmarkChecked': true,
+      'selectedPeers': new Set()
     };
   }
 
@@ -43,6 +45,7 @@ class BondPeersTable extends Component {
   }
 
   _preformPeersBonds() {
+    const colorGenerator = d3.scale.category10();
     let limitedPeersIsins = this.props.peersIsins.slice(0, this.peersPerPage + this.peersPerPage * this._peersPage)
     let promises = [
       Data.getBondsInfo([this.props.parentIsin]),
@@ -68,7 +71,8 @@ class BondPeersTable extends Component {
            let itemInfo =  response[2][i];
            peersBonds.push({
              isin: itemInfo.isin,
-             info: itemInfo.data
+             info: itemInfo.data,
+             color: colorGenerator(itemInfo.isin)
            });
 
          for (let j = 0, len2 = response[3].length; j < len2; j++) {
@@ -135,33 +139,25 @@ class BondPeersTable extends Component {
     return result
   }
 
-  isBenchmarkChecked () {
-    return this.showBenchmark
+  togglePeer = bond => {
+    if (this.state.selectedPeers.has(bond.isin)) {
+      this.props.removePeerFromChart(bond.isin);
+      this.state.selectedPeers.delete(bond.isin);
+    } else {
+      this.props.addPeerToChart(bond.isin, bond.info.standardName, bond.color);
+      this.state.selectedPeers.add(bond.isin);
+    }
+    this.setState({ selectedPeers: this.state.selectedPeers });
   }
 
-  togglePeer (bond) {
-    let checkedIsins = this.state.checkedIsins;
-    let pos = checkedIsins.indexOf(bond.isin);
-    if (pos == -1) {
-      checkedIsins.push(bond.isin)
-    } else {
-      checkedIsins.splice(pos, 1)
-    }
-    this.setState({
-      'checkedIsins': checkedIsins
-    });
-  }
 
   toggleBenchmark () {
-    if (this.showBenchmark) {
-      this.showBenchmark = false;
-    } else {
-      this.showBenchmark = true;
-    }
+    this.props.toggleBenchmark();
+    this.setState({ benchmarkChecked: !this.state.benchmarkChecked });
   }
 
   isPeerChecked (bond) {
-    let pos = this.state.checkedIsins.indexOf(bond.isin);
+    let pos = this.props.checkedPeersIsins.indexOf(bond.isin);
     return pos != - 1;
   }
 
@@ -169,6 +165,7 @@ class BondPeersTable extends Component {
     this._peersPage++ ;
     this._preformPeersBonds()
   }
+
 
   render(){
     let parentBond = this.parentBond;
@@ -178,13 +175,13 @@ class BondPeersTable extends Component {
 
       var peersList = peersBonds.map((bond, index) => {
         return (
-          <tr key={index} className={style.bondPeersTable_row} onClick={this.togglePeer.bind(this, bond)}>
+          <tr key={index} className={style.bondPeersTable_row} onClick={this.togglePeer.bind(this, bond, index)}>
             <td className={style.bondPeersTable_cell + ' ' + style.__check}>
-              { (this.isPeerChecked(bond)) ?
-                <input type="checkbox" className={style.bondPeersTable_check} checked/>
-                :
-                <input type="checkbox" className={style.bondPeersTable_check}/>
-              }
+              <input type="checkbox"
+                className={style.bondPeersTable_check}
+                checked={this.state.selectedPeers.has(bond.isin)}
+                onChange={this.togglePeer.bind(this, bond)}
+                />
             </td>
             <td className={style.bondPeersTable_cell + ' ' + style.__text}>
               <span className={style.bondPeersTable_text}>
@@ -332,13 +329,13 @@ class BondPeersTable extends Component {
               </tr>
             </thead>
             <tbody className={style.bondPeersTable_tbody}>
-              <tr className={style.bondPeersTable_row + ' ' + (this.isBenchmarkChecked() ?  style.__checked : '')} onClick={this.toggleBenchmark()}>
+              <tr className={style.bondPeersTable_row + ' ' + (this.state.benchmarkChecked ?  style.__checked : '')} onClick={this.toggleBenchmark.bind(this)}>
                 <td className={style.bondPeersTable_cell + ' ' + style.__check}>
-                  { (this.isBenchmarkChecked()) ?
-                    <input type="checkbox" className={style.bondPeersTable_check} checked/>
-                    :
-                    <input type="checkbox" className={style.bondPeersTable_check}/>
-                  }
+                  <input type="checkbox"
+                    className={style.bondPeersTable_check}
+                    checked = {this.state.benchmarkChecked}
+                    onChange = {this.toggleBenchmark.bind(this)}
+                  />
                 </td>
                 <td className={style.bondPeersTable_cell + ' ' + style.__text}>
                   <span className={style.bondPeersTable_text}>Benchmark from filtered peers</span>
@@ -387,9 +384,10 @@ BondPeersTable.propTypes = {
   date: React.PropTypes.object.isRequired,
   parentIsin: React.PropTypes.string.isRequired,
   peersIsins: React.PropTypes.array.isRequired,
-  checkedIsins: React.PropTypes.array.isRequired,
   filters: React.PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({ user: state.user });
-export default connect(mapStateToProps)(BondPeersTable);
+export default connect(mapStateToProps, {
+    addPeerToChart, removePeerFromChart, toggleBenchmark
+  })(BondPeersTable);

@@ -5,119 +5,100 @@
   margin: 0 0 11px
   position: relative
   z-index: 2
-  &:after
-    content: ''
-    display: table
-    clear: both
+  @include clearFix
 
 .reportLayersStrip_list
-    display: inline-block
-    max-width: calc(100% - 200px)
-    font-size: $fsM
+  display: inline-block
+  max-width: calc(100% - 200px)
+  font-size: $fsM
 
-.reportLayersStrip
-  &_list
-    display: inline-block
-    max-width: calc(100% - 200px)
-    font-size: $fsM
+.reportLayersStrip_item
+  display: inline-block
+  border-radius: 3px 3px 0 0
+  line-height: 1
+  white-space: nowrap
+  &.__active
+    background-color: transparentize($colorBlack, .93)
 
-  &_item
-    display: inline-block
-    border-radius: 3px 3px 0 0
-    line-height: 1
-    white-space: nowrap
-    &.__active
-      background-color: rgba(0,0,0,.07)
-
-  &_name
-    display: inline-block
-    line-height: 1
-    height: 24px
-    padding: 0 3px
-    margin: 0 -3px
-    font-size: $fsXL
-    border: 1px solid $colorBorder
-    border-radius: 3px
-    max-width: 220px
-    &[readonly]
-      border-color: transparent
-      background-color: transparent
-      cursor: pointer
-      text-overflow: ellipsis
-  &_item.__active
-    .reportLayersStrip_name
-      cursor: text
-
-  &_item:hover
-    &_name:not(:focus)
-      color: $colorLoudHover
-
-  &_closeIcon
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMS40MTQgMTBMMjAgMS40MTRWMGgtMS40MTRMMTAgOC41ODYgMS40MTQgMEgwdjEuNDE0TDguNTg2IDEwIDAgMTguNTg2VjIwaDEuNDE0TDEwIDExLjQxNCAxOC41ODYgMjBIMjB2LTEuNDE0eiIvPjwvc3ZnPg==')
-    width: 20px
-    height: 20px
-    zoom: 0.5
-    display: inline-block
-    margin: 0 0 0 20px
-    color: #999
+.reportLayersStrip_name
+  display: inline-block
+  line-height: 1
+  height: 24px
+  padding: 0 3px
+  margin: 0 -3px
+  font-size: $fsXL
+  border: 1px solid $colorBorder
+  border-radius: 3px
+  max-width: 220px
+  &[readonly]
+    border-color: transparent
+    background-color: transparent
     cursor: pointer
+    text-overflow: ellipsis
 
-  &_content
-    position: relative
-    padding: 3px 10px 2px
-    cursor: pointer
+.reportLayersStrip_item.__active
+  .reportLayersStrip_name
+    cursor: text
 
-  &_item.__set.__hidden
-    &_name
-      opacity: .5
+.reportLayersStrip_item:hover
+  .reportLayersStrip_name:not(:focus)
+    color: $colorLoudHover
 
-  &_remove
-    margin: 0 0 0 6px
-    color: $colorMuted
-    cursor: pointer
-    //vertical-align: text-top
-    &:hover
-      color: $colorLoudHover
+.reportLayersStrip_content
+  position: relative
+  padding: 3px 10px 2px
+  cursor: pointer
 
-  &_buttons
-    display: inline-block
-    margin: 0 0 0 10px
-    font-size: $fsM
-    line-height: 1
-    white-space: nowrap
+.reportLayersStrip_item.__set.__hidden
+  .reportLayersStrip_name
+    opacity: .5
 
-  &_button
-    display: inline-block
-    margin-left: 10px
-    padding: 2px 3px
-    color: $colorLink
-    background: transparentize($colorLink, 0.9)
-    border-radius: 3px
-    cursor: pointer
-    &:first-child
-      margin-left: 0
-    &:hover
-      color: $colorLoudHover
-      background: transparentize($colorLoudHover, 0.9)
-    &:before
-      content: "+"
+.reportLayersStrip_remove
+  margin: 0 0 0 6px
+  color: $colorMuted
+  cursor: pointer
+  &:hover
+    color: $colorLoudHover
+
+.reportLayersStrip_buttons
+  display: inline-block
+  margin: 0 0 0 10px
+  font-size: $fsM
+  line-height: 1
+  white-space: nowrap
+
+.reportLayersStrip_button
+  display: inline-block
+  margin-left: 10px
+  padding: 2px 3px
+  color: $colorLink
+  background: transparentize($colorLink, 0.9)
+  border-radius: 3px
+  cursor: pointer
+  &:first-child
+    margin-left: 0
+  &:hover
+    color: $colorLoudHover
+    background: transparentize($colorLoudHover, 0.9)
+  &:before
+    content: "+"
+
 
 .reportLayersView:hover .reportLayersView_wrap
-    display: block
+  display: block
 .reportLayersView
   position: relative
   z-index: 1
   display: inline-block
   color: $colorMuted
-  margin-right: 5px
-  font-weight: bold
 .reportLayersStrip_item:hover,
 .reportLayersStrip_item.__active
   .reportLayersView
     color: $colorText
-.reportLayersView_icon
-  margin: 0 4px 0 0
-  cursor: pointer
+.reportLayersView
+  :global(.svgIcon)
+    margin: 0 4px 0 0
+    cursor: pointer
 .reportLayersView_wrap
   position: absolute
   padding: 5px 0 0
@@ -165,84 +146,6 @@
 report-layer-set-view
   .reportLayersView > .reportLayersView_icon
     opacity: .5
-
-.reportLayersStrip_item
-  display: inline-block
-  border-radius: 3px 3px 0 0
-  line-height: 1
-  white-space: nowrap
-  &.__active
-    background-color: rgba(0,0,0,.07)
-
-.reportLayersStrip_name
-  line-height: 1
-  height: 24px
-  padding: 0 3px
-  margin: 0 -3px
-  font-size: $fsXL
-  border: 1px solid $colorBorder
-  border-radius: 3px
-  max-width: 220px
-  &[readonly]
-    border-color: transparent
-    background-color: transparent
-    cursor: pointer
-    text-overflow: ellipsis
-
-.reportLayersStrip_item.__active
-  .report-layers-strip_name
-    cursor: text
-
-.reportLayersStrip_item:hover
-  .reportLayersStrip_name:not(:focus)
-    color: $colorLoudHover
-
-.reportLayersStrip_content
-  position: relative
-  padding: 3px 10px 2px
-  cursor: pointer
-
-.reportLayersStrip_item.__set.__hidden
-  .reportLayersStrip_name
-    opacity: .5
-
-.reportLayersStrip_remove
-  margin: 0 0 0 6px
-  color: $colorMuted
-  cursor: pointer
-  &:hover
-    color: $colorLoudHover
-
-.reportLayersStrip_buttons
-  display: inline-block
-  margin: 0 0 0 10px
-  font-size: $fsM
-  line-height: 1
-  white-space: nowrap
-
-.reportLayersStrip_button
-  display: inline-block
-  margin-left: 10px
-  padding: 2px 3px
-  color: $colorLink
-  background: transparentize($colorLink, 0.9)
-  border-radius: 3px
-  cursor: pointer
-  &:first-child
-    margin-left: 0
-  &:hover
-    color: $colorLoudHover
-    background: transparentize($colorLoudHover, 0.9)
-  &:before
-    content: "+"
-
-.reportLayersStrip_remove
-  margin: 0 0 0 6px
-  color: $colorMuted
-  cursor: pointer
-  &:hover
-    color: $colorLoudHover
-
 
 
 .reportLayerSettings

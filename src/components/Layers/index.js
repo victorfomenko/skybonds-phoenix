@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {assign} from 'lodash';
+import { assign } from 'lodash';
 
 import Layer from './Layer';
 import LayerSearch from './LayerSearch';
@@ -8,12 +8,13 @@ import Filters from '../Filters';
 import layersStyle from './styles.sass';
 
 import {
-        addLayer,
-        deleteLayer,
-        activateLayer,
-        renameLayer,
-        changeLayerView
-      } from '../../actions';
+  addSet,
+  addSpread,
+  removeLayer,
+  activateLayer,
+  renameLayer,
+  changeLayerView
+} from '../../actions';
 
 
 class Layers extends Component {
@@ -26,20 +27,20 @@ class Layers extends Component {
     this.setState({'loaded': true});
   }
 
-  _removeLayerSet(layerId) {
-    this.props.deleteLayer(layerId);
-  }
-
   onNewSet() {
-    this.props.addLayer();
+    this.props.addSet();
   }
 
-  onLayerClose(layerId) {
-    this._removeLayerSet(layerId);
+  onNewSpread() {
+    this.props.addSpread();
   }
 
   onLayerClick(layerId) {
     this.props.activateLayer(layerId);
+  }
+
+  onLayerRemove(layerId) {
+    this.props.removeLayer(layerId);
   }
 
   onLayerRename(layerId, layerName) {
@@ -57,9 +58,10 @@ class Layers extends Component {
       return <Layer
                 key={'layer_key_' + index}
                 id={layerById.id}
-                name={layerById.name}
+                name={layerById.name ? layerById.name : layerById.autoName}
                 active={(layerById.id == this.props.layers.activeLayer)? true: false}
-                onLayerClose={this.onLayerClose.bind(this)}
+                viewMode={layerById.viewMode}
+                onLayerRemove={this.onLayerRemove.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}
                 onLayerViewChange={this.onLayerViewChange.bind(this)} />;
@@ -73,8 +75,13 @@ class Layers extends Component {
               {layers}
             </ul>
             <div className={layersStyle.reportLayersStrip_buttons}>
-              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set} onClick={this.onNewSet.bind(this)}>
+              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set}
+                    onClick={this.onNewSet.bind(this)}>
                 set
+              </span>
+              <span className={layersStyle.reportLayersStrip_button + ' ' + layersStyle.__set}
+                    onClick={this.onNewSpread.bind(this)}>
+                spread
               </span>
             </div>
           </div>
@@ -99,13 +106,14 @@ class Layers extends Component {
 
 Layers.propTypes = {
   layers: React.PropTypes.object.isRequired,
-  addLayer: React.PropTypes.func.isRequired,
-  deleteLayer: React.PropTypes.func.isRequired,
+  addSet: React.PropTypes.func.isRequired,
+  addSpread: React.PropTypes.func.isRequired,
+  removeLayer: React.PropTypes.func.isRequired,
   renameLayer: React.PropTypes.func.isRequired,
   changeLayerView: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
-    addLayer, deleteLayer, activateLayer, renameLayer, changeLayerView
+    addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerView
   })(Layers);

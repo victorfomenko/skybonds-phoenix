@@ -12,6 +12,34 @@
   background: linear-gradient(to bottom,transparentize($colorLink,0.94),transparentize($colorLink,0.9))
   @include pageGutters
 
+
+.reportViewMode
+  display: block
+  .reportViewMode_item
+    display: inline-block
+    padding: 5px 10px 8px
+    border-radius: 3px 3px 0 0
+    cursor: pointer
+    &:hover
+      color: $colorLoudHover
+    &.__active
+      background-color: $colorWhite
+      color: $colorText
+      font-weight: bold
+    &.__na
+      cursor: not-allowed
+
+  :global(.svgIcon)
+    margin: 0 4px 0 0
+
+
+.reportDate
+  display: block
+  position: relative
+  z-index: 1
+  float: right
+
+
 .reportView
   position: relative
   z-index: 1
@@ -78,5 +106,3 @@
   margin-left: 10px
   padding-left: 20px
   overflow: hidden
-
-

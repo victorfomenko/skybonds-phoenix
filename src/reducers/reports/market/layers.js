@@ -1,5 +1,7 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection } from 'lodash';
+import { getAutoName } from '../../../helpers/LayerAutoName';
+import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
 
 
 const filters = {
@@ -249,7 +251,8 @@ const initialState = {
   layersById: {
     1: {
       id : 1,
-      name : 'Empty set',
+      name: '',
+      autoName: 'Empty set',
       dataSource: {
         search: {
           query: '',
@@ -270,7 +273,7 @@ const initialState = {
         isins: [],
         bonds: []
       },
-      'viewMode' : 'bonds'
+      viewMode : LAYER_SET_VIEW_MODES.BONDS
     }
   },
   activeLayer: 1,
@@ -279,7 +282,7 @@ const initialState = {
 const layers = (state = initialState, action) => {
   switch (action.type) {
 
-    case actionTypes.ADD_LAYER:
+    case actionTypes.ADD_SET:
       let newId = state.layers[state.layers.length-1] + 1;
       return {
         layers: state.layers.concat(newId),
@@ -287,7 +290,8 @@ const layers = (state = initialState, action) => {
           ...state.layersById,
           [newId]: {
             id: newId,
-            name: 'Empty set',
+            name: '',
+            autoName: 'Empty set',
             dataSource: {
               search: {
                 query: '',
@@ -308,13 +312,13 @@ const layers = (state = initialState, action) => {
               isins: [],
               bonds: []
             },
-            'viewMode' : 'bonds',
+            viewMode : LAYER_SET_VIEW_MODES.BONDS
           }
         },
         activeLayer: newId,
       };
 
-    case actionTypes.DELETE_LAYER:
+    case actionTypes.REMOVE_LAYER:
       if(state.layers.length == 1) {
         return initialState;
       }
@@ -330,8 +334,9 @@ const layers = (state = initialState, action) => {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
-            assign({}, layer, { name: action.name }) :
-            layer;
+            {...layer,
+              name: action.name
+            } : layer;
         })
       };
 
@@ -351,6 +356,25 @@ const layers = (state = initialState, action) => {
         activeLayer: action.id,
       };
 
+    case actionTypes.LAYER_SEARCH_QUERY_CHANGE:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer) => {
+          return layer.id === action.id ?
+            {...layer,
+              autoName: getAutoName(
+                {...layer.dataSource.search,
+                  query: action.query
+                }, layer.dataSource.filters),
+              dataSource: {...layer.dataSource,
+                search: {...layer.dataSource.search,
+                  query: action.query
+                }
+              }
+            } : layer;
+        })
+      };
+
     case actionTypes.LAYER_SEARCH_ISINS_CHANGE:
       return {
         ...state,
@@ -367,11 +391,6 @@ const layers = (state = initialState, action) => {
           }
           return layer.id === action.id ?
             {...layer,
-              dataSource: {...layer.dataSource,
-                search: {...layer.dataSource.search,
-                  query: action.query
-                },
-              },
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
                   isins: action.isins
@@ -426,12 +445,15 @@ const layers = (state = initialState, action) => {
 
     case actionTypes.LAYER_FILTERS_CHANGE:
       if(!action.id) { return state; }
-
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
           return layer.id === action.id ?
             {...layer,
+              autoName: getAutoName(layer.dataSource.search,
+                {...layer.dataSource.filters,
+                  filters
+                }),
               dataSource: {...layer.dataSource,
                 filters: action.filters
               }
