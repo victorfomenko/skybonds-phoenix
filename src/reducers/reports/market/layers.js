@@ -122,7 +122,7 @@ const layers = (state = {}, action) => {
     case actionTypes.LAYER_FILTERS_ISINS_CHANGE:
       return {
         ...state,
-        layersById: mapValues(state.layersById, (layer) => {
+        layersById: mapValues(state.layersById, (layer, id) => {
           const searchIsins = layer.data.search.isins;
           const filtersIsins = action.isins;
           let layerIsins = [];
@@ -133,7 +133,7 @@ const layers = (state = {}, action) => {
           } else if(filtersIsins.length) {
             layerIsins = filtersIsins;
           }
-          return layer.id === action.id ?
+          return id === action.id ?
             {...layer,
               data: {...layer.data,
                 filters: {...layer.data.filters,
@@ -149,8 +149,8 @@ const layers = (state = {}, action) => {
     case actionTypes.LAYER_FILTERS_STATS_CHANGE:
       return {
         ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
+        layersById: mapValues(state.layersById, (layer, id) => {
+          return id === action.id ?
             {...layer,
               data: {...layer.data,
                 filters: {...layer.data.filters,
@@ -166,8 +166,8 @@ const layers = (state = {}, action) => {
 
       return {
         ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
+        layersById: mapValues(state.layersById, (layer, id) => {
+          return id === action.id ?
             {...layer,
               source: {...layer.source,
                 filters: action.filters
@@ -179,8 +179,8 @@ const layers = (state = {}, action) => {
     case actionTypes.LAYER_BONDS_UPDATE:
       return {
         ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
+        layersById: mapValues(state.layersById, (layer, id) => {
+          return id === action.id ?
             {...layer,
               data: {...layer.data,
                 bonds: action.bonds

@@ -74,7 +74,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
 	        },
 	        filters: {
 	          isins: [],
-	          stats: {}
+	          stats: []
 	        },
 	        isins: [],
 	        bonds: []
