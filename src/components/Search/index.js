@@ -53,8 +53,8 @@ class Search extends Component {
     this.setState({ dropdownActive: false });
   }
 
-  onInputChange(event) {
-    let query = event.target.value;
+  onInputChange(e) {
+    let query = e.target.value;
     this.props.searchQueryChange(query);
     this.searchRequestDebounced(query, DEFAULT_DATE);
   }
