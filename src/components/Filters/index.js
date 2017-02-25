@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
-import { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds } from '../../actions';
+import { layerFilterBonds, layerGetFilterStats, changeLayersBonds } from '../../actions';
 import { isPortfolioScb } from '../../helpers/portfolio';
 
 const MAX_ISINS_PER_LAYER = 200;
@@ -13,7 +13,7 @@ class Filters extends Component {
     this.state = {
       filtersValues: props.layer.source.filters,
       filtersStats: props.layer.data.filters.stats,
-      isins: props.layer.data.isins,
+      isins: props.layer.data.isinsAll,
       searchIsins: props.layer.data.search.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
@@ -23,7 +23,7 @@ class Filters extends Component {
     this.setState({
       filtersValues: nextProps.layer.source.filters,
       filtersStats: nextProps.layer.data.filters.stats,
-      isins: nextProps.layer.data.isins,
+      isins: nextProps.layer.data.isinsAll,
       searchIsins: nextProps.layer.data.search.isins
     });
   }
@@ -50,7 +50,7 @@ class Filters extends Component {
       result[key] = values.map(item=>{return item.name})
     }
     delete result['range'];
-    
+
     return {
       filters: result,
       date: this.getDate()
@@ -61,8 +61,7 @@ class Filters extends Component {
     const filters = this.formatFilters(selected);
     const needStatsFromFilters = this.state.searchIsins.length == 0;
     const activeLayerId = this.props.activeLayerId;
-    this.props.changeFilters(activeLayerId, filters.filters);
-    await this.props.layerFilterBonds(activeLayerId, filters, needStatsFromFilters);
+    await this.props.layerFilterBonds(activeLayerId, filters, all, needStatsFromFilters);
     if(!needStatsFromFilters) {
       await this.props.layerGetFilterStats(activeLayerId, filters, this.state.isins);
     }
@@ -335,7 +334,7 @@ class Filters extends Component {
                 case 'range':
                   item.values = value.values
                 break;
-                default: 
+                default:
                   item.selected = true;
               }
             }
@@ -455,8 +454,6 @@ class Filters extends Component {
 Filters.propTypes = {
   layer: React.PropTypes.object.isRequired,
   layerFilterBonds: React.PropTypes.func.isRequired,
-  changeFilters: React.PropTypes.func.isRequired,
-  changeFiltersIsins: React.PropTypes.func.isRequired,
   changeLayersBonds: React.PropTypes.func.isRequired
 };
 

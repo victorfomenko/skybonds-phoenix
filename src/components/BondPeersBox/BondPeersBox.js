@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as Data from '../../data/providers/Data';
 import BondPeersTable from '../BondPeersTable/BondPeersTable';
+import BondPeersTimeSeries from '../BondPeersTimeSeries';
 import style from './style.sass';
 
 
@@ -17,7 +18,6 @@ class BondPeersBox extends Component {
   _initValues() {
     this.parentIsin = this.props.bond.isin;
     this.peersIsins = [];
-    this.checkedIsins = [];
     this.filters = [];
   }
 
@@ -31,7 +31,6 @@ class BondPeersBox extends Component {
       'peersIsins': peersData.peers,
       'peersFilters': peersData.filters
     });
-    this.checkedIsins = [];
   }
 
 
@@ -40,12 +39,12 @@ class BondPeersBox extends Component {
       return (
         <div className={style.bondPeersBox}>
           <div className={style.bondPeersBox_title}>Peers</div>
+          <BondPeersTimeSeries bond={this.props.bond} />
           <BondPeersTable
             bond={this.props.bond}
             date={this.props.date}
             parentIsin={this.parentIsin}
             peersIsins={this.state.peersIsins}
-            checkedIsins={this.checkedIsins}
             filters={this.state.peersFilters}
           />
         </div>
@@ -60,5 +59,6 @@ BondPeersBox.propTypes = {
   bond: React.PropTypes.object.isRequired,
   date: React.PropTypes.object.isRequired
 };
+
 
 export default BondPeersBox;

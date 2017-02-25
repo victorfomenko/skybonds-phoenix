@@ -4,9 +4,9 @@ import { getColor } from '../../helpers/BondRating';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import styles from './styles.sass';
 
-const DEBOUNCE_DELAY = 250;
+const DEBOUNCE_DELAY = 200;
 const MIN_QUERY_LENGTH = 3;
-const defaultDate = new Date('2017/02/05');
+const DEFAULT_DATE = new Date('2017/02/05');
 
 class Search extends Component {
 
@@ -15,8 +15,8 @@ class Search extends Component {
     this.state = {
       query: props.query,
       bonds: props.bonds,
-      dropdownActive: false,
-      pending: false
+      pending: props.pending,
+      dropdownActive: false
     };
   }
 
@@ -24,21 +24,21 @@ class Search extends Component {
     this.setState({
       query: nextProps.query,
       bonds: nextProps.bonds,
-      pending: false
+      pending: nextProps.pending
     });
   }
 
   componentWillUnmount() {
-    this.sendSearchRequest.cancel();
+    this.searchRequestDebounced.cancel();
   }
 
-  sendSearchRequest = _.debounce((query, date) => {
-    this.props.sendSearchRequest(query, date);
+  searchRequestDebounced = _.debounce((query, date) => {
+    this.props.searchRequest(query, date)
   }, DEBOUNCE_DELAY);
 
   onSearchClear() {
-    this.setState({ query: '', bonds: [] });
-    this.sendSearchRequest('', defaultDate);
+    this.props.searchQueryChange('');
+    this.props.searchRequest('', DEFAULT_DATE);
   }
 
   onDropdownMouseDown(e) {
@@ -53,10 +53,10 @@ class Search extends Component {
     this.setState({ dropdownActive: false });
   }
 
-  onInputChange(event) {
-    let query = event.target.value;
-    this.setState({query: query, bonds: [], pending: true});
-    this.sendSearchRequest(query, defaultDate);
+  onInputChange(e) {
+    let query = e.target.value;
+    this.props.searchQueryChange(query);
+    this.searchRequestDebounced(query, DEFAULT_DATE);
   }
 
   render() {
@@ -123,8 +123,7 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
               <a className={styles.bondsSearch_info} href={'/bond/' + bond.isin} target="_blank">
-                <Icon glyph={GLYPHS.INFO}
-              width="14" height="14" />
+                <Icon glyph={GLYPHS.INFO} width="14" height="14" />
               </a>
             </span>
           </li>;
@@ -144,8 +143,7 @@ class Search extends Component {
             </span>
             <span className={styles.bondsSearch_cell + ' ' + styles.__info + ' ' + styles.__hidden}>
               <a className={styles.bondsSearch_info} href={'/issuer/' + group.issuerId} target="_blank">
-                <Icon glyph={GLYPHS.INFO}
-                      width="14" height="14" />
+                <Icon glyph={GLYPHS.INFO} width="14" height="14" />
               </a>
             </span>
           </div>

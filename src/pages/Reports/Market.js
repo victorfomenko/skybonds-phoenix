@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+
 import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
 import Movers from '../../components/Movers';
-import { isEqual, intersection, uniq, union } from 'lodash';
+import { Icon, GLYPHS } from '../../components/Icon';
+
+import { MARKET_REPORT_VIEW_MODES } from '../../data/constants';
+import { getSpaces } from '../../data/providers/Spaces';
 import { loadReports } from '../../actions';
-import reportStyle from './style.sass';
 
-const REPORT_ISINS_QUOTA = 200;
-
+import styles from './styles.sass';
 
 class Market extends Component {
 
@@ -19,20 +22,20 @@ class Market extends Component {
       reportName: 'Reports',
       reportIsins: [],
       activeIsin: '',
+      viewMode: MARKET_REPORT_VIEW_MODES.SCATTERPLOT,
+      date: '',
       reportID: props.match.params.reportID
     };
+    this.onViewModeChange = this.onViewModeChange.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    if(isEqual(nextState, this.state)) {
-      return false;
-    }
-    return true;
+    return !isEqual(nextState, this.state);
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.market && nextProps.market.id) {
-      const reportIsins = this.getReportIsins(nextProps.market.layers.layersById);
+      const reportIsins = nextProps.market.layers.allLayersIsinsByQuotaVisible
       this.setState({
         reportIsins: reportIsins,
         market: nextProps.market
@@ -44,33 +47,16 @@ class Market extends Component {
     this.props.loadReports(this.state.reportID);
   }
 
-  getReportIsins(layers){
-    let nonEmptyLayers = [];
-    for(let key in layers) {
-      const layerIsins = layers[key].data.isins;
-      if(layerIsins.length) {
-        nonEmptyLayers.push(layerIsins);
-      }
-    }
-    nonEmptyLayers = nonEmptyLayers.sort((a,b)=>{
-      return a.length - b.length;
-    });
-    let maxIsinsPerLayer = Math.floor(REPORT_ISINS_QUOTA / nonEmptyLayers.length);
-    let remainingQuota = REPORT_ISINS_QUOTA;
-    let layersIsinsByQuota = [];
-    nonEmptyLayers.forEach((isins, index)=>{
-      let isinsByQuota = isins.slice(0, maxIsinsPerLayer);
-      layersIsinsByQuota.push(isinsByQuota);
-      remainingQuota -= isinsByQuota.length;
-      if(index < nonEmptyLayers.length - 1) {
-        maxIsinsPerLayer = Math.floor(remainingQuota / (nonEmptyLayers.length - index - 1));
-      }
-    });
-    return union(...layersIsinsByQuota);
-  }
-
   onActiveIsinChange(isin) {
     this.setState({ activeIsin: isin });
+  }
+
+  onDateChange(e) {
+    this.setState(e.target.value)
+  }
+
+  onViewModeChange(viewMode) {
+    // console.log('view mode change', viewMode);
   }
 
   render(){
@@ -79,19 +65,28 @@ class Market extends Component {
       <div className='skybondsWrap'>
         <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
         { market ?
-          <div className={reportStyle.reportWrap}>
-            <div className={reportStyle.reportHeader}>
+          <div className={styles.reportWrap}>
+            <div className={styles.reportHeader}>
               <Layers />
+              <div className={styles.reportDate}><input type="date" value={this.state.date} onChange={this.onDateChange.bind(this)}/></div>
+              <div className={styles.reportViewMode}>
+                <ul className={styles.reportViewMode_list}>
+                  <li className={styles.reportViewMode_item + (this.state.viewMode === MARKET_REPORT_VIEW_MODES.SCATTERPLOT ? ' ' + styles.__active : '')} onClick={()=>this.onViewModeChange(MARKET_REPORT_VIEW_MODES.SCATTERPLOT)}>
+                    <Icon glyph={GLYPHS.VIEW_SCATTERPLOT} width="13" height="11" />
+                    <span>Scatter plot</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div className={reportStyle.reportView}>
-              <div className={reportStyle.reportViewScatterPlot}>
-                <div className={reportStyle.reportView_content}>
+            <div className={styles.reportView}>
+              <div className={styles.reportViewScatterPlot}>
+                <div className={styles.reportView_content}>
                   <ScatterPlot
                     isins={this.state.reportIsins}
                     activeIsin={this.state.activeIsin}
                     onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
                 </div>
-                <div className={reportStyle.reportView_aside}>
+                <div className={styles.reportView_aside}>
                   <Movers
                     isins={this.state.reportIsins}
                     onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
@@ -99,7 +94,7 @@ class Market extends Component {
               </div>
             </div>
           </div>
-          : null }
+          : <div>Loading...</div> }
       </div>
     );
   }
