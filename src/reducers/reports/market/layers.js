@@ -28,7 +28,8 @@ const defaultLayer = {
       isins: [],
       stats: []
     },
-    isins: [],
+    isinsAll: [],
+    isinsByQuota: [],
     bonds: []
   }
 }
@@ -49,11 +50,11 @@ const getLayerIsinsByQuota = (layersById, callback)=> {
   let result = {};
   let idsNonEmptyLayers = [];
 
-  mapValues(layersById, (layer) => {
+  mapValues(layersById, (layer, id) => {
     if(layer.data.isinsAll.length) {
-      idsNonEmptyLayers.push(layer.id);
+      idsNonEmptyLayers.push(id);
     }
-    result[layer.id] = [];
+    result[id] = [];
   });
 
   idsNonEmptyLayers = idsNonEmptyLayers.sort((idA,idB)=>{
@@ -74,27 +75,6 @@ const getLayerIsinsByQuota = (layersById, callback)=> {
     }
   });
   return callback(result);
-};
-
-const getAllLayersIsinsObject = (layersById)=> {
-  let result = {
-    allLayersIsinsAll: [],
-    allLayersIsinsByQuota: [],
-    allLayersIsinsByQuotaVisible: []
-  };
-  mapValues(layersById, (layer) => {
-    result.allLayersIsinsAll.push(...layer.data.isinsAll);
-    result.allLayersIsinsByQuota.push(...layer.data.isinsByQuota);
-    if(layer.viewMode === LAYER_SET_VIEW_MODES.BONDS ||
-       layer.viewMode === LAYER_SET_VIEW_MODES.BONDS_AND_CURVES
-    ) {
-      result.allLayersIsinsByQuotaVisible.push(...layer.data.isinsByQuota);
-    }
-  });
-  result.allLayersIsinsAll = uniq(result.allLayersIsinsAll);
-  result.allLayersIsinsByQuota = uniq(result.allLayersIsinsByQuota);
-  result.allLayersIsinsByQuotaVisible = uniq(result.allLayersIsinsByQuotaVisible);
-  return result;
 };
 
 const layers = (state = {}, action) => {
@@ -160,8 +140,8 @@ const layers = (state = {}, action) => {
     case actionTypes.LAYER_SEARCH_QUERY_CHANGE:
       return {
         ...state,
-        layersById: mapValues(state.layersById, (layer) => {
-          return layer.id === action.id ?
+        layersById: mapValues(state.layersById, (layer, id) => {
+          return id === action.id ?
             {...layer,
               ui: {
                 ...layer.ui,
@@ -245,21 +225,15 @@ const layers = (state = {}, action) => {
       return {
         ...state,
         layersById: getLayerIsinsByQuota(state.layersById, (layerIsinsByQuota)=>{
-          return mapValues(state.layersById, (layer) => {
+          return mapValues(state.layersById, (layer, id) => {
             return {
               ...layer,
               data: {...layer.data,
-                isinsByQuota: layerIsinsByQuota[layer.id]
+                isinsByQuota: layerIsinsByQuota[id]
               }
             }
           })
         })
-      };
-
-    case actionTypes.ALL_LAYERS_ISINS_UPDATE:
-      return {
-        ...state,
-        ...getAllLayersIsinsObject(state.layersById)
       };
 
     case actionTypes.LAYER_BONDS_UPDATE:

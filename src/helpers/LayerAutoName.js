@@ -2,6 +2,9 @@ import { sortByOrder, getGroup, getGroupsCount } from '../helpers/BondRating'
 
 const getShortRatingsArray = (ratingData) => {
   let result = [];
+  if(ratingData == null){
+    return result;
+  }
   let ratings = ratingData.filter((item)=>{
     return item.selected
   }).map((item)=>{
@@ -103,19 +106,19 @@ const FILTER_NAME_SEPARATOR = ', ';
 export const getAutoName = (layerSearch, layerFilters) => {
   let result = [];
   addStringToResult(result, layerSearch.query);
-  addArrayToResult(result, collectionToArray(layerFilters.industry.values));
-  addArrayToResult(result, getShortRatingsArray(layerFilters.rating.values));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.outlook.values)));
-  addArrayToResult(result, collectionToArray(layerFilters.country.values));
-  addArrayToResult(result, collectionToArray(layerFilters.currency.values));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.domInt.values)));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.corporations.values)));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.financial.values)));
-  addArrayToResult(result, capitalizeValues(governmentCollectionToArray(layerFilters.government.values)));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.liquidity.values)));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.type.values)));
-  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.portfolio.values)));
-  addArrayToResult(result, rangeCollectionToArray(layerFilters.range.values));
+  addArrayToResult(result, collectionToArray(layerFilters.industry));
+  addArrayToResult(result, getShortRatingsArray(layerFilters.rating));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.outlook)));
+  addArrayToResult(result, collectionToArray(layerFilters.country));
+  addArrayToResult(result, collectionToArray(layerFilters.currency));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.domInt)));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.corporations)));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.financial)));
+  addArrayToResult(result, capitalizeValues(governmentCollectionToArray(layerFilters.government)));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.liquidity)));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.type)));
+  addArrayToResult(result, capitalizeValues(collectionToArray(layerFilters.portfolio)));
+  addArrayToResult(result, rangeCollectionToArray(layerFilters.range));
   if (result.length) {
     return result.join(FILTER_NAME_SEPARATOR);
   } else {

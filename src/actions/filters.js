@@ -2,13 +2,13 @@ import { actionTypes } from './actionTypes';
 import * as DataProvider from '../data/providers/Data';
 
 
-export const layerFilterBonds = (id, filters, allFilters, needStatsFromFilters) => async (dispatch) => {
+export const layerFilterBonds = (id, filtersToRequest, filtersToStore, needStatsFromFilters) => async (dispatch) => {
   dispatch({
     type: actionTypes.LAYER_FILTERS_CHANGE,
     id,
-    filters: allFilters
+    filters: filtersToStore
   });
-  let response = await DataProvider.filtersApply(filters, needStatsFromFilters);
+  let response = await DataProvider.filtersApply(filtersToRequest, needStatsFromFilters);
   dispatch({
     type: actionTypes.LAYER_FILTERS_ISINS_CHANGE,
     id,

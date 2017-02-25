@@ -61,7 +61,7 @@ class Filters extends Component {
     const filters = this.formatFilters(selected);
     const needStatsFromFilters = this.state.searchIsins.length == 0;
     const activeLayerId = this.props.activeLayerId;
-    await this.props.layerFilterBonds(activeLayerId, filters, all, needStatsFromFilters);
+    await this.props.layerFilterBonds(activeLayerId, filters, filters.filters, needStatsFromFilters);
     if(!needStatsFromFilters) {
       await this.props.layerGetFilterStats(activeLayerId, filters, this.state.isins);
     }
@@ -458,4 +458,4 @@ Filters.propTypes = {
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user, activeLayerId: state.reports.market.activeLayerId });
-export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeFilters, changeFiltersIsins, changeLayersBonds })(Filters);
+export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeLayersBonds })(Filters);

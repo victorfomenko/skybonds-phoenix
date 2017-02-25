@@ -25,14 +25,14 @@ class LayerSearch extends Component {
     this.setState({
       pending: true
     });
-    this.props.layerSearchQueryChange(this.props.layer.id, query);
+    this.props.layerSearchQueryChange(this.props.activeLayerId, query);
   }
 
   async searchRequest(query, date) {
-    await this.props.layerSearchRequest(this.props.layer.id, query, date);
+    await this.props.layerSearchRequest(this.props.activeLayerId, query, date);
     if(this.props.layer.data.isinsAll.length) {
-      await this.props.layerGetFilterStats(this.props.layer.id, this.props.layer.source.filters, this.props.layer.data.isinsAll);
-      await this.props.changeLayersBonds(this.props.layer.id, this.props.layer.data.isinsAll, date);
+      await this.props.layerGetFilterStats(this.props.activeLayerId, this.props.layer.source.filters, this.props.layer.data.isinsAll);
+      await this.props.changeLayersBonds(this.props.activeLayerId, this.props.layer.data.isinsAll, date);
     }
     this.setState({
       pending: false
@@ -53,5 +53,5 @@ class LayerSearch extends Component {
   }
 }
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers });
+const mapStateToProps = state => ({ layers: state.reports.market.layers, activeLayerId: state.reports.market.activeLayerId });
 export default connect(mapStateToProps, { layerSearchQueryChange, layerSearchRequest, layerGetFilterStats, changeLayersBonds })(LayerSearch);

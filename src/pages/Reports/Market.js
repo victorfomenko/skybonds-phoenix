@@ -35,9 +35,8 @@ class Market extends Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.market && nextProps.market.id) {
-      const reportIsins = nextProps.market.layers.allLayersIsinsByQuotaVisible
       this.setState({
-        reportIsins: reportIsins,
+        reportIsins: nextProps.market.data.allLayersIsinsByQuotaVisible,
         market: nextProps.market
       });
     }

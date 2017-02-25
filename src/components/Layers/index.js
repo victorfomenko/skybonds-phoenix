@@ -63,7 +63,7 @@ class Layers extends Component {
                 id={layerID}
                 name={layer.ui.name ? layer.ui.name : layer.ui.autoName}
                 active={layerID === activeLayerId}
-                viewMode={layerById.viewMode}
+                viewMode={layer.ui.viewMode}
                 onLayerRemove={this.onLayerRemove.bind(this)}
                 onLayerClick={this.onLayerClick.bind(this)}
                 onLayerRename={this.onLayerRename.bind(this)}
