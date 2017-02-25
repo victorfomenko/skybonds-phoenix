@@ -1,6 +1,6 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { mapValues, uniq } from 'lodash';
-import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
+import { LAYER_SET_VIEW_MODES, DEFAULT_LAYER } from '../../../data/constants';
 
 import layers from './layers';
 import movers from './movers';
@@ -9,34 +9,7 @@ const initState = {
   layers: {
     ids: [1],
     layersById: {
-      1: {
-        source: {
-          search: {
-            query: '',
-            peersFor: []
-          },
-          filters: {},
-          include: [],
-          exclude: []
-        },
-        ui: {
-          name : '',
-          autoName: 'Empty set',
-          viewMode : LAYER_SET_VIEW_MODES.BONDS
-        },
-        data: {
-          search: {
-            isins: []
-          },
-          filters: {
-            isins: [],
-            stats: []
-          },
-          isinsAll: [],
-          isinsByQuota: [],
-          bonds: []
-        }
-      }
+      1: DEFAULT_LAYER
     }
   },
   include: [],

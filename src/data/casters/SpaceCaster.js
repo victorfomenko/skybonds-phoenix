@@ -1,3 +1,5 @@
+import { DEFAULT_LAYER } from '../constants';
+
 export default {
 
   format:  (value)=> {
@@ -68,18 +70,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
   sourceLayers.forEach((layer, index) => {
     const ui = uiLayers[index] ? castUiLayer(uiLayers[index], activeLayerId) : {};
     const source = castSourceLayer(layer);
-    const data = {
-      search: {
-        isins: []
-      },
-      filters: {
-        isins: [],
-        stats: []
-      },
-      isinsAll: [],
-      isinsByQuota: [],
-      bonds: []
-    }
+    const data = DEFAULT_LAYER.data
 
     ids.push(String(layer.id));
     layersById[layer.id] = { source, ui, data }

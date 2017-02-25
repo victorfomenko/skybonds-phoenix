@@ -14,3 +14,33 @@ export const LAYER_SET_VIEW_MODES = {
   BONDS_AND_CURVES: 'bonds_and_curves',
   HIDDEN: 'hidden'
 };
+
+
+export const DEFAULT_LAYER = {
+  source: {
+    search: {
+      query: '',
+      peersFor: []
+    },
+    filters: {},
+    include: [],
+    exclude: []
+  },
+  ui: {
+    name: '',
+    autoName: 'Empty set',
+    viewMode : LAYER_SET_VIEW_MODES.BONDS
+  },
+  data: {
+    search: {
+      isins: []
+    },
+    filters: {
+      isins: [],
+      stats: []
+    },
+    isinsAll: [],
+    isinsByQuota: [],
+    bonds: []
+  }
+}
