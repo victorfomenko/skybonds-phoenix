@@ -15,6 +15,13 @@ export const layerFilterBonds = (id, filters, allFilters, needStatsFromFilters) 
     isins: response.result,
     stats: response.stats
   });
+  dispatch({
+    type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE,
+    id
+  });
+  dispatch({
+    type: actionTypes.ALL_LAYERS_ISINS_UPDATE
+  });
 };
 
 export const layerGetFilterStats = (id, filters, isins) => async (dispatch) => {

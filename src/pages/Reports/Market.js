@@ -7,7 +7,7 @@ import Movers from '../../components/Movers';
 import { Icon, GLYPHS } from '../../components/Icon';
 import { MARKET_REPORT_VIEW_MODES } from '../../data/constants';
 import { getSpaces } from '../../data/providers/Spaces';
-import { isEqual, intersection, uniq, union } from 'lodash';
+import { map, isEqual } from 'lodash';
 import styles from './styles.sass';
 
 const REPORT_ISINS_QUOTA = 200;
@@ -31,48 +31,19 @@ class Market extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    if(isEqual(nextState, this.state)) {
-      return false;
-    }
-    return true;
+    return !isEqual(nextState, this.state);
   }
 
   componentWillReceiveProps(nextProps) {
-    const reportIsins = this.getReportIsins(nextProps.market.layers.layersById);
-    this.setState({ reportIsins });
-  }
-
-  getReportIsins(layers){
-    let nonEmptyLayers = [];
-    for(let key in layers) {
-      const layerIsins = layers[key].dataComputed.isins;
-      if(layerIsins.length) {
-        nonEmptyLayers.push(layerIsins);
-      }
-    }
-    nonEmptyLayers = nonEmptyLayers.sort((a,b)=>{
-      return a.length - b.length;
-    });
-    let maxIsinsPerLayer = Math.floor(REPORT_ISINS_QUOTA / nonEmptyLayers.length);
-    let remainingQuota = REPORT_ISINS_QUOTA;
-    let layersIsinsByQuota = [];
-    nonEmptyLayers.forEach((isins, index)=>{
-      let isinsByQuota = isins.slice(0, maxIsinsPerLayer);
-      layersIsinsByQuota.push(isinsByQuota);
-      remainingQuota -= isinsByQuota.length;
-      if(index < nonEmptyLayers.length - 1) {
-        maxIsinsPerLayer = Math.floor(remainingQuota / (nonEmptyLayers.length - index - 1));
-      }
-    });
-    return union(...layersIsinsByQuota);
+    this.setState({ reportIsins: nextProps.market.layers.allLayersIsinsByQuotaVisible });
   }
 
   onActiveIsinChange(isin) {
     this.setState({ activeIsin: isin });
   }
 
-  onDateChange(event) {
-    this.setState(event.target.value)
+  onDateChange(e) {
+    this.setState(e.target.value)
   }
 
   onViewModeChange(viewMode) {

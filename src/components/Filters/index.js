@@ -13,7 +13,7 @@ class Filters extends Component {
     this.state = {
       filters: this.formatPortfolio(props.layer.dataSource.filters, props.user),
       stats: props.layer.dataComputed.filters.stats,
-      isins: props.layer.dataComputed.isins,
+      isins: props.layer.dataComputed.isinsAll,
       searchIsins: props.layer.dataComputed.search.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
@@ -23,7 +23,7 @@ class Filters extends Component {
     this.setState({
       filters: this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user),
       stats: nextProps.layer.dataComputed.filters.stats,
-      isins: nextProps.layer.dataComputed.isins,
+      isins: nextProps.layer.dataComputed.isinsAll,
       searchIsins: nextProps.layer.dataComputed.search.isins
     });
   }

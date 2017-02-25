@@ -1,8 +1,9 @@
 import { actionTypes } from '../../../actions/actionTypes';
-import { omit, mapValues, assign, cloneDeep, intersection } from 'lodash';
+import { omit, mapValues, assign, cloneDeep, intersection, uniq } from 'lodash';
 import { getAutoName } from '../../../helpers/LayerAutoName';
 import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
 
+const REPORT_ISINS_QUOTA = 200;
 
 const filters = {
   industry:{
@@ -270,13 +271,81 @@ const initialState = {
           isins: [],
           stats: []
         },
-        isins: [],
+        isinsAll: [],
+        isinsByQuota: [],
         bonds: []
       },
       viewMode : LAYER_SET_VIEW_MODES.BONDS
     }
   },
+  allLayersIsinsAll: [],
+  allLayersIsinsByQuota: [],
+  allLayersIsinsByQuotaVisible: [],
   activeLayer: 1,
+};
+
+const getLayerIsinsAll = (searchIsins, filtersIsins)=> {
+  let result = [];
+  if (searchIsins.length && filtersIsins.length) {
+    result = intersection(searchIsins, filtersIsins);
+  } else if (searchIsins.length) {
+    result = searchIsins;
+  } else if(filtersIsins.length) {
+    result = filtersIsins;
+  }
+  return result;
+};
+
+const getLayerIsinsByQuota = (layersById, callback)=> {
+  let result = {};
+  let idsNonEmptyLayers = [];
+
+  mapValues(layersById, (layer) => {
+    if(layer.dataComputed.isinsAll.length) {
+      idsNonEmptyLayers.push(layer.id);
+    }
+    result[layer.id] = [];
+  });
+
+  idsNonEmptyLayers = idsNonEmptyLayers.sort((idA,idB)=>{
+    let a = layersById[idA].dataComputed.isinsAll;
+    let b = layersById[idB].dataComputed.isinsAll;
+    return a.length - b.length;
+  });
+
+  let maxIsinsPerLayer = Math.floor(REPORT_ISINS_QUOTA / idsNonEmptyLayers.length);
+  let remainingQuota = REPORT_ISINS_QUOTA;
+  idsNonEmptyLayers.forEach((layerId, index)=>{
+    let isins = layersById[layerId].dataComputed.isinsAll;
+    let isinsByQuota = isins.slice(0, maxIsinsPerLayer);
+    result[layerId] = isinsByQuota;
+    remainingQuota -= isinsByQuota.length;
+    if(index < idsNonEmptyLayers.length - 1) {
+      maxIsinsPerLayer = Math.floor(remainingQuota / (idsNonEmptyLayers.length - index - 1));
+    }
+  });
+  return callback(result);
+};
+
+const getAllLayersIsinsObject = (layersById)=> {
+  let result = {
+    allLayersIsinsAll: [],
+    allLayersIsinsByQuota: [],
+    allLayersIsinsByQuotaVisible: []
+  };
+  mapValues(layersById, (layer) => {
+    result.allLayersIsinsAll.push(...layer.dataComputed.isinsAll);
+    result.allLayersIsinsByQuota.push(...layer.dataComputed.isinsByQuota);
+    if(layer.viewMode === LAYER_SET_VIEW_MODES.BONDS ||
+       layer.viewMode === LAYER_SET_VIEW_MODES.BONDS_AND_CURVES
+    ) {
+      result.allLayersIsinsByQuotaVisible.push(...layer.dataComputed.isinsByQuota);
+    }
+  });
+  result.allLayersIsinsAll = uniq(result.allLayersIsinsAll);
+  result.allLayersIsinsByQuota = uniq(result.allLayersIsinsByQuota);
+  result.allLayersIsinsByQuotaVisible = uniq(result.allLayersIsinsByQuotaVisible);
+  return result;
 };
 
 const layers = (state = initialState, action) => {
@@ -285,6 +354,7 @@ const layers = (state = initialState, action) => {
     case actionTypes.ADD_SET:
       let newId = state.layers[state.layers.length-1] + 1;
       return {
+        ...state,
         layers: state.layers.concat(newId),
         layersById: {
           ...state.layersById,
@@ -326,7 +396,7 @@ const layers = (state = initialState, action) => {
         ...state,
         layers: state.layers.filter(id => id !== action.id),
         layersById: omit(state.layersById, action.id),
-        activeLayer: (action.id == state.activeLayer) ? state.layers[0] : state.activeLayer,
+        activeLayer: (action.id == state.activeLayer) ? state.layers[0] : state.activeLayer
       };
 
     case actionTypes.RENAME_LAYER:
@@ -379,25 +449,18 @@ const layers = (state = initialState, action) => {
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
-          const searchIsins = action.isins;
-          const filtersIsins = layer.dataComputed.filters.isins;
-          let layerIsins = [];
-          if (searchIsins.length && filtersIsins.length) {
-            layerIsins = intersection(searchIsins, filtersIsins);
-          } else if (searchIsins.length) {
-            layerIsins = searchIsins;
-          } else if(filtersIsins.length) {
-            layerIsins = filtersIsins;
-          }
-          return layer.id === action.id ?
-            {...layer,
+          if(layer.id === action.id) {
+            return {...layer,
               dataComputed: {...layer.dataComputed,
                 search: {...layer.dataComputed.search,
                   isins: action.isins
                 },
-                isins: layerIsins
+                isinsAll: getLayerIsinsAll(action.isins, layer.dataComputed.filters.isins)
               }
-            } : layer;
+            }
+          } else {
+            return layer
+          }
         })
       };
 
@@ -405,26 +468,19 @@ const layers = (state = initialState, action) => {
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer) => {
-          const searchIsins = layer.dataComputed.search.isins;
-          const filtersIsins = action.isins;
-          let layerIsins = [];
-          if (searchIsins.length && filtersIsins.length) {
-            layerIsins = intersection(searchIsins, filtersIsins);
-          } else if (searchIsins.length) {
-            layerIsins = searchIsins;
-          } else if(filtersIsins.length) {
-            layerIsins = filtersIsins;
-          }
-          return layer.id === action.id ?
-            {...layer,
+          if(layer.id === action.id) {
+            return {...layer,
               dataComputed: {...layer.dataComputed,
                 filters: {...layer.dataComputed.filters,
                   isins: action.isins,
                   stats: action.stats
                 },
-                isins: layerIsins
+                isinsAll: getLayerIsinsAll(layer.dataComputed.search.isins, action.isins)
               }
-            } : layer;
+            }
+          } else {
+            return layer
+          }
         })
       };
 
@@ -459,6 +515,27 @@ const layers = (state = initialState, action) => {
               }
             } : layer;
         })
+      };
+
+    case actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE:
+      return {
+        ...state,
+        layersById: getLayerIsinsByQuota(state.layersById, (layerIsinsByQuota)=>{
+          return mapValues(state.layersById, (layer) => {
+            return {
+              ...layer,
+              dataComputed: {...layer.dataComputed,
+                isinsByQuota: layerIsinsByQuota[layer.id]
+              }
+            }
+          })
+        })
+      };
+
+    case actionTypes.ALL_LAYERS_ISINS_UPDATE:
+      return {
+        ...state,
+        ...getAllLayersIsinsObject(state.layersById)
       };
 
     case actionTypes.LAYER_BONDS_UPDATE:

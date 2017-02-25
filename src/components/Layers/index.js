@@ -13,7 +13,7 @@ import {
   removeLayer,
   activateLayer,
   renameLayer,
-  changeLayerView
+  changeLayerViewMode
 } from '../../actions';
 
 
@@ -48,7 +48,7 @@ class Layers extends Component {
   }
 
   onLayerViewChange(layerId, viewMode) {
-    this.props.changeLayerView(layerId, viewMode);
+    this.props.changeLayerViewMode(layerId, viewMode);
   }
 
   render(){
@@ -110,10 +110,10 @@ Layers.propTypes = {
   addSpread: React.PropTypes.func.isRequired,
   removeLayer: React.PropTypes.func.isRequired,
   renameLayer: React.PropTypes.func.isRequired,
-  changeLayerView: React.PropTypes.func.isRequired
+  changeLayerViewMode: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({ layers: state.reports.market.layers });
 export default connect(mapStateToProps, {
-    addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerView
+    addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerViewMode
   })(Layers);

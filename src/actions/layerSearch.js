@@ -20,6 +20,13 @@ export const layerSearchRequest = (id, query, date) => async (dispatch) => {
       id,
       isins
     });
+    dispatch({
+      type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE,
+      id
+    });
+    dispatch({
+      type: actionTypes.ALL_LAYERS_ISINS_UPDATE
+    });
   }
   catch (response) {
     dispatch({
