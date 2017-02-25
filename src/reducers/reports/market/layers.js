@@ -165,10 +165,7 @@ const layers = (state = {}, action) => {
             {...layer,
               ui: {
                 ...layer.ui,
-                autoName: getAutoName(
-                  {...layer.source.search,
-                    query: action.query
-                  }, layer.source.filters),
+                autoName: getAutoName({...layer.source.search, query: action.query}, layer.source.filters),
               },
               source: {...layer.source,
                 search: {...layer.source.search,
@@ -234,13 +231,9 @@ const layers = (state = {}, action) => {
         layersById: mapValues(state.layersById, (layer, id) => {
           return id === action.id ?
             {...layer,
-              ui: {
-              ...layer.ui,
-                autoName: getAutoName(layer.source.search,
-                  {...layer.source.filters,
-                    action.filters
-                  }),
-              }
+              ui: {...layer.ui,
+                autoName: getAutoName(layer.source.search, {...layer.source.filters, filters: action.filters })
+              },
               source: {...layer.source,
                 filters: action.filters
               }
