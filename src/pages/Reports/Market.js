@@ -23,7 +23,7 @@ class Market extends Component {
       reportIsins: [],
       activeIsin: '',
       viewMode: MARKET_REPORT_VIEW_MODES.SCATTERPLOT,
-      date: '',
+      date: props.summary.today,
       reportID: props.match.params.reportID
     };
     this.onViewModeChange = this.onViewModeChange.bind(this);
@@ -43,7 +43,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    this.props.loadReports(this.state.reportID);
+    this.props.loadReports(this.state.reportID, this.state.date);
   }
 
   onActiveIsinChange(isin) {
@@ -105,5 +105,5 @@ Market.propTypes = {
   loadReports: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ user: state.user, market: state.reports.market });
+const mapStateToProps = state => ({ user: state.user, market: state.reports.market, summary: state.summary });
 export default connect(mapStateToProps, { loadReports })(Market);
