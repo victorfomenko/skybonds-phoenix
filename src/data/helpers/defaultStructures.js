@@ -131,7 +131,6 @@ export const getEmptyFilters = () => {
           { name: 'CCC-', color: '#ffd400' },
           { name: 'CC', color: '#af6725' },
           { name: 'C', color: '#b04127' },
-          { name: 'D', color: '#808080' },
           { name: 'NR', color: '#cbcbcb' }
         ],
         sortStrategy: function (a, b) {
