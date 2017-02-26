@@ -8,6 +8,10 @@ export const layerSearchQueryChange = (id, query) => (dispatch) => {
     id,
     query
   });
+  dispatch({
+    type: actionTypes.LAYER_AUTO_NAME_UPDATE,
+    id
+  });
 };
 
 export const layerSearchRequest = (id, query, date) => async (dispatch) => {
