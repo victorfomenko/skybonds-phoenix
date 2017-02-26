@@ -41,12 +41,11 @@ export const getSpacesByIds = (ids=[]) => {
 	});
 };
 
-export const add = (spaceId, space={}) => {
+export const add = (space={}) => {
 	const USER_ID = getUserId();
 	if(!USER_ID) { return Promise.reject('spacesApi.add: USER_ID is undefined.') }
-	if(!spaceId) { return Promise.reject('spacesApi.add: spaceId is undefined.') }
 	return requestProvider.post({
-		url: `${API_V1}/${USER_ID}/${spaceId}/add`,
+		url: `${API_V1}/${USER_ID}/add`,
 		body: space
 	});
 };
@@ -60,22 +59,20 @@ export const remove = (spaceId) => {
 	});
 };
 
-export const update = (spaceId, space={}) => {
+export const update = (space={}) => {
 	const USER_ID = getUserId();
 	if(!USER_ID) { return Promise.reject('spacesApi.update: USER_ID is undefined.') }
-	if(!spaceId) { return Promise.reject('spacesApi.update: spaceId is undefined.') }
 	return requestProvider.post({
-		url: `${API_V1}/${USER_ID}/${spaceId}/update`,
+		url: `${API_V1}/${USER_ID}/update`,
 		body: space
 	});
 };
 
-export const order = (spaceId, order={}) => {
+export const order = (order={}) => {
 	const USER_ID = getUserId();
 	if(!USER_ID) { return Promise.reject('spacesApi.order: USER_ID is undefined.') }
-	if(!spaceId) { return Promise.reject('spacesApi.order: spaceId is undefined.') }
 	return requestProvider.post({
-		url: `${API_V1}/${USER_ID}/${spaceId}/order`,
+		url: `${API_V1}/${USER_ID}/order`,
 		body: order
 	});
 };
