@@ -13,21 +13,21 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = ( async ()=> {
   let user = {};
-	let summary = {};
+  let summary = {};
 
   [user, summary] = await Promise.all([
     Auth.loginWithToken(),
     Data.getSummary()
   ])
-  .catch((e)=>{
-    console.warn(e);
-  })
+    .catch((e)=>{
+      console.warn(e);
+    });
 
-	return createStore(rootReducer, { user, summary },
-	  composeEnhancers(
-	    applyMiddleware(thunk),
-	  ),
-	);
+  return createStore(rootReducer, { user, summary },
+    composeEnhancers(
+      applyMiddleware(thunk),
+    ),
+  );
 })();
 
 
