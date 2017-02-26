@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { getColor } from '../../helpers/BondRating';
 import { connect } from 'react-redux';
-import BondInfoHeader from '../BondInfoHeader';
-import BondInfoTimeSeries from '../BondInfoTimeSeries';
+import BondInfoHeader from './BondInfoHeader';
+import BondInfoChart from './BondInfoChart';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
 import { closeBondInfo } from '../../actions';
 import { Icon, GLYPHS } from '../../components/Icon';
-import style from './style.sass';
+import styles from './styles.sass';
 
 class BondInfo extends Component {
   constructor(props) {
@@ -49,9 +49,9 @@ class BondInfo extends Component {
   render(){
     if(this.bond && this.bond.isin ) {
       return (
-        <div className={style.reportAsideBondGeneral + ' ' + (this.bond.show ? style.__active : '')}>
-          <div className={style.reportAsideBond}>
-            <span className={style.reportAsideBond_link + ' ' + style.reportAsideBond_close}
+        <div className={styles.reportAsideBondGeneral + ' ' + (this.bond.show ? styles.__active : '')}>
+          <div className={styles.reportAsideBond}>
+            <span className={styles.reportAsideBond_link + ' ' + styles.reportAsideBond_close}
                   onClick={ () => this.onClickClose()}>
             <Icon glyph={GLYPHS.CLOSE}
                   width="30" height="30" />
@@ -59,9 +59,9 @@ class BondInfo extends Component {
             <BondInfoHeader
               bond={this.bond}
             />
-            <div className={style.reportAsideBondContent}>
-              <div className={style.reportAsideBondContent_wrap}>
-                <BondInfoTimeSeries bond={this.bond} yAxis='yield' />
+            <div className={styles.reportAsideBondContent}>
+              <div className={styles.reportAsideBondContent_wrap}>
+                <BondInfoChart bond={this.bond} yAxis='yield' />
               </div>
             </div>
 

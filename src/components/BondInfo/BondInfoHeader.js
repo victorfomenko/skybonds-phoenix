@@ -3,7 +3,7 @@ import { getColor } from '../../helpers/BondRating';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
-import style from './style.sass';
+import style from './bondInfoHeader.sass';
 
 class BondInfoHeader extends Component {
   constructor(props) {

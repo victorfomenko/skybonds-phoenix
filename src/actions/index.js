@@ -5,4 +5,5 @@ export * from './layerSearch';
 export * from './filters';
 export * from './movers';
 export * from './bond';
+export * from './bondInfo';
 

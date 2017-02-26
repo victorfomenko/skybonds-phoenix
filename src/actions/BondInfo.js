@@ -3,7 +3,7 @@ import * as DataProvider from '../data/providers/Data';
 
 export const openBondInfo = (isin, date) => async (dispatch, getState) => {
   try {
-    let dailyAttrs = ['coupon'];
+    let dailyAttrs = ['coupon', 'spreadToBMK'];
     let infoAttrs = ['isin', 'standardName', 'maturityDate', 'issuerId', 'issuer', 'sector', 'outlook', 'ratingGroup'];
 
     let info = await DataProvider.getBondsInfo([isin], infoAttrs);
