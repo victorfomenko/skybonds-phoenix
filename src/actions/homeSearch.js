@@ -11,25 +11,17 @@ export const homeSearchQueryChange = (query) => (dispatch) => {
 };
 
 export const homeSearchRequest = (query, date) => async (dispatch) => {
-  try {
-    let bonds = await SearchProvider.searchBonds(query, date);
-    dispatch({
-      type: actionTypes.HOME_SEARCH_RESPONSE,
-      bonds
-    });
+  let bonds = await SearchProvider.searchBonds(query, date);
+  dispatch({
+    type: actionTypes.HOME_SEARCH_RESPONSE,
+    bonds
+  });
 
-    if(bonds.length > 0) {
-      bonds = await DataProvider.getSearchBondsData(bonds, date);
-      dispatch({
-        type: actionTypes.HOME_SEARCH_DAILY,
-        bonds
-      });
-    }
-  }
-  catch (response) {
+  if(bonds.length > 0) {
+    bonds = await DataProvider.getSearchBondsData(bonds, date);
     dispatch({
-      type: actionTypes.HOME_SEARCH_ERROR,
-      response
+      type: actionTypes.HOME_SEARCH_DAILY,
+      bonds
     });
   }
 };
