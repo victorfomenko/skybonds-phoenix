@@ -5,8 +5,9 @@ import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getColor } from '../../helpers/BondRating';
 import { getStartDateByPeriod } from '../../helpers/BondDatePeriod';
+import { connect } from 'react-redux';
 import moment from 'moment'
-import styles from './styles.sass';
+import styles from './BondInfoTimeSeries.sass';
 
 class BondInfoTimeSeries extends Component {
 
@@ -38,8 +39,13 @@ class BondInfoTimeSeries extends Component {
   }
 
   getDates(period, format) {
-    //TODO Need to make it work with period buttons
-    let startDate = getStartDateByPeriod(new Date(), period);
+    let startDate = null;
+    if (period == 'max') {
+      startDate = this.props.summary.dataSince
+    } else {
+      startDate = getStartDateByPeriod(this.props.summary.today, period);
+    }
+
     var dateArray = [];
     var currentDate = moment(startDate);
     var stopDate = moment(stopDate);
@@ -77,9 +83,9 @@ class BondInfoTimeSeries extends Component {
         y: yAxis
       },
       margin: {
-        top: 0,
+        top: 10,
         right: 0,
-        bottom: 0,
+        bottom: 21,
         left: 0
       },
       buildDailyData: (isin, date) => {
@@ -120,4 +126,5 @@ BondInfoTimeSeries.propTypes = {
   chartConfig: React.PropTypes.object
 };
 
-export default BondInfoTimeSeries;
+const mapStateToProps = state => ({ summary: state.summary });
+export default connect(mapStateToProps)(BondInfoTimeSeries);

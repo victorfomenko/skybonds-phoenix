@@ -1,0 +1,61 @@
+.bondInfoTimeSeriesDiagram
+  display: block
+  height: 200px
+  position: relative
+
+  svg
+    vertical-align: top
+    pointer-events: all
+    width: 100%
+    height: 100%
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+
+  text
+    -moz-user-select: -moz-none
+    -webkit-user-select: none
+    -ms-user-select: none
+    user-select: none
+
+  :global(.axis)
+    line,
+    path
+      shape-rendering: crispEdges
+    :global(.domain),
+    line
+      stroke: #e6e6e6
+    :global(.tick:nth-child(even))
+      text
+        display: none
+
+  .dot-in-sight
+    cursor: pointer
+    &:hover .label
+      display: block !important
+
+  .label text
+    font-weight: normal
+
+  .time-series path
+    stroke-width: 2
+
+  .time-series
+    .hints
+      pointer-events: none
+
+  .report-aside-bond-timeseries_empty
+    position: absolute
+    height: 100%
+    width: 100%
+    top: 0
+    font-size: 18px
+    color: #999
+    text-align: center
+
+  .report-aside-bond-timeseries-empty_text
+    position: absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+
+  .report-aside-bond-timeseries_chart
+    height: 100%
