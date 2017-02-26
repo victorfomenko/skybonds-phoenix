@@ -54,6 +54,7 @@ export const changeLayerViewMode = (id, viewMode) => (dispatch) => {
     id,
     viewMode
   });
+  // TODO inefficient! call only visible isins update on viewMode change
   dispatch({
     type: actionTypes.ALL_LAYERS_ISINS_UPDATE
   });
