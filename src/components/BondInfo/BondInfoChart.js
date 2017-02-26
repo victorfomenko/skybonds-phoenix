@@ -67,8 +67,4 @@ class BondInfoChart extends Component {
 
 }
 
-BondInfoChart.propTypes = {
-  yAxis: React.PropTypes.string.isRequired
-};
-
 export default BondInfoChart;

@@ -22,7 +22,7 @@ class BondInfo extends Component {
     if (putDate != null){
       putDate = DateDayCaster.cast(putDate)
     }
-    this.bond.putDate = putDate
+    this.bond.putDate = putDate;
   }
 
   getPutCallDate(dates) {
@@ -60,9 +60,12 @@ class BondInfo extends Component {
               bond={this.bond}
             />
             <div className={styles.reportAsideBondContent}>
-              <div className={styles.reportAsideBondContent_wrap}>
-                <BondInfoChart bond={this.bond} yAxis='yield' />
-              </div>
+              { (this.bond.daily != null) ?
+                <div className={styles.reportAsideBondContent_wrap}>
+                  <BondInfoChart bond={this.bond}/>
+                </div>
+                : ''
+              }
             </div>
 
           </div>

@@ -37,15 +37,16 @@ class BondInfoHeader extends Component {
                   <span>Maturity date </span>
                   <span>{DateFormatter(DateDayCaster.cast(bond.info.maturityDate))}</span>
                 </li>
-                <li className={style.reportAsideBondHeader_item}>
-                  <span>Coupon </span>
-                  <span>{bond.daily.coupon}</span>
-                </li>
-                { bond.putDate ?
+                { (bond.daily != null && bond.daily.coupon != null) &&
+                  <li className={style.reportAsideBondHeader_item}>
+                    <span>Coupon </span>
+                    <span>{bond.daily.coupon}</span>
+                  </li>
+                }
+                { bond.putDate &&
                   <li className={style.reportAsideBondHeader_item}>
                     <span>({DateFormatter(bond.putDate)})</span>
                   </li>
-                  : ''
                 }
                 <li className={style.reportAsideBondHeader_line}>
                   <ul className={style.reportAsideBondHeader_list}>
