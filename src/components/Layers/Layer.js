@@ -13,14 +13,17 @@ class Layer extends Component {
   }
 
   onLayerClick() {
-    if(this.props.active && !this.state.renameMode){
-      this.setState({renameMode: true});
-    }
     this.props.onLayerClick(this.props.id);
   }
 
-  onLayerRemove(event) {
-    event.stopPropagation();
+  onLayerInputClick() {
+    if(this.props.active && !this.state.renameMode){
+      this.setState({renameMode: true});
+    }
+  }
+
+  onLayerRemove(e) {
+    e.stopPropagation();
     this.props.onLayerRemove(this.props.id);
   }
 
@@ -38,35 +41,32 @@ class Layer extends Component {
     }
   }
 
-  onLayerViewChange(viewMode) {
-    this.props.onLayerViewChange(this.props.id, viewMode);
+  onLayerViewModeChange(viewMode) {
+    this.props.onLayerViewModeChange(this.props.id, viewMode);
   }
 
   onSetViewModeClick() {
-
+    let nextViewMode;
+    switch(this.props.viewMode) {
+      case LAYER_SET_VIEW_MODES.BONDS: nextViewMode = LAYER_SET_VIEW_MODES.CURVES; break;
+      case LAYER_SET_VIEW_MODES.CURVES: nextViewMode = LAYER_SET_VIEW_MODES.BONDS_AND_CURVES; break;
+      case LAYER_SET_VIEW_MODES.BONDS_AND_CURVES: nextViewMode = LAYER_SET_VIEW_MODES.HIDDEN; break;
+      case LAYER_SET_VIEW_MODES.HIDDEN: nextViewMode = LAYER_SET_VIEW_MODES.BONDS; break;
+    }
+    this.props.onLayerViewModeChange(this.props.id, nextViewMode);
   }
 
   render(){
     let readonly = !this.state.renameMode;
-    let icon;
+    let glyph;
     switch(this.props.viewMode) {
-      case LAYER_SET_VIEW_MODES.BONDS:
-        icon = <Icon glyph={GLYPHS.SET_VIEW_BONDS}
-                     onClick={this.onSetViewModeClick.bind(this)} width="15" height="13" />;
-        break;
-      case LAYER_SET_VIEW_MODES.CURVES:
-        icon = <Icon glyph={GLYPHS.SET_VIEW_CURVES}
-                     onClick={this.onSetViewModeClick.bind(this)} width="15" height="13" />;
-        break;
-      case LAYER_SET_VIEW_MODES.BONDS_AND_CURVES:
-        icon = <Icon glyph={GLYPHS.SET_VIEW_BONDS_AND_CURVES}
-                     onClick={this.onSetViewModeClick.bind(this)} width="15" height="13" />;
-        break;
-      case LAYER_SET_VIEW_MODES.HIDDEN:
-        icon = <Icon glyph={GLYPHS.SET_VIEW_HIDDEN}
-                     onClick={this.onSetViewModeClick.bind(this)} width="15" height="13" />;
-        break;
+      case LAYER_SET_VIEW_MODES.BONDS: glyph = GLYPHS.SET_VIEW_BONDS; break;
+      case LAYER_SET_VIEW_MODES.CURVES: glyph = GLYPHS.SET_VIEW_CURVES; break;
+      case LAYER_SET_VIEW_MODES.BONDS_AND_CURVES: glyph = GLYPHS.SET_VIEW_BONDS_AND_CURVES; break;
+      case LAYER_SET_VIEW_MODES.HIDDEN: glyph = GLYPHS.SET_VIEW_HIDDEN; break;
     }
+    let icon = <Icon glyph={glyph} width="15" height="13"
+                     onClick={this.onSetViewModeClick.bind(this)} />;
     return (
         <li className={styles.reportLayersStrip_item + ' ' +(this.props.active ? styles.__active : '')}
             onClick={this.onLayerClick.bind(this, this.props.id)}>
@@ -75,30 +75,30 @@ class Layer extends Component {
               { icon }
               <div className={styles.reportLayersView_wrap}>
                 <ul className={styles.reportLayersView_list}>
-                  <li className={styles.reportLayersView_item}>
+                  <li className={styles.reportLayersView_item + (this.props.viewMode === LAYER_SET_VIEW_MODES.BONDS ? ' ' + styles.__active : '')}>
                     <a className={styles.reportLayersView_link}
-                       onClick={this.onLayerViewChange.bind(this, LAYER_SET_VIEW_MODES.BONDS)}>
+                       onClick={this.onLayerViewModeChange.bind(this, LAYER_SET_VIEW_MODES.BONDS)}>
                       <Icon glyph={GLYPHS.SET_VIEW_BONDS} width="15" height="13" />
                       <span>Bonds</span>
                     </a>
                   </li>
-                  <li className={styles.reportLayersView_item}>
+                  <li className={styles.reportLayersView_item + (this.props.viewMode === LAYER_SET_VIEW_MODES.CURVES ? ' ' + styles.__active : '')}>
                     <a className={styles.reportLayersView_link}
-                       onClick={this.onLayerViewChange.bind(this, LAYER_SET_VIEW_MODES.CURVES)}>
+                       onClick={this.onLayerViewModeChange.bind(this, LAYER_SET_VIEW_MODES.CURVES)}>
                       <Icon glyph={GLYPHS.SET_VIEW_CURVES} width="15" height="13" />
                       <span>Curves</span>
                     </a>
                   </li>
-                  <li className={styles.reportLayersView_item}>
+                  <li className={styles.reportLayersView_item + (this.props.viewMode === LAYER_SET_VIEW_MODES.BONDS_AND_CURVES ? ' ' + styles.__active : '')}>
                     <a className={styles.reportLayersView_link}
-                       onClick={this.onLayerViewChange.bind(this, LAYER_SET_VIEW_MODES.BONDS_AND_CURVES)}>
+                       onClick={this.onLayerViewModeChange.bind(this, LAYER_SET_VIEW_MODES.BONDS_AND_CURVES)}>
                       <Icon glyph={GLYPHS.SET_VIEW_BONDS_AND_CURVES} width="15" height="13" />
                       <span>Bonds &amp; Curves</span>
                     </a>
                   </li>
-                  <li className={styles.reportLayersView_item}>
+                  <li className={styles.reportLayersView_item + (this.props.viewMode === LAYER_SET_VIEW_MODES.HIDDEN ? ' ' + styles.__active : '')}>
                     <a className={styles.reportLayersView_link}
-                       onClick={this.onLayerViewChange.bind(this, LAYER_SET_VIEW_MODES.HIDDEN)}>
+                       onClick={this.onLayerViewModeChange.bind(this, LAYER_SET_VIEW_MODES.HIDDEN)}>
                       <Icon glyph={GLYPHS.SET_VIEW_HIDDEN} width="15" height="13" />
                       <span>Hidden</span>
                     </a>
@@ -114,7 +114,7 @@ class Layer extends Component {
               onChange={this.onLayerRename.bind(this)}
               onKeyUp={this.onKeyUp.bind(this)}
               onBlur={this.onBlur.bind(this)}
-              onClick={this.onLayerClick.bind(this)}
+              onClick={this.onLayerInputClick.bind(this)}
               size={this.props.name.length + 1}
               readOnly={readonly} />
             <Icon className={styles.reportLayersStrip_remove}
@@ -129,13 +129,13 @@ class Layer extends Component {
 
 
 Layer.propTypes = {
-  id: React.PropTypes.number.isRequired,
+  id: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
   active: React.PropTypes.bool.isRequired,
   onLayerClick: React.PropTypes.func.isRequired,
   onLayerRemove: React.PropTypes.func.isRequired,
   onLayerRename: React.PropTypes.func.isRequired,
-  onLayerViewChange: React.PropTypes.func.isRequired
+  onLayerViewModeChange: React.PropTypes.func.isRequired
 };
 
 export default Layer;

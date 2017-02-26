@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import UIFilters from '@skybonds/ui-filters/';
 import { connect } from 'react-redux';
+import UIFilters from '@skybonds/ui-filters/';
+
 import { layerFilterBonds, layerGetFilterStats, changeLayersBonds } from '../../actions';
-import { isPortfolioScb } from '../../helpers/portfolio';
+import { getEmptyFilters } from '../../data/helpers';
 
 const MAX_ISINS_PER_LAYER = 200;
 
@@ -11,31 +12,26 @@ class Filters extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: this.formatPortfolio(props.layer.dataSource.filters, props.user),
-      stats: props.layer.dataComputed.filters.stats,
-      isins: props.layer.dataComputed.isins,
-      searchIsins: props.layer.dataComputed.search.isins
+      filtersValues: props.layer.source.filters,
+      filtersStats: props.layer.data.filters.stats,
+      isins: props.layer.data.isinsAll,
+      searchIsins: props.layer.data.search.isins
     };
     this.onFiltersChange = this.onFiltersChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      filters: this.formatPortfolio(nextProps.layer.dataSource.filters, this.props.user),
-      stats: nextProps.layer.dataComputed.filters.stats,
-      isins: nextProps.layer.dataComputed.isins,
-      searchIsins: nextProps.layer.dataComputed.search.isins
+      filtersValues: nextProps.layer.source.filters,
+      filtersStats: nextProps.layer.data.filters.stats,
+      isins: nextProps.layer.data.isinsAll,
+      searchIsins: nextProps.layer.data.search.isins
     });
   }
 
-  formatPortfolio(filters, user) {
-    if(filters['portfolio'] != null) {return filters}
-    if(isPortfolioScb(user)) {
-      filters['portfolio'] = {
-        values: [{name: 'Portfolio'}]
-      }
-    }
-    return filters;
+  shouldComponentUpdate(nextProps, nextState) {
+    return  nextProps.layer.source.filters !== this.props.layer.source.filters ||
+            nextProps.layer.data.filters.stats !== this.props.layer.data.filters.stats
   }
 
   getDate(){
@@ -47,38 +43,131 @@ class Filters extends Component {
   }
 
   formatFilters(selectedFilters) {
+    let result = {}
     for (const key in selectedFilters) {
-      //TODO Remove when it will optimise. Or move to filterFormatters
+      const values = selectedFilters[key];
       if(key === 'range') {
-        const values = selectedFilters[key];
         values.forEach(filter=>{
           const name = filter.name;
           const value = filter.values;
-          selectedFilters[name] = value
+          result[name] = value
         })
-
       }
+      result[key] = values.map(item=>{return item.name})
     }
-    delete selectedFilters['range']
-    let filtersProviderParams = {'filters': selectedFilters};
-    filtersProviderParams['date'] = this.getDate();
+    delete result['range'];
 
-    return filtersProviderParams;
+    return {
+      filters: result,
+      date: this.getDate()
+    }
   }
 
   async onFiltersChange({ selected, all }) {
     const filters = this.formatFilters(selected);
     const needStatsFromFilters = this.state.searchIsins.length == 0;
-    await this.props.layerFilterBonds(this.props.layer.id, filters, all, needStatsFromFilters);
+    const activeLayerId = this.props.activeLayerId;
+    await this.props.layerFilterBonds(activeLayerId, filters, filters.filters, needStatsFromFilters);
     if(!needStatsFromFilters) {
-      await this.props.layerGetFilterStats(this.props.layer.id, filters, this.state.isins);
+      await this.props.layerGetFilterStats(activeLayerId, filters, this.state.isins);
     }
-    this.props.changeLayersBonds(this.props.layer.id, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), this.state.filters.date);
+    this.props.changeLayersBonds(activeLayerId, this.state.isins.slice(0, MAX_ISINS_PER_LAYER), this.getDate());
   }
 
-  makeViewModel(stats, filters) {
-    let viewModel = Object.assign({}, filters);
-    let typeValues = {};
+  makeViewModel(stats, values) {
+    const viewModel = getEmptyFilters();
+    const valuesViewModel = this.valuesViewModel(values);
+    const statsViewModel = this.statsViewModel(stats);
+    //console.log('statsViewModel', statsViewModel);
+
+    for (const name in viewModel) {
+      const defaultFilter =   viewModel[name];
+      let values =  defaultFilter.values;
+
+      //Add selected values
+      const selectedValues =  valuesViewModel[name] ? valuesViewModel[name].values : null;
+      if(selectedValues && selectedValues.length) {
+        values.forEach((item, index)=>{
+          selectedValues.forEach(value=> {
+            if(item.name === value.name) {
+              item.selected = true;
+              if(name === 'range') {
+                item.values = value.values
+              }
+            }
+          })
+        })
+      }
+
+      //Add stats values
+      const statsValues = statsViewModel[name];
+      if(stats && stats.length && statsValues) {
+        values.forEach((item, index)=>{
+          switch(name) {
+            case 'range':
+              statsValues.values.forEach(_value=>{
+                if(item.name == _value.name){
+                  item.defaultValues = _value.defaultValues
+                }
+              })
+              break;
+            case 'portfolio':
+              break;
+            default:
+              item.tag = null;
+              if(Object.keys(statsValues).length) {
+                item.disabled = true;
+              }
+              if(Object.keys(statsValues).length === 0){
+                item.disabled = false;
+              }
+              Object.keys(statsValues).forEach(_value=>{
+                if(item.name == _value){
+                  item.disabled = !Number(statsValues[_value]);
+                  item.tag = statsValues[_value];
+                }
+              });
+          }
+        })
+      }
+    }
+    return viewModel
+  }
+
+  valuesViewModel(val){
+    let result = {
+      range: { values: [] }
+    };
+    for(let key in val) {
+      switch(key){
+        case 'yield':
+        case 'spread':
+        case 'price':
+        case 'duration':
+        case 'maturity':
+        case 'discount':
+          const rangeValue = {
+            name: key,
+            values: val[key] || [],
+            selected: val[key].length ? true : false
+          }
+          result['range'].values.push(rangeValue)
+          delete result[key];
+          break;
+        default:
+          const values = val[key].map(item => { return {name: item} });
+          result[key] = {
+            values: values
+          };
+      }
+    }
+    return result;
+  }
+
+  statsViewModel(stats) {
+    let result = {
+      range: { values: [] }
+    };
 
     stats.forEach(item => {
       switch(item.name){
@@ -88,52 +177,28 @@ class Filters extends Component {
         case 'duration':
         case 'maturity':
         case 'discount':
-          viewModel['range'].values = viewModel['range'].values.map(filter=> {
-            if(item.name === filter.name) {
-              return {
-                name: item.name,
-                values:  filter.values || [],
-                defaultValues: item.values || [],
-                selected: item.values.length ? true : false
-              }
-            }
-            return filter
-          })
-      }
-    })
-
-    stats.forEach(item => {
-      if(filters[item.name]){
-        let values = filters[item.name].values;
-        if(!values.length) return;
-        values.forEach(value=>{
-          value.tag = null;
-          if(Object.keys(item.values).length) {
-            value.disabled = true;
+          const rangeValue = {
+              name: item.name,
+              defaultValues: item.values,
           }
-          if(Object.keys(item.values).length === 0){
-            value.disabled = false;
-          }
-          Object.keys(item.values).forEach(_value=>{
-            if(value.name == _value){
-              value.disabled = !Number(item.values[_value]);
-              value.tag = item.values[_value];
-            }
-          });
-        });
-        viewModel[item.name] = { values };
+          result['range'].values.push(rangeValue)
+          delete result[item.name];
+          break;
+        default:
+          result[item.name] = item.values;
       }
     });
-
-    return viewModel;
+    return result;
   }
 
-  render(){
-    const filtersViewModel = this.makeViewModel(this.state.stats, this.state.filters);
+  render() {
+    const { filtersStats, filtersValues } = this.state;
+    const filters = this.makeViewModel(filtersStats, filtersValues);
+
     return (
       <UIFilters
-        filters={filtersViewModel}
-        onStateChange={(state)=>{
+        filters={filters}
+        onStateChange={state=>{
           this.onFiltersChange({selected: state.selected, all: state.all});
         }}
       />
@@ -149,5 +214,5 @@ Filters.propTypes = {
   changeLayersBonds: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers, user: state.user });
+const mapStateToProps = state => ({ layers: state.reports.market.layers, activeLayerId: state.reports.market.activeLayerId });
 export default connect(mapStateToProps, { layerFilterBonds, layerGetFilterStats, changeLayersBonds })(Filters);

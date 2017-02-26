@@ -11,4 +11,4 @@ const Reports = ({ match }) => (
     //{/*<Route path="/reports/portfolio" component={Portfolio} />*/}
 );
 
-export default connect(state => ({ user: {} }))(Reports);
+export default connect(state => ({ user: {}, summary: {} }))(Reports);

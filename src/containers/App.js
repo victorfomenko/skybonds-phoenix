@@ -40,6 +40,7 @@ const App = ({ user }) => (
 
 App.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
+  summary: React.PropTypes.shape({}).isRequired,
 };
 
-export default connect(state => ({ user: state.user }))(App);
+export default connect(state => ({ user: state.user, summary: state.summary }))(App);

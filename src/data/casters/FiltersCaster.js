@@ -63,13 +63,13 @@ export default {
         case 'non-financial':
           values.forEach(function(item) {
             var value;
-            name = item.name;
+            name = item;
             value = values.map(function(val) {
               var ref, ref1;
-              if ((ref = val.name) === 'financial' || ref === 'corporations') {
+              if ((ref = val) === 'financial' || ref === 'corporations') {
                 return true;
               }
-              if ((ref1 = val.name) === 'non-financial' || ref1 === 'non-corporations') {
+              if ((ref1 = val) === 'non-financial' || ref1 === 'non-corporations') {
                 return false;
               }
             });
@@ -91,14 +91,14 @@ export default {
               return true;
             });
             return filterArray.push({
-              name: item.name,
+              name: item,
               value: values
             });
           });
           break;
         default:
           values = values.map(function(item) {
-            return item.name;
+            return item;
           });
           filterArray.push({
             name: name,

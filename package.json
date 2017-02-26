@@ -50,6 +50,7 @@
     "node-sass": "^3.13.0",
     "react-addons-test-utils": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
+    "rewire": "^2.5.2",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "svg-sprite-loader": "^0.2.2",

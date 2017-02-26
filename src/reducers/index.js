@@ -1,15 +1,17 @@
 import { combineReducers } from 'redux';
 
 import user from './user';
-import bond from './bond';
+import summary from './summary';
 import home from './home';
 import reports from './reports';
+import bond from './bond';
 
 const rootReducer = combineReducers({
   user,
-  bond,
+  summary,
   home,
-  reports
+  reports,
+  bond
 });
 
 export default rootReducer;

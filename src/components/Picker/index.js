@@ -25,7 +25,7 @@ class Picker extends Component {
     document.body.addEventListener('click', this.outsideClickListener.bind(this));
   }
 
-  outsideClickListener(event) {
+  outsideClickListener(e) {
     if (!this.state.open) {
       return;
     }
