@@ -3,34 +3,36 @@ import { isPortfolioScb } from '../../helpers/portfolio';
 import { localStorageProvider } from '../helpers';
 import { USER_DATA } from '../constants';
 
-export const emptyLayer = {
-  source: {
-    search: {
-      query: '',
-      peersFor: []
+export const getEmptyLayer = ()=> {
+  return {
+    source: {
+      search: {
+        query: '',
+        peersFor: []
+      },
+      filters: {},
+      include: [],
+      exclude: []
     },
-    filters: {},
-    include: [],
-    exclude: []
-  },
-  ui: {
-    name: '',
-    autoName: 'Empty set',
-    viewMode : LAYER_SET_VIEW_MODES.BONDS
-  },
-  data: {
-    search: {
-      isins: []
+    ui: {
+      name: '',
+      autoName: 'Empty set',
+      viewMode : LAYER_SET_VIEW_MODES.BONDS
     },
-    filters: {
-      isins: [],
-      stats: []
-    },
-    isinsAll: [],
-    isinsByQuota: [],
-    bonds: []
+    data: {
+      search: {
+        isins: []
+      },
+      filters: {
+        isins: [],
+        stats: []
+      },
+      isinsAll: [],
+      isinsByQuota: [],
+      bonds: []
+    }
   }
-}
+};
 
 export const getEmptyFilters = () => {
     let filters = {
