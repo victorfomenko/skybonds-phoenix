@@ -24,7 +24,6 @@ const RATINGS = {
   'CCC-': { color: '#ffd400', group: 'CCC', synonym: 'Caa3', order: 69 },
   'CC':   { color: '#af6725', group: 'CC',  synonym: 'Ca',   order: 65 },
   'C':    { color: '#b04127', group: 'C',   synonym: 'C',    order: 60 },
-  'D':    { color: '#808080', group: 'D',   synonym: 'D',    order: 57 },
   'NR':   { color: '#cbcbcb', group: 'NR',  synonym: 'NR',   order: 55 }
 };
 
@@ -49,8 +48,7 @@ const CLOSE_RATINGS = {
   'CCC':  ['CCC+', 'CCC', 'CCC-'],
   'CCC-': ['CCC', 'CCC-', 'CC'],
   'CC':   ['CCC-', 'CC', 'C'],
-  'C':    ['CC', 'C', 'D'],
-  'D':    ['C', 'D'],
+  'C':    ['CC', 'C'],
   'NR':   ['NR']
 };
 

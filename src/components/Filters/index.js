@@ -167,7 +167,6 @@ class Filters extends Component {
           { name: 'CCC-', color: '#ffd400' },
           { name: 'CC', color: '#af6725' },
           { name: 'C', color: '#b04127' },
-          { name: 'D', color: '#808080' },
           { name: 'NR', color: '#cbcbcb' }
         ],
         sortStrategy: function (a, b) {
@@ -193,7 +192,6 @@ class Filters extends Component {
             'CCC-': {color: '#ffd400', group: 'CCC', synonym: 'Caa3', order: 69},
             'CC': {color: '#af6725', group: 'CC', synonym: 'Ca', order: 65},
             'C': {color: '#b04127', group: 'C', synonym: 'C', order: 60},
-            'D': {color: '#808080', group: 'D', synonym: 'D', order: 57},
             'NR': {color: '#cbcbcb', group: 'NR', synonym: 'NR', order: 55}
           };
 
