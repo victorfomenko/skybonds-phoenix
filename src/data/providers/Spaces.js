@@ -12,7 +12,7 @@ export const getSpaces = () => {
 	})
 };
 
-export const getMarketSpaces = () => {
+export const getMarketSpaces = (data) => {
 	return getSpaces()
 	.then(spaces => {
 		const result = spaces.filter(item=>{return item.ui.type === 'market' })

@@ -29,6 +29,11 @@ class Filters extends Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return  nextProps.layer.source.filters !== this.props.layer.source.filters ||
+            nextProps.layer.data.filters.stats !== this.props.layer.data.filters.stats
+  }
+
   getDate(){
     // TODO !!Client date can be wrong!!
     // Better is get date from server
@@ -85,12 +90,9 @@ class Filters extends Component {
         values.forEach((item, index)=>{
           selectedValues.forEach(value=> {
             if(item.name === value.name) {
-              switch(name){
-                case 'range':
-                  item.values = value.values
-                break;
-                default:
-                  item.selected = true;
+              item.selected = true;
+              if(name === 'range') {
+                item.values = value.values
               }
             }
           })
@@ -98,8 +100,8 @@ class Filters extends Component {
       }
 
       //Add stats values
-      if(stats && stats.length) {
-        const statsValues = statsViewModel[name];
+      const statsValues = statsViewModel[name];
+      if(stats && stats.length && statsValues) {
         values.forEach((item, index)=>{
           switch(name) {
             case 'range':
