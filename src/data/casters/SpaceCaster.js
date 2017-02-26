@@ -1,3 +1,5 @@
+import { emptyLayer } from '../helpers/defaultStructures';
+
 export default {
 
   format:  (value)=> {
@@ -68,18 +70,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
   sourceLayers.forEach((layer, index) => {
     const ui = uiLayers[index] ? castUiLayer(uiLayers[index], activeLayerId) : {};
     const source = castSourceLayer(layer);
-    const data = {
-      search: {
-        isins: []
-      },
-      filters: {
-        isins: [],
-        stats: []
-      },
-      isinsAll: [],
-      isinsByQuota: [],
-      bonds: []
-    }
+    const data = emptyLayer.data
 
     ids.push(String(layer.id));
     layersById[layer.id] = { source, ui, data }
@@ -90,8 +81,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
 
 const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
   if(name == null) return {}
-  const active = String(id) === activeLayerId;
-  return Object.assign({}, { name, autoName: 'Empty set', viewMode, active })
+  return Object.assign({}, { name, autoName: 'Empty set', viewMode })
 }
 
 const castSourceLayer = ({ id, method, functions }) => {

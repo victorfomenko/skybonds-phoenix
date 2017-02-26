@@ -50,36 +50,65 @@ describe('SpaceCaster', function () {
 		const uiLayersList = [{id: 1, name: 'Layer Name', viewMode: 'bonds'}]
 
 		const result = {
-			ids: [1,2],
+			ids: ['1','2'],
 			layersById: {
 				'1': {
 					source: {
-			            filters: {
-			            	corporations: ['corporations'],
-			            	rating: ['A+','A','A-'],
-			            },
-			            search: {
-			            	query: 'asdw',
+            filters: {
+            	corporations: ['corporations'],
+            	rating: ['A+','A','A-'],
+            },
+            search: {
+            	query: 'asdw',
 							type: 'custom',
 							limit: null,
 							from: null,
 							attrs: null
-			            },
+            },
 						peersFor: [],
-			            include: [],
-			            exclude: [],
-			            method: 'set'
+	            include: [],
+	            exclude: [],
+	            method: 'set'
 					},
 					ui: {
 						name: 'Layer Name',
-  						viewMode: 'bonds'
-					}
+            autoName: '',
+						viewMode: 'bonds'
+					},
+          data: {
+            bonds: [],
+            filters: {
+              isins: [],
+              stats: [],
+            },
+            isinsAll: [],
+            isinsByQuota: [],
+            search: {
+              isins: [],
+            }
+          }
 				},
 				'2': {
 					source: {
-			            method: 'set'
+            method: 'set',
+            filters: {},
+            search: {
+              query: ''
+            }
 					},
-					ui: {}
+					ui: {},
+          data: {
+            bonds: [],
+            filters: {
+              isins: [],
+              stats: [],
+            },
+            isinsAll: [],
+            isinsByQuota: [],
+            search: {
+              isins: [],
+            }
+          }
 				}
 			}
 		}

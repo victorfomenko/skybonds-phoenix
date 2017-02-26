@@ -2,37 +2,10 @@ import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection, uniq } from 'lodash';
 import { getAutoName } from '../../../helpers/LayerAutoName';
 import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
+import { emptytLayer } from '../../../data/helpers/defaultStructures';
 
 const REPORT_ISINS_QUOTA = 200;
 
-const defaultLayer = {
-  source: {
-    search: {
-      query: '',
-      peersFor: []
-    },
-    filters: {},
-    include: [],
-    exclude: []
-  },
-  ui: {
-    name: '',
-    autoName: 'Empty set',
-    viewMode : LAYER_SET_VIEW_MODES.BONDS
-  },
-  data: {
-    search: {
-      isins: []
-    },
-    filters: {
-      isins: [],
-      stats: []
-    },
-    isinsAll: [],
-    isinsByQuota: [],
-    bonds: []
-  }
-}
 
 const getLayerIsinsAll = (searchIsins, filtersIsins)=> {
   let result = [];
@@ -87,7 +60,7 @@ const layers = (state = {}, action) => {
         layersById: {
           ...state.layersById,
           [newId]: {
-            ...defaultLayer
+            ...emptytLayer
           }
         }
       };
@@ -98,7 +71,7 @@ const layers = (state = {}, action) => {
           ids: ['1'],
           layersById: {
             ['1']: {
-              ...defaultLayer,
+              ...emptytLayer,
             }
           }
         };
