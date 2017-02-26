@@ -1,6 +1,7 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { mapValues, uniq } from 'lodash';
-import { LAYER_SET_VIEW_MODES, DEFAULT_LAYER } from '../../../data/constants';
+import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
+import { emptytLayer } from '../../../data/helpers/defaultStructures';
 
 import layers from './layers';
 import movers from './movers';
@@ -9,7 +10,7 @@ const initState = {
   layers: {
     ids: [1],
     layersById: {
-      1: DEFAULT_LAYER
+      1: emptytLayer
     }
   },
   include: [],

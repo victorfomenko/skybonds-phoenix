@@ -1,7 +1,8 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection, uniq } from 'lodash';
 import { getAutoName } from '../../../helpers/LayerAutoName';
-import { LAYER_SET_VIEW_MODES, DEFAULT_LAYER } from '../../../data/constants';
+import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
+import { emptytLayer } from '../../../data/helpers/defaultStructures';
 
 const REPORT_ISINS_QUOTA = 200;
 
@@ -59,7 +60,7 @@ const layers = (state = {}, action) => {
         layersById: {
           ...state.layersById,
           [newId]: {
-            ...DEFAULT_LAYER
+            ...emptytLayer
           }
         }
       };
@@ -70,7 +71,7 @@ const layers = (state = {}, action) => {
           ids: ['1'],
           layersById: {
             ['1']: {
-              ...DEFAULT_LAYER,
+              ...emptytLayer,
             }
           }
         };
