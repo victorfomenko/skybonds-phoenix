@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import throttle from 'lodash/throttle';
 import * as Auth from './data/providers/Auth';
+import * as Data from './data/providers/Data';
 
 
 import rootReducer from './reducers';
@@ -11,14 +12,18 @@ import { localStorageProvider } from './data/helpers';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = ( async ()=> {
-	let data = {};
-	try {
-		data = await Auth.loginWithToken();
-	}
-	catch (e) {
-		data = {};
-	}
-	return createStore(rootReducer, {user: data},
+  let user = {};
+	let summary = {};
+
+  [user, summary] = await Promise.all([
+    Auth.loginWithToken(),
+    Data.getSummary()
+  ])
+  .catch((e)=>{
+    console.warn(e);
+  })
+
+	return createStore(rootReducer, { user, summary },
 	  composeEnhancers(
 	    applyMiddleware(thunk),
 	  ),

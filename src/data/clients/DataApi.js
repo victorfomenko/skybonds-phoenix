@@ -97,4 +97,16 @@ export const getTimeSeries = (isin, dates) => {
   });
 };
 
+export const getSummary = () => {
+  return requestProvider.get({
+    url: API_V1 + 'summary'
+  }).then(resp=> {
+    return {
+      ...resp,
+      today: DateDayCaster.cast(resp.today),
+      dataSince: DateDayCaster.cast(resp.dataSince)
+    }
+  });
+};
+
 // TODO: handle errors on base _request layer
