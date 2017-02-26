@@ -8,6 +8,10 @@ export const layerFilterBonds = (id, filtersToRequest, filtersToStore, needStats
     id,
     filters: filtersToStore
   });
+  dispatch({
+    type: actionTypes.LAYER_AUTO_NAME_UPDATE,
+    id
+  });
   let response = await DataProvider.filtersApply(filtersToRequest, needStatsFromFilters);
   dispatch({
     type: actionTypes.LAYER_FILTERS_ISINS_CHANGE,

@@ -2,9 +2,14 @@ import { actionTypes } from './actionTypes';
 import * as DataProvider from '../data/providers/Data';
 
 
-export const addSet = () => (dispatch) => {
+export const addSet = () => (dispatch, getState) => {
   dispatch({
     type: actionTypes.ADD_SET
+  });
+  const currentIds = getState().reports.market.layers.ids;
+  dispatch({
+    type: actionTypes.ACTIVATE_LAYER,
+    id: currentIds[currentIds.length - 1]
   });
 };
 
@@ -19,11 +24,14 @@ export const removeLayer = (id) => (dispatch, getState) => {
     type: actionTypes.REMOVE_LAYER,
     id
   });
-  const ativeLayerId = getState().reports.market.layers.ids[0]
-  dispatch({
-    type: actionTypes.ACTIVATE_LAYER,
-    id: ativeLayerId
-  });
+  let activeLayerId = getState().reports.market.activeLayerId;
+  if(id === activeLayerId) {
+    let newActiveLayerId = getState().reports.market.layers.ids[0];
+    dispatch({
+      type: actionTypes.ACTIVATE_LAYER,
+      id: newActiveLayerId
+    });
+  }
   dispatch({
     type: actionTypes.ALL_LAYERS_ISINS_UPDATE
   });

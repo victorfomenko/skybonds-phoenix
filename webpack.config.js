@@ -6,7 +6,7 @@ var combineLoaders = require('webpack-combine-loaders');
 // NB: devtool: 'eval' for some reason crashes Chrome Dev Tools when hovering over bonds
 // on a ScatterPlot, while 'inline-source-map' does not cause this
 module.exports = {
-  devtool: 'eval',
+  // devtool: 'eval',
   entry: [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',

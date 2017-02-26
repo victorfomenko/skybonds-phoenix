@@ -1,4 +1,4 @@
-import { emptyLayer } from '../helpers/defaultStructures';
+import { getEmptyLayer } from '../helpers/defaultStructures';
 
 export default {
 
@@ -70,7 +70,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
   sourceLayers.forEach((layer, index) => {
     const ui = uiLayers[index] ? castUiLayer(uiLayers[index], activeLayerId) : {};
     const source = castSourceLayer(layer);
-    const data = emptyLayer.data
+    const data = getEmptyLayer().data;
 
     ids.push(String(layer.id));
     layersById[layer.id] = { source, ui, data }
@@ -81,7 +81,7 @@ const castLayers = (sourceLayers, uiLayers, activeLayerId) => {
 
 const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
   if(name == null) return {}
-  return Object.assign({}, { name, autoName: '', viewMode })
+  return Object.assign({}, { name, autoName: 'Empty set', viewMode })
 }
 
 const castSourceLayer = ({ id, method, functions }) => {

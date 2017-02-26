@@ -2,7 +2,7 @@ import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection, uniq } from 'lodash';
 import { getAutoName } from '../../../helpers/LayerAutoName';
 import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
-import { emptytLayer } from '../../../data/helpers/defaultStructures';
+import { getEmptyLayer } from '../../../data/helpers/defaultStructures';
 
 const REPORT_ISINS_QUOTA = 200;
 
@@ -60,7 +60,7 @@ const layers = (state = {}, action) => {
         layersById: {
           ...state.layersById,
           [newId]: {
-            ...emptytLayer
+            ...getEmptyLayer()
           }
         }
       };
@@ -71,7 +71,7 @@ const layers = (state = {}, action) => {
           ids: ['1'],
           layersById: {
             ['1']: {
-              ...emptytLayer,
+              ...getEmptyLayer(),
             }
           }
         };
@@ -116,10 +116,6 @@ const layers = (state = {}, action) => {
         layersById: mapValues(state.layersById, (layer, id) => {
           return id === action.id ?
             {...layer,
-              ui: {
-                ...layer.ui,
-                autoName: getAutoName({...layer.source.search, query: action.query}, layer.source.filters),
-              },
               source: {...layer.source,
                 search: {...layer.source.search,
                   query: action.query
@@ -178,15 +174,11 @@ const layers = (state = {}, action) => {
       };
 
     case actionTypes.LAYER_FILTERS_CHANGE:
-      if(!action.id) { return state; }
       return {
         ...state,
         layersById: mapValues(state.layersById, (layer, id) => {
           return id === action.id ?
             {...layer,
-              ui: {...layer.ui,
-                autoName: getAutoName(layer.source.search, {...layer.source.filters, filters: action.filters })
-              },
               source: {...layer.source,
                 filters: action.filters
               }
@@ -206,6 +198,20 @@ const layers = (state = {}, action) => {
               }
             }
           })
+        })
+      };
+
+    case actionTypes.LAYER_AUTO_NAME_UPDATE:
+      return {
+        ...state,
+        layersById: mapValues(state.layersById, (layer, id) => {
+          return id === action.id ?
+            {...layer,
+              ui: {
+                ...layer.ui,
+                autoName: getAutoName(layer.source.search, layer.source.filters),
+              }
+            } : layer;
         })
       };
 
