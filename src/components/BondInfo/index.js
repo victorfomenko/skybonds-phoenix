@@ -3,9 +3,10 @@ import { getColor } from '../../helpers/BondRating';
 import { connect } from 'react-redux';
 import BondInfoHeader from './BondInfoHeader';
 import BondInfoChart from './BondInfoChart';
+import LoadingCover from '../LoadingCover';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
-import { closeBondInfo } from '../../actions';
+import { closeBondInfo, getBondInfo } from '../../actions';
 import { Icon, GLYPHS } from '../../components/Icon';
 import styles from './styles.sass';
 
@@ -24,6 +25,12 @@ class BondInfo extends Component {
     }
     this.bond.putDate = putDate;
   }
+
+  componentWillUpdate(nextProps) {
+    if (this.bond.loading && this.props.bondInfo.isin != nextProps.bondInfo.isin ) {
+      this.props.getBondInfo(this.bond.isin, this.bond.date)
+    }
+  };
 
   getPutCallDate(dates) {
     if (dates == null || dates.length == 0) {
@@ -47,33 +54,33 @@ class BondInfo extends Component {
   }
 
   render(){
-    if(this.bond && this.bond.isin ) {
-      return (
-        <div className={styles.reportAsideBondGeneral + ' ' + (this.bond.show ? styles.__active : '')}>
-          <div className={styles.reportAsideBond}>
-            <span className={styles.reportAsideBond_link + ' ' + styles.reportAsideBond_close}
-                  onClick={ () => this.onClickClose()}>
-            <Icon glyph={GLYPHS.CLOSE}
-                  width="30" height="30" />
-            </span>
-            <BondInfoHeader
-              bond={this.bond}
-            />
+    return (
+    <div className={styles.reportAsideBondGeneral + ' ' + ( ( this.bond != null && this.bond.show) ? styles.__active : '')}>
+        <div className={styles.reportAsideBond}>
+          <span className={styles.reportAsideBond_link + ' ' + styles.reportAsideBond_close}
+                onClick={ () => this.onClickClose()}>
+          <Icon glyph={GLYPHS.CLOSE}
+                width="30" height="30" />
+          </span>
+          { (this.bond && this.bond.info ) &&
+          <BondInfoHeader
+            bond={this.bond}
+          />
+          }
+          { ( ( this.bond && this.bond.daily) != null) &&
             <div className={styles.reportAsideBondContent}>
-              { (this.bond.daily != null) ?
-                <div className={styles.reportAsideBondContent_wrap}>
-                  <BondInfoChart bond={this.bond}/>
-                </div>
-                : ''
-              }
+              <div className={styles.reportAsideBondContent_wrap}>
+                <BondInfoChart bond={this.bond}/>
+              </div>
             </div>
-
-          </div>
+          }
+          {
+            (( this.bond == null || this.bond.loading )) &&
+            <LoadingCover />
+          }
         </div>
-      );
-    } else {
-      return <span></span>;
-    }
+    </div>
+    )
   }
 }
 
@@ -83,4 +90,4 @@ BondInfo.propTypes = {
 };
 
 const mapStateToProps = state => ({ bondInfo: state.reports.market.bondInfo });
-export default connect(mapStateToProps, { closeBondInfo })(BondInfo);
+export default connect(mapStateToProps, { closeBondInfo, getBondInfo })(BondInfo);

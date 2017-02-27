@@ -3,6 +3,22 @@ import * as DataProvider from '../data/providers/Data';
 
 export const openBondInfo = (isin, date) => async (dispatch, getState) => {
   try {
+    dispatch({
+      type: actionTypes.OPEN_BOND_INFO,
+      isin: isin,
+      date: date
+    });
+  }
+  catch (response) {
+    dispatch({
+      type: actionTypes.OPEN_BOND_INFO,
+      response
+    });
+  }
+};
+
+export const getBondInfo = (isin, date) => async (dispatch, getState) => {
+  try {
     let dailyAttrs = ['coupon', 'spreadToBMK'];
     let infoAttrs = ['isin', 'standardName', 'maturityDate', 'issuerId', 'issuer', 'sector', 'outlook', 'ratingGroup'];
 
@@ -11,7 +27,7 @@ export const openBondInfo = (isin, date) => async (dispatch, getState) => {
     let putDates = await DataProvider.getBondsSchedulePut(isin);
 
     dispatch({
-      type: actionTypes.OPEN_BOND_INFO,
+      type: actionTypes.GET_BOND_INFO,
       isin: isin,
       date: date,
       info: info[0].data,
@@ -21,7 +37,7 @@ export const openBondInfo = (isin, date) => async (dispatch, getState) => {
   }
   catch (response) {
     dispatch({
-      type: actionTypes.OPEN_BOND_INFO,
+      type: actionTypes.GET_BOND_INFO,
       response
     });
   }
