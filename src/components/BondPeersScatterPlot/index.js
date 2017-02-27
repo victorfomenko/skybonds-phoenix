@@ -66,7 +66,8 @@ class BondPeersScatterPlot extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateChart(nextProps.bond.peersBonds, nextProps.bond.selectedPeersIsins);
+    const bonds = [nextProps.parentBond].concat(nextProps.peersBonds);
+    this.updateChart(bonds, nextProps.selectedPeersIsins);
   }
 
   initChart() {
@@ -80,11 +81,14 @@ class BondPeersScatterPlot extends Component {
     this.chartDocument = new ChartDocument(chartDocumentConfig);
 
     this.chartDocument.on('bondDotClick', (isin) => {
-      this.props.togglePeer(isin);
+      if(isin != this.props.parentBond.isin){
+        this.props.togglePeer(isin);
+      }
     });
+
   }
 
-  updateChart(peersBonds = [], highlightedIsins) {
+  updateChart(bonds = [], highlightedIsins) {
     let config = {
       date: DEFAULT_DATE,
       axes: {
@@ -98,19 +102,19 @@ class BondPeersScatterPlot extends Component {
       }
     };
 
-    if(peersBonds.length) {
+    if(bonds.length) {
       let isins = [];
-      for (let bond of peersBonds) {
+      for (let bond of bonds) {
         isins.push(bond.isin);
       }
       config.data = {
-        info: this.transformArrayToMap(peersBonds, 'info'),
-        daily: this.transformArrayToMap(peersBonds, 'daily'),
+        info: this.transformArrayToMap(bonds, 'info'),
+        daily: this.transformArrayToMap(bonds, 'daily'),
         portfolio: {}
       };
       this.refreshChart(isins, highlightedIsins, config);
     } else {
-      // this.refreshChart(peersBonds,  config);
+      // this.refreshChart(bonds,  config);
     }
   }
 
@@ -122,27 +126,28 @@ class BondPeersScatterPlot extends Component {
     return result;
   }
 
-  refreshChart(isins, highlightedIsins, config) {
-    this.dotsSetsPlugin.update( this.getDotsSetsConfig(isins, highlightedIsins, config.date) );
+  refreshChart(dimmedIsins, highlightedIsins, config) {
+    this.dotsSetsPlugin.update( this.getDotsSetsConfig(dimmedIsins, highlightedIsins, config.date) );
     this.chartDocument.update( this.getChartConfig(config.data, config.axes) );
   }
 
-  getDotsSetsConfig(isins, highlightedIsins, date) {
+  getDotsSetsConfig(dimmedIsins, highlightedIsins, date) {
     const dimmedDots = {
-      isins: isins,
+      isins: dimmedIsins,
       date: date,
       opacity: 0.2
     };
 
     const highlightedDots = {
-      isins: highlightedIsins,
+      isins: [this.props.parentBond.isin].concat(highlightedIsins),
       date: date,
       opacity: 1
     };
-    return { dotsSets: [highlightedDots, dimmedDots] };
+    return { dotsSets: [dimmedDots, highlightedDots] };
   }
 
   getChartConfig(data, axes) {
+
     return {
       axes: {
         x: axes.x,

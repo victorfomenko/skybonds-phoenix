@@ -365,8 +365,9 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
 
   return _preformParentBondData(isin, date).then((response) => {
     let parentBond = {
+      isin: isin,
       'info': response[0][0].data,
-      'daily': response[1][0].data
+      'daily': response[1][0].data,
     };
     return _getPeersSlices(parentBond, date).then((response) => {
       let peersSlices = {
