@@ -38,11 +38,18 @@ class Market extends Component {
     return !isEqual(nextState, this.state);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if((this.props.match.params.reportID !== nextProps.market.id) && nextProps.market.id != null) {
+      nextProps.push(`/reports/market/${nextProps.market.id}`)
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.market && nextProps.market.id) {
       this.setState({
         reportIsins: nextProps.market.data.allLayersIsinsByQuotaVisible,
-        market: nextProps.market
+        market: nextProps.market,
+        reportID: nextProps.market.id
       });
     }
   }

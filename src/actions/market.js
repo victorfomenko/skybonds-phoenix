@@ -18,7 +18,7 @@ export const loadReports = (reportID, date) => async (dispatch) => {
       dispatch({type: actionTypes.REPORTS_UPDATE_ORDER_VERSION, orderVersion});
       reports = await SpacesProvider.getSpaceById(id).then(space => {return [space] })
     }
-
+    console.log(reports, reportID)
     dispatch({type: actionTypes.MARKET_REPORTS_FETCH_SUCCESS, reports, reportID});
   }
   catch(error) {
