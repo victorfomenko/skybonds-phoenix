@@ -6,6 +6,7 @@ const initialState = {
   daily: null,
   putDates: null,
   show: false,
+  loading: false,
   date: null
 };
 
@@ -15,11 +16,20 @@ const bondInfo = (state = initialState, action) => {
       return {
         ...state,
         isin: action.isin,
+        date: action.date,
+        show: true,
+        loading: true
+      };
+
+    case actionTypes.GET_BOND_INFO:
+      return {
+        ...state,
+        isin: action.isin,
         info: action.info,
         daily: action.daily,
         putDates: action.putDates,
         date: action.date,
-        show: true
+        loading: false
       };
 
     case actionTypes.CLOSE_BOND_INFO:

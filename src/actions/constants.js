@@ -55,3 +55,4 @@ export const TOGGLE_BENCHMARK = 'TOGGLE_BENCHMARK';
 //Bond Info
 export const OPEN_BOND_INFO = 'OPEN_BOND_INFO';
 export const CLOSE_BOND_INFO = 'CLOSE_BOND_INFO';
+export const GET_BOND_INFO = 'GET_BOND_INFO';
