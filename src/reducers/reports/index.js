@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 
+import all from './all';
 import market from './market';
-import orderVersion from './orderVersion';
 // import portfolioList from './portfolioList'
 
 const reports = combineReducers({
+  all,
   market,
   // portfolioList
-  orderVersion,
 });
 
 export default reports;

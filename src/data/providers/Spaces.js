@@ -6,6 +6,11 @@ export const getList = () => {
   return SpacesApi.getList()
 }
 
+export const getSpacesByIds = (ids) => {
+  if(!ids){console.warn('getSpacesByIds: ids is not defined.')}
+  return SpacesApi.getSpacesByIds(ids)
+}
+
 export const getMarketSpacesByIds = (ids) => {
   if(!ids){console.warn('getMarketSpacesByIds: ids is not defined.')}
   return SpacesApi.getSpacesByIds(ids)

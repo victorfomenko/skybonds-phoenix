@@ -31,27 +31,13 @@ const getAllLayersIsinsObject = (layersById)=> {
 
 const market = (state = initState, action) => {
   switch (action.type) {
-    case actionTypes.MARKET_REPORTS_FETCH_REQUEST:
-      return initState
 
-    case actionTypes.MARKET_REPORTS_FETCH_SUCCESS:
-      let report = {};
-      const reports = action.reports;
-
-      reports.forEach(item => {
-        if(item.id === action.reportID) {
-          report = item
-        }
-      })
-
-      if(Object.keys(report).length === 0) {
-        report = reports[reports.length-1]
-      }
+    case actionTypes.MARKET_REPORT_UPDATE:
 
       return {
         ...state,
-        ...report,
-        layers: layers(report.layers, action),
+        ...action.report,
+        layers: layers(action.report.layers, action),
         movers: movers(state.movers, action)
       };
       break;
