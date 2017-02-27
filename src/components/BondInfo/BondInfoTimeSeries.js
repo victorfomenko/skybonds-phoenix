@@ -7,7 +7,7 @@ import { getColor } from '../../helpers/BondRating';
 import { getStartDateByPeriod } from '../../helpers/BondDatePeriod';
 import { connect } from 'react-redux';
 import moment from 'moment'
-import styles from './BondInfoTimeSeries.sass';
+import styles from './bondInfoTimeSeries.sass';
 
 class BondInfoTimeSeries extends Component {
 
