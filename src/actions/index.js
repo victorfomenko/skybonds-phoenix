@@ -8,4 +8,5 @@ export * from './market';
 export * from './bond';
 export * from './reports';
 export * from './bondInfo';
+export * from './header';
 

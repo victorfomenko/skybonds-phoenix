@@ -1,4 +1,5 @@
 import { actionTypes } from '../../actions/actionTypes';
+import { omit } from 'lodash';
 import { getEmptyReports } from '../../data/helpers/defaultStructures';
 
 const initState = getEmptyReports();
@@ -37,7 +38,7 @@ const all = (state = initState, action) => {
         error: true
       }
 
-    case actionTypes.REPORTS_ADD_NEW:
+    case actionTypes.REPORT_ADD:
       return {
         ...state,
         ids: [
@@ -49,6 +50,13 @@ const all = (state = initState, action) => {
           [action.report.id]: action.report
         },
         pending: false
+      }
+
+    case actionTypes.REPORT_DELETE:
+      return {
+        ...state,
+        ids: state.ids.filter(id => { return id !== action.id }),
+        reportsById: omit(state.reportsById, action.id)
       }
 
     default:

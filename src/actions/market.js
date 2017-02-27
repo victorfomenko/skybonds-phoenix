@@ -17,13 +17,12 @@ export const prepareMarketReports = (reportID) => async (dispatch, getState) => 
   if(!marketReportsIds.length) {
     let { id, orderVersion } = await addDefaultMarketSpace();
     report = await SpacesProvider.getSpaceById(id);
-    dispatch({type: actionTypes.REPORTS_ADD_NEW, report});
+    dispatch({type: actionTypes.REPORT_ADD, report});
   }
   else {
     const lastReportId = marketReportsIds[marketReportsIds.length-1];
     report = allReports.reportsById[reportID] ? allReports.reportsById[reportID] : allReports.reportsById[lastReportId]
   }
-  console.log(report);
   dispatch({type: actionTypes.MARKET_REPORT_UPDATE, report});
 
 };
