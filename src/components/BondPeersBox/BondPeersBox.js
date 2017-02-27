@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as Data from '../../data/providers/Data';
 import BondPeersTable from '../BondPeersTable/BondPeersTable';
 import BondPeersTimeSeries from '../BondPeersTimeSeries';
+import BondPeersScatterPlot from '../BondPeersScatterPlot';
 import style from './style.sass';
 
 
@@ -16,7 +17,7 @@ class BondPeersBox extends Component {
   }
 
   _initValues() {
-    this.parentIsin = this.props.bond.isin;
+    this.parentIsin = this.props.bond.parentBond.isin;
     this.peersIsins = [];
     this.filters = [];
   }
@@ -39,12 +40,32 @@ class BondPeersBox extends Component {
       return (
         <div className={style.bondPeersBox} id="peers">
           <div className={style.bondPeersBox_title}>Peers</div>
-          <BondPeersTimeSeries bond={this.props.bond} />
+          <div className={style.bondPeersDiagrams}>
+            <div className={style.bondPeersDiagrams_timeseries}>
+              <BondPeersTimeSeries
+                parentBond={this.props.bond.parentBond}
+                selectedPeersIsins={this.props.bond.selectedPeersIsins}
+                peersBonds={this.props.bond.peersBonds}
+                showBenchmark={this.props.bond.showBenchmark}
+              />
+            </div>
+            <div className={style.bondPeersDiagrams_scatterplot}>
+              <span className={style.bondPeersDiagrams_label +' '+ style.__y}>Yield</span>
+              <span className={style.bondPeersDiagrams_label +' '+ style.__x}>Duration</span>
+              <div className={style.bondPeersDiagrams_now}>Now
+              </div>
+              <div className={style.bondPeersScatterPlot}>
+                <BondPeersScatterPlot bond={this.props.bond} />
+              </div>
+            </div>
+          </div>
           <BondPeersTable
-            bond={this.props.bond}
+            parentBond={this.props.bond.parentBond}
             date={this.props.date}
             parentIsin={this.parentIsin}
             peersIsins={this.state.peersIsins}
+            selectedPeersIsins = {this.props.bond.selectedPeersIsins}
+            peersBonds={this.props.bond.peersBonds}
             filters={this.state.peersFilters}
           />
         </div>
@@ -57,8 +78,7 @@ class BondPeersBox extends Component {
 
 BondPeersBox.propTypes = {
   bond: React.PropTypes.object.isRequired,
-  date: React.PropTypes.object.isRequired
+  date: React.PropTypes.object.isRequired,
 };
-
 
 export default BondPeersBox;

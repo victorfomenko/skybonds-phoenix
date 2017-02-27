@@ -1,7 +1,6 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { omit, mapValues, assign, cloneDeep, intersection, uniq } from 'lodash';
 import { getAutoName } from '../../../helpers/LayerAutoName';
-import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
 import { getEmptyLayer } from '../../../data/helpers/defaultStructures';
 
 const REPORT_ISINS_QUOTA = 200;

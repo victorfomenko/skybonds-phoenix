@@ -1,33 +1,13 @@
 import { actionTypes } from '../../../actions/actionTypes';
 import { mapValues, uniq } from 'lodash';
 import { LAYER_SET_VIEW_MODES } from '../../../data/constants';
-import { emptytLayer } from '../../../data/helpers/defaultStructures';
+import { getEmptyMarketReport } from '../../../data/helpers/defaultStructures';
 
 import layers from './layers';
 import movers from './movers';
 import bondInfo from './bondInfo';
 
-const initState = {
-  layers: {
-    ids: [1],
-    layersById: {
-      1: emptytLayer
-    }
-  },
-  include: [],
-  exclude: [],
-  activeLayerId: '1',
-  ui: {
-    type: 'market',
-    spaceName: 'New report',
-    viewMode: 'scatterPlot',
-  },
-  data: {
-    allLayersIsinsAll: [],
-    allLayersIsinsByQuota: [],
-    allLayersIsinsByQuotaVisible: []
-  }
-};
+const initState = getEmptyMarketReport();
 
 const getAllLayersIsinsObject = (layersById)=> {
   let result = {
@@ -52,14 +32,20 @@ const getAllLayersIsinsObject = (layersById)=> {
 
 const market = (state = initState, action) => {
   switch (action.type) {
+    case actionTypes.MARKET_REPORTS_FETCH_REQUEST:
+      return initState
+
     case actionTypes.MARKET_REPORTS_FETCH_SUCCESS:
       let report = {};
       const reports = action.reports;
 
-      if(typeof action.reportID === 'number') {
-        report = reports[action.reportID]
-      }
-      else {
+      reports.forEach(item => {
+        if(item.id === action.reportID) {
+          report = item
+        }
+      })
+
+      if(Object.keys(report).length === 0) {
         report = reports[reports.length-1]
       }
 

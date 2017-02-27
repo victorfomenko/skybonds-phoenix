@@ -6,6 +6,7 @@ import { USER_DATA } from '../constants';
 export const getEmptyLayer = ()=> {
   return {
     source: {
+      method: 'set',
       search: {
         query: '',
         peersFor: []
@@ -277,4 +278,33 @@ export const getEmptyFilters = () => {
       }
     }
     return filters
+}
+
+export const getEmptyMarketReport = () => {
+  return {
+    id: null,
+    version: '',
+    layers: {
+      ids: ['1'],
+      layersById: {
+        '1': getEmptyLayer()
+      }
+    },
+    ui: {
+      type: 'market',
+      spaceName: 'New report',
+      viewMode: 'scatterPlot',
+      extensions: {
+        calendar: {}
+      }
+    },
+    exclude: [],
+    include: [],
+    activeLayerId: '1',
+    data: {
+      allLayersIsinsAll: [],
+      allLayersIsinsByQuota: [],
+      allLayersIsinsByQuotaVisible: []
+    }
   }
+}

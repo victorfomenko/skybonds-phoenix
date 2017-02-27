@@ -1,39 +1,34 @@
 import * as SpacesApi from '../clients/SpacesApi';
 import SpaceCaster from '../casters/SpaceCaster';
 
-export const getSpaces = () => {
-	return SpacesApi.getList()
-	.then(({ spaces }) => {
-		const ids = spaces.map(item=>{ return item.id });
-		return SpacesApi.getSpacesByIds(ids);
-	})
-	.catch(err => {
-		console.warn(err);
-	})
-};
 
-export const getMarketSpaces = (data) => {
-	return getSpaces()
-	.then(spaces => {
-		const result = spaces.filter(item=>{return item.ui.type === 'market' })
-		return Promise.resolve(result);
-	})
-};
+export const getList = () => {
+  return SpacesApi.getList()
+}
 
-export const getPortfolioSpaces = () => {
-  return getSpaces()
+export const getMarketSpacesByIds = (ids) => {
+  if(!ids){console.warn('getMarketSpacesByIds: ids is not defined.')}
+  return SpacesApi.getSpacesByIds(ids)
+  .then(spaces => {
+    const result = spaces.filter(item=>{return item.ui.type === 'market' })
+    return Promise.resolve(result);
+  });
+}
+
+export const getPortfolioSpacesByIds = (ids) => {
+  if(!ids){console.warn('getPortfolioSpacesByIds: ids is not defined.')}
+  return SpacesApi.getSpacesByIds(ids)
   .then(spaces => {
     const result = spaces.filter(item=>{return item.ui.type === 'portfolio' })
     return Promise.resolve(result);
   })
-};
-
-export const add = (space) => {
-	return SpacesApi.add(space)
-};
-
-const ensureReportsAreNotEmpty = ({ reportsIds, orderVersion }) => {
-  if(reportsIds.length) { return { reportsIds, orderVersion } }
-
 }
 
+export const getSpaceById = (spaceId) => {
+	return SpacesApi.getSpaceById(spaceId);
+};
+
+export const add = (report) => {
+  const space = SpaceCaster.format(report);
+	return SpacesApi.add(space);
+};

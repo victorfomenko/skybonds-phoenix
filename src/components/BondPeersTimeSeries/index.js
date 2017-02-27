@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import ChartTimeSeries from '../ChartTimeSeries';
 import * as DataProvider from '../../data/providers/Data';
-import * as NewtonProvider from '../../data/providers/Newton';
-import { connect } from 'react-redux';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getColor } from '../../helpers/BondRating';
@@ -32,7 +30,7 @@ class BondPeersTimeSeries extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateChart(nextProps.selectedPeers);
+    this.updateChart(nextProps.selectedPeersIsins);
   }
 
   initChart() {
@@ -41,20 +39,20 @@ class BondPeersTimeSeries extends Component {
 
     timeSeries.push(this.getTimeSeriesConfig());
     Promise.all([
-      DataProvider.getTimeSeries(this.props.bond.isin, dates)
+      DataProvider.getTimeSeries(this.props.parentBond.isin, dates)
       ]).
     then((response)=> {
       this.setState({chartData: response, chartTimeSeries: timeSeries});
     });
   }
 
-  updateChart(selectedPeers) {
+  updateChart(selectedPeersIsins) {
     let timeSeries = [];
     let promises = []
     let dates = this.getDates('YYYYMMDD');
 
     timeSeries.push(this.getTimeSeriesConfig());
-    promises.push(DataProvider.getTimeSeries(this.props.bond.isin, dates));
+    promises.push(DataProvider.getTimeSeries(this.props.parentBond.isin, dates));
 
     if(this.state.yAxis == 'yield' && this.props.showBenchmark) {
       // timeSeries.push({
@@ -65,15 +63,17 @@ class BondPeersTimeSeries extends Component {
       // });
     }
 
-    for(let peer of selectedPeers) {
+    const peersBonds = this.transformArrayToMap(this.props.peersBonds);
+
+    for(let isin of selectedPeersIsins) {
       promises.push(
-        DataProvider.getTimeSeries(peer.isin, dates)
+        DataProvider.getTimeSeries(isin, dates)
       );
       timeSeries.push({
-        label: peer.name,
-        isin: peer.isin,
+        label: peersBonds[isin].info.standardName,
+        isin: isin,
         dates: this.getDates('YYYY-MM-DD'),
-        color: peer.color,
+        color: peersBonds[isin].color,
       });
     }
     Promise.all(promises).then((response)=> {
@@ -81,9 +81,17 @@ class BondPeersTimeSeries extends Component {
     });
   }
 
+  transformArrayToMap(data) {
+    let result = {};
+    for(let item of data) {
+      result[ item.isin ] = item;
+    }
+    return result;
+  }
+
   getDates(format) {
     //TODO Need to make it work with period buttons
-    const endDate = this.props.bond.date;
+    const endDate = this.props.parentBond.date;
     let startDate = new Date();
     startDate.setDate(startDate.getDate() - 365);
     var dateArray = [];
@@ -98,10 +106,10 @@ class BondPeersTimeSeries extends Component {
 
   getTimeSeriesConfig() {
     return {
-      label: this.props.bond.info.name,
-      isin: this.props.bond.isin,
+      label: this.props.parentBond.info.name,
+      isin: this.props.parentBond.isin,
       dates: this.getDates('YYYY-MM-DD'),
-      color: getColor(this.props.bond.info.ratingGroup)
+      color: getColor(this.props.parentBond.info.ratingGroup)
     };
   }
 
@@ -137,13 +145,13 @@ class BondPeersTimeSeries extends Component {
 
   onYAxisPickerChange(pickerValue) {
     this.setState({ yAxis: pickerValue }, () => {
-      this.updateChart(this.props.selectedPeers);
+      this.updateChart(this.props.selectedPeersIsins);
     });
   }
 
   render() {
     return (
-      <div className={styles.peersTimeSeries}>
+      <div className={styles.bondPeersTimeSeries}>
         <Picker className={styles.peersTimeSeriesPicker}
           pickerList={this.state.yAxisPicker}
           selectedPicker={this.state.yAxis}
@@ -161,11 +169,7 @@ class BondPeersTimeSeries extends Component {
 
 
 BondPeersTimeSeries.propTypes = {
-    bond: React.PropTypes.object.isRequired,
+    parentBond: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  selectedPeers: state.bond.selectedPeers,
-  showBenchmark: state.bond.showBenchmark
-});
-export default connect( mapStateToProps )(BondPeersTimeSeries);
+export default BondPeersTimeSeries;

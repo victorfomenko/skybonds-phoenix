@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as Data from '../../data/providers/Data';
-import Promise from 'rsvp';
 import BondHeader from '../../components/BondHeader/BondHeader';
 import BondGeneral from '../../components/BondGeneral/BondGeneral';
 import BondBidAskTable from '../../components/BondBidAskTable/BondBidAskTable';
 import BondRepaymentTable from '../../components/BondRepaymentTable/BondRepaymentTable';
 import BondPeersBox from '../../components/BondPeersBox/BondPeersBox';
 import ScatterPlot from '../../components/ScatterPlot';
+import { getBondData } from '../../actions';
 import style from './style.sass';
 
 const defaultDate = new Date('2017/02/17');
@@ -17,58 +16,41 @@ class Bond extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isin: props.match.params.isin,
-      date: defaultDate,
-      info: null,
-      daily: null,
-      portfolioInfo: null,
       loaded: false
     };
   }
 
   componentWillMount() {
-    this.initBond(this.state.isin);
+    this.props.getBondData([this.props.match.params.isin], defaultDate);
   }
 
-  initBond(isin = null) {
-    if(isin != null) {
-      Promise.all([
-        Data.getBondsInfo([isin]),
-        Data.getBondsDaily([isin], defaultDate)
-      ]).then((response) => {
-        this.setState({
-          'loaded': true,
-          'info': response[0][0].data,
-          'daily': response[1][0].data
-        });
-
-      });
-    }
+  componentWillReceiveProps(nextProps) {
+    this.setState({loaded: true});
   }
 
   render(){
 
-    const bond = this.state;
-    const date = this.state.date;
+    const parentBond = this.props.bond.parentBond;
+    const date = defaultDate;
     if(this.state.loaded){
       return (
         <div className='skybondsWrap'>
           <div className={style.bondPage_content}>
             <BondHeader
-              bond={bond}
+              bond={parentBond}
             />
             <BondGeneral
-              bond={bond}
+              bond={parentBond}
             />
             <BondPeersBox
-              bond={bond}
+              bond={this.props.bond}
               date={date}
             />
             <BondBidAskTable
-              bond={bond}
+              bond={parentBond}
             />
             <BondRepaymentTable
-              bond={bond}
+              bond={parentBond}
               date={date}
             />
           </div>
@@ -81,5 +63,5 @@ class Bond extends Component {
 }
 
 
-const mapStateToProps = state => ({ market: state.reports.market });
-export default connect(mapStateToProps)(Bond);
+const mapStateToProps = state => ({ bond: state.bond });
+export default connect(mapStateToProps, { getBondData })(Bond);

@@ -71,17 +71,17 @@ class ChartTimeSeries extends Component {
     this.chartDocument = new ChartDocument(chartDocumentConfig);
   }
 
-  updateChart(data, timeSeries) {
-    this.refreshChart(data, timeSeries);
+  updateChart(chartData, chartTimeSeries) {
+    this.refreshChart(chartData, chartTimeSeries);
   }
 
-  refreshChart(data, timeSeries) {
+  refreshChart(chartData, chartTimeSeries) {
     let bonds = {};
-    for (let dailyData of data) {
+    for (let dailyData of chartData) {
       bonds[dailyData.isin] = dailyData.data;
     }
-    this.timeSeriesPlugin.update({ timeSeries: timeSeries });
-    this.valueSeriesPlugin.update({ timeSeries: timeSeries });
+    this.timeSeriesPlugin.update({ timeSeries: chartTimeSeries });
+    this.valueSeriesPlugin.update({ timeSeries: chartTimeSeries });
     this.chartDocument.update( this.props.chartConfig(bonds, this.props.yAxis) );
   }
 

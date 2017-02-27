@@ -21,6 +21,7 @@ export const store = ( async ()=> {
   ])
     .catch((e)=>{
       console.warn(e);
+      return [];
     });
 
   return createStore(rootReducer, { user, summary },

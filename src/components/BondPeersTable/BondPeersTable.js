@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import * as Data from '../../data/providers/Data';
-import { isPortfolioScb } from '../../helpers/portfolio';
 import { connect } from 'react-redux';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
-import { addPeerToChart, removePeerFromChart, toggleBenchmark } from '../../actions';
 import style from './style.sass';
+
+import {
+  getPeersData,
+  toggleBenchmark,
+  togglePeer
+} from '../../actions';
 
 const Defaults = {
   Sort: {
@@ -19,16 +22,13 @@ class BondPeersTable extends Component {
     super(props);
     this._initValues()
     this.state = {
-      'peersBonds': [],
-      'benchmarkChecked': true,
-      'selectedPeers': new Set()
+      'benchmarkChecked': true
     };
   }
 
   _initValues() {
     //parentBond = bondsProvider.peekBond @parentIsin
     this.parentBond = null
-    this.peersBonds = [];
     this._peersPage = 0;
     this.peersPerPage = Defaults.PeersPerPage;
     this.peersTotal = this.props.peersIsins.length;
@@ -41,66 +41,23 @@ class BondPeersTable extends Component {
   }
 
   componentWillMount() {
-    this._preformPeersBonds()
+    this.getPeersBonds();
   }
 
-  _preformPeersBonds() {
+  componentWillReceiveProps(nextProps) {
+
+  }
+
+  getPeersBonds() {
     const colorGenerator = d3.scale.category10();
-    let limitedPeersIsins = this.props.peersIsins.slice(0, this.peersPerPage + this.peersPerPage * this._peersPage)
-    let promises = [
-      Data.getBondsInfo([this.props.parentIsin]),
-      Data.getBondsDaily([this.props.parentIsin], this.props.date),
-      Data.getBondsInfo(limitedPeersIsins),
-      Data.getBondsDaily(limitedPeersIsins, this.props.date)
-    ];
-    if(isPortfolioScb(this.props.user)) {
-      //promises.push(bondsPortfolioProvider.preformDailyQuantityData @peersBonds, @portfolioId, @date.getValue()
-      //promises.push bondsPortfolioProvider.preformDailyData @peersBonds, @portfolioId, @date.getValue()
-    }
-
-     Promise.all(promises).then((response)=> {
-       this.parentBond = {
-         isin: this.props.parentIsin,
-         info: response[0][0].data,
-         daily: response[1][0].data
-       };
-
-       this.peersBonds = [];
-       let peersBonds = [];
-       for (let i = 0, len1 = response[2].length; i < len1; i++) {
-           let itemInfo =  response[2][i];
-           peersBonds.push({
-             isin: itemInfo.isin,
-             info: itemInfo.data,
-             color: colorGenerator(itemInfo.isin)
-           });
-
-         for (let j = 0, len2 = response[3].length; j < len2; j++) {
-           let itemDaily = response[3][i];
-           if (itemDaily.isin == itemInfo.isin) {
-             peersBonds[i]['daily'] = itemDaily.data;
-           }
-         }
-       }
-
-       this.setState({
-        'peersBonds': peersBonds
-       });
-
-       this.bondCurrency = this.parentBond.info.ccy;
-       this._sortSettings = {
-         column: Defaults.Sort.Column,
-         asc: Defaults.Sort.Asc
-       };
-
-       this._sortBonds();
-     })
-
+    let limitedPeersIsins = this.props.peersIsins.slice(0, this.peersPerPage + this.peersPerPage * this._peersPage);
+    this.props.getPeersData(limitedPeersIsins, this.props.date);
   }
 
-  _sortBonds() {
+  _sortBonds(bonds) {
+    //TODO: need to implement sorting on table header click
     if (this._sortSettings.column) {
-      return this.peersBonds.sortBy((function(_this) {
+      return bonds.sortBy((function(_this) {
         return function(bond) {
           return _this._getBondValue(bond, _this._sortSettings.column);
         };
@@ -140,16 +97,8 @@ class BondPeersTable extends Component {
   }
 
   togglePeer = bond => {
-    if (this.state.selectedPeers.has(bond.isin)) {
-      this.props.removePeerFromChart(bond.isin);
-      this.state.selectedPeers.delete(bond.isin);
-    } else {
-      this.props.addPeerToChart(bond.isin, bond.info.standardName, bond.color);
-      this.state.selectedPeers.add(bond.isin);
-    }
-    this.setState({ selectedPeers: this.state.selectedPeers });
+    this.props.togglePeer(bond.isin);
   }
-
 
   toggleBenchmark () {
     this.props.toggleBenchmark();
@@ -163,14 +112,12 @@ class BondPeersTable extends Component {
 
   showNextPage () {
     this._peersPage++ ;
-    this._preformPeersBonds()
+    this.getPeersBonds()
   }
 
-
   render(){
-    let parentBond = this.parentBond;
-    let peersBonds = this.state.peersBonds;
-
+    let parentBond = this.props.parentBond;
+    let peersBonds = this.props.peersBonds;
     if(parentBond != null) {
 
       var peersList = peersBonds.map((bond, index) => {
@@ -179,7 +126,7 @@ class BondPeersTable extends Component {
             <td className={style.bondPeersTable_cell + ' ' + style.__check}>
               <input type="checkbox"
                 className={style.bondPeersTable_check}
-                checked={this.state.selectedPeers.has(bond.isin)}
+                checked={(this.props.selectedPeersIsins.indexOf(bond.isin) !== -1)}
                 onChange={this.togglePeer.bind(this, bond)}
                 />
             </td>
@@ -234,7 +181,7 @@ class BondPeersTable extends Component {
                   Bonds
                   <span className={style.bondPeersTable_unit}>
                     <span>in </span>
-                    <span>{this.bondCurrency}</span>
+                    <span>{parentBond.info.ccy}</span>
                   </span>
                 </th>
                 <th className={style.bondPeersTable_cell + ' ' + style.__text + ' ' + style.__liquidity}></th>
@@ -365,7 +312,7 @@ class BondPeersTable extends Component {
               { (this.peersTotal - peersBonds.length > this.peersPerPage) ?
                 this.peersPerPage
               :
-                this.peersTotal - this.peersBonds.length
+                this.peersTotal - this.props.peersBonds.length
               }
             </span>
             <span> peers</span>
@@ -380,14 +327,16 @@ class BondPeersTable extends Component {
 }
 
 BondPeersTable.propTypes = {
-  bond: React.PropTypes.object.isRequired,
+  parentBond: React.PropTypes.object.isRequired,
   date: React.PropTypes.object.isRequired,
   parentIsin: React.PropTypes.string.isRequired,
   peersIsins: React.PropTypes.array.isRequired,
+  selectedPeersIsins: React.PropTypes.array.isRequired,
+  peersBonds: React.PropTypes.array.isRequired,
   filters: React.PropTypes.array.isRequired
 };
 
-const mapStateToProps = state => ({ user: state.user });
+const mapStateToProps = state => ({  });
 export default connect(mapStateToProps, {
-    addPeerToChart, removePeerFromChart, toggleBenchmark
-  })(BondPeersTable);
+  getPeersData, toggleBenchmark, togglePeer
+})(BondPeersTable);
