@@ -1,23 +1,35 @@
 import { actionTypes } from '../actions/actionTypes';
 
 const initalState = {
-  selectedPeers: [],
+  parentBond: {},
+  selectedPeersIsins: [],
   showBenchmark: true,
+  peersBonds: [],
 }
 const bond = (state = initalState, action) => {
 	switch (action.type) {
+    case actionTypes.GET_BOND_DATA:
+      return {
+        ...state,
+        parentBond: action.bond
+      }
+
+    case actionTypes.GET_PEERS_DATA:
+      return {
+        ...state,
+        peersBonds: action.peersBonds
+      }
+
     case actionTypes.ADD_PEER_TO_CHART:
       return {
         ...state,
-        selectedPeers: state.selectedPeers.concat({
-          isin: action.isin, name: action.name, color: action.color
-        })
+        selectedPeersIsins: state.selectedPeersIsins.concat(action.isin)
       }
 
     case actionTypes.REMOVE_PEER_FROM_CHART:
       return {
         ...state,
-        selectedPeers: state.selectedPeers.filter(bond => bond.isin !== action.isin),
+        selectedPeersIsins: state.selectedPeersIsins.filter(isin => isin !== action.isin)
       }
 
     case actionTypes.TOGGLE_BENCHMARK:

@@ -134,6 +134,35 @@ export const getTimeSeries = (isin, dates) => {
   return DataApi.getTimeSeries(isin, dates);
 };
 
+export const getPeersData = (isins, date) => {
+  const colorGenerator = d3.scale.category10();
+  let promises = [
+    DataApi.getBondsInfo(isins),
+    DataApi.getBondsDaily(isins, date)
+  ];
+
+  return Promise.all(promises).then((response)=> {
+     let peersBonds = [];
+     //TODO: this needs to be refactored according to ES6
+     for (let i = 0, len1 = response[0].length; i < len1; i++) {
+         let itemInfo =  response[0][i];
+         peersBonds.push({
+           isin: itemInfo.isin,
+           info: itemInfo.data,
+           color: colorGenerator(itemInfo.isin)
+         });
+
+       for (let j = 0, len2 = response[1].length; j < len2; j++) {
+         let itemDaily = response[1][i];
+         if (itemDaily.isin == itemInfo.isin) {
+           peersBonds[i]['daily'] = itemDaily.data;
+         }
+       }
+     }
+    return peersBonds;
+  });
+};
+
 export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
 
   let _preformParentBondData = function(isin, date) {
@@ -197,9 +226,7 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
     let currencyFilters = {
       date: date,
       filters: {
-        'currency': [{
-          name: currency
-        }]
+        'currency': [currency]
       }
     };
 
@@ -208,9 +235,7 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
     let countryFilters = {
       date: date,
       filters: {
-        'country': [{
-          name: country
-        }]
+        'country': [country]
       }
     };
 
@@ -220,9 +245,7 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
     let ratingNames = []
     for (let i = 0, len = ratingArray.length; i < len; i++) {
       let item = ratingArray[i];
-      ratingNames.push({
-        name: item
-      })
+      ratingNames.push(item)
     }
 
     let ratingFilters = {
@@ -246,9 +269,7 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
     let sectorFilters = {
       date: date,
       filters: {
-        sector: [{
-          name: sector
-        }]
+        sector: [sector]
       }
     };
 

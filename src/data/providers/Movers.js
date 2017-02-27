@@ -56,9 +56,9 @@ export const loadMovers = ({isins, startDate, endDate, paramName}) => {
       moversData[dailyItem.isin].dailyData = dailyItem.data;
     }
     for (let portfolioItem of resp[2]) {
-			if(moversData[portfolioItem.isin]) {
-				moversData[portfolioItem.isin].inBondPortfolio = true;
-			}
+		if(moversData[portfolioItem.isin]) {
+			moversData[portfolioItem.isin].inBondPortfolio = true;
+		}
     }
 		return moversData;
 	})
