@@ -68,7 +68,7 @@ class Movers extends Component {
   }
 
   async onClickByMover(isin) {
-    this.props.openBondInfo(isin, this.getLastDate())
+    this.props.openBondInfo(isin, this.props.dateToday)
   }
 
   render() {

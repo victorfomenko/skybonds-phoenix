@@ -110,13 +110,7 @@ class ScatterPlot extends Component {
     });
     // TODO open bond info on click
     this.chartDocument.on('bondDotClick', (isin) => {
-
-      let endDate = new Date();
-      endDate.setDate(endDate.getDate() - 3);
-
-       //this.props.summary.today not work
-
-      this.props.openBondInfo(isin, endDate);
+      this.props.openBondInfo(isin, this.props.dateToday);
     });
     // TODO highlight bond on hover
     // this.chartDocument.on('mouseEnter', () => {
