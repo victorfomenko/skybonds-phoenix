@@ -38,7 +38,7 @@ class BondPeersBox extends Component {
   render(){
     if(this.state.peersIsins.length > 0){
       return (
-        <div className={style.bondPeersBox}>
+        <div className={style.bondPeersBox} id="peers">
           <div className={style.bondPeersBox_title}>Peers</div>
           <div className={style.bondPeersDiagrams}>
             <div className={style.bondPeersDiagrams_timeseries}>
@@ -55,7 +55,11 @@ class BondPeersBox extends Component {
               <div className={style.bondPeersDiagrams_now}>Now
               </div>
               <div className={style.bondPeersScatterPlot}>
-                <BondPeersScatterPlot bond={this.props.bond} />
+                <BondPeersScatterPlot
+                parentBond={this.props.bond.parentBond}
+                selectedPeersIsins={this.props.bond.selectedPeersIsins}
+                peersBonds={this.props.bond.peersBonds}
+                showBenchmark={this.props.bond.showBenchmark} />
               </div>
             </div>
           </div>

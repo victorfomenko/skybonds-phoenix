@@ -7,4 +7,5 @@ export * from './movers';
 export * from './market';
 export * from './bond';
 export * from './reports';
+export * from './bondInfo';
 

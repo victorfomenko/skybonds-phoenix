@@ -5,6 +5,7 @@ import { isEqual } from 'lodash';
 import Header from '../../components/Header';
 import Layers from '../../components/Layers';
 import ScatterPlot from '../../components/ScatterPlot';
+import BondInfo from '../../components/BondInfo';
 import Movers from '../../components/Movers';
 import { Icon, GLYPHS } from '../../components/Icon';
 
@@ -115,6 +116,9 @@ class Market extends Component {
                     isins={this.state.reportIsins}
                     dateToday={this.state.dateToday}
                     onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
+                  <BondInfo
+                    date={'2017/02/17'}
+                  />
                 </div>
               </div>
             </div>
