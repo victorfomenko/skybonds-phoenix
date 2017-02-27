@@ -39,30 +39,19 @@ class Movers extends Component {
     }
   }
 
-  getLastDate() {
-    // TODO !!Client date can be wrong!!
-    // Better is get date from server
-    let endDate = new Date();
-    endDate.setDate(endDate.getDate() - 3);
-    return endDate;
-  }
-
   getPeriodRange(period) {
-    let endDate = this.getLastDate();
-    let startDate = this.getLastDate();
+    let endDate = new Date(this.props.dateToday);
+    let startDate = new Date(this.props.dateToday);
+    let diff;
     switch(period) {
-      case '7D':
-        startDate.setDate(startDate.getDate() - 7); break;
-      case '14D':
-        startDate.setDate(startDate.getDate() - 14); break;
-      case 'M':
-        startDate.setDate(startDate.getDate() - 30); break;
-      case '3M':
-        startDate.setDate(startDate.getDate() - 90); break;
-      case 'D':
-        startDate.setDate(startDate.getDate() - 1); break;
+      case '3M': diff = 90; break;
+      case 'M': diff = 30; break;
+      case '14D': diff = 14; break;
+      case '7D': diff = 7; break;
+      case 'D': diff = 1; break;
+      default: diff = 1; break;
     }
-
+    startDate = new Date(startDate.setDate(startDate.getDate() - diff));
     return { startDate, endDate };
   }
 
