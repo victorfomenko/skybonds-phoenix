@@ -74,10 +74,7 @@ class BondInfo extends Component {
               </div>
             </div>
           }
-          {
-            (( this.bond == null || this.bond.loading )) &&
-            <LoadingCover />
-          }
+          <LoadingCover isLoading={ this.bond == null || this.bond.loading } />
         </div>
     </div>
     )
