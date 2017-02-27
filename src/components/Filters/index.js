@@ -210,6 +210,7 @@ class Filters extends Component {
 
 Filters.propTypes = {
   layer: React.PropTypes.object.isRequired,
+  activeLayerId: React.PropTypes.string.isRequired,
   layerFilterBonds: React.PropTypes.func.isRequired,
   changeLayersBonds: React.PropTypes.func.isRequired
 };

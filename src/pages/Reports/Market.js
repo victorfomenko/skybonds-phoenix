@@ -48,7 +48,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    this.props.loadReports(this.state.reportID);
+    this.props.loadReports(this.state.reportID, this.state.date);
   }
 
   onActiveIsinChange(isin) {
