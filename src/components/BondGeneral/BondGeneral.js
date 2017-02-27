@@ -169,7 +169,9 @@ class BondGeneral extends Component {
   }
 
   getCleanWebLink(link) {
-    return link.replace(/https?\:\/\/|\/$/ig, '')
+    if (link != null) {
+      return link.replace(/https?\:\/\/|\/$/ig, '')
+    }
   }
 
   render(){

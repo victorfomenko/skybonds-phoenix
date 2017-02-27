@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Promise from 'rsvp';
+import { connect } from 'react-redux';
 import * as DataProvider from '../../data/providers/Data';
 import * as PortfolioProvider from '../../data/providers/Portfolio';
 import Picker from '../Picker';
 import ChartZoom from '../ChartZoom';
 import { Chart, ChartDocument, ChartPlugins } from '@skybonds/ui-component-chart';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
+import { openBondInfo } from '../../actions';
 import styles from './styles.sass';
 
 const DEFAULT_CONFIG = {
@@ -108,7 +110,7 @@ class ScatterPlot extends Component {
     });
     // TODO open bond info on click
     this.chartDocument.on('bondDotClick', (isin) => {
-      // console.log('click', isin);
+      this.props.openBondInfo(isin, this.props.dateToday);
     });
     // TODO highlight bond on hover
     // this.chartDocument.on('mouseEnter', () => {
@@ -245,7 +247,9 @@ class ScatterPlot extends Component {
 }
 
 ScatterPlot.propTypes = {
-  onActiveIsinChange: React.PropTypes.func.isRequired
+  onActiveIsinChange: React.PropTypes.func.isRequired,
+  openBondInfo: React.PropTypes.func.isRequired
 };
 
-export default ScatterPlot;
+const mapStateToProps = state => ({ summary: state.summary });
+export default connect(mapStateToProps, { openBondInfo })(ScatterPlot);

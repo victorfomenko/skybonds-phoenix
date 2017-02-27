@@ -51,3 +51,7 @@ export const TOGGLE_PEER = 'TOGGLE_PEER';
 export const ADD_PEER_TO_CHART = 'ADD_PEER_TO_CHART';
 export const REMOVE_PEER_FROM_CHART = 'REMOVE_PEER_FROM_CHART';
 export const TOGGLE_BENCHMARK = 'TOGGLE_BENCHMARK';
+
+//Bond Info
+export const OPEN_BOND_INFO = 'OPEN_BOND_INFO';
+export const CLOSE_BOND_INFO = 'CLOSE_BOND_INFO';

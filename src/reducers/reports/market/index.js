@@ -5,6 +5,7 @@ import { getEmptyMarketReport } from '../../../data/helpers/defaultStructures';
 
 import layers from './layers';
 import movers from './movers';
+import bondInfo from './bondInfo';
 
 const initState = getEmptyMarketReport();
 
@@ -52,7 +53,8 @@ const market = (state = initState, action) => {
         ...state,
         ...report,
         layers: layers(report.layers, action),
-        movers: movers(state.movers, action)
+        movers: movers(state.movers, action),
+        bondInfo: bondInfo(state.bondInfo, action)
       };
       break;
 
@@ -75,7 +77,8 @@ const market = (state = initState, action) => {
       return {
         ...state,
         layers: layers(state.layers, action),
-        movers: movers(state.movers, action)
+        movers: movers(state.movers, action),
+        bondInfo: bondInfo(state.bondInfo, action)
       }
   }
 };
