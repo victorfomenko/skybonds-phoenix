@@ -17,7 +17,7 @@ export const store = ( async ()=> {
 
   [user, summary] = await Promise.all([
     Auth.loginWithToken(),
-    Data.getSummary()
+    Data.getSummary().catch(e=> { return {} })
   ])
     .catch((e)=>{
       console.warn(e);

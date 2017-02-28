@@ -1,6 +1,8 @@
 import * as SpacesApi from '../clients/SpacesApi';
 import SpaceCaster from '../casters/SpaceCaster';
+import PromiseQueue from '../helpers/PromiseQueue';
 
+const queue = new PromiseQueue();
 
 export const getList = () => {
   return SpacesApi.getList()
@@ -39,5 +41,9 @@ export const add = (report) => {
 };
 
 export const remove = (spaceId) => {
-	return SpacesApi.remove(spaceId);
+  return SpacesApi.remove(spaceId);
+};
+
+export const update = (report, date) => {
+  return SpacesApi.update(report, date)
 };

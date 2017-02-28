@@ -26,6 +26,8 @@ export const REPORT_ADD = 'REPORT_ADD';
 export const REPORT_RENAME = 'REPORT_RENAME';
 export const REPORT_DELETE = 'REPORT_DELETE';
 export const REPORT_SELECT = 'REPORT_SELECT';
+export const REPORT_UPDATE_SUCCESS = 'REPORT_UPDATE_SUCCESS';
+export const REPORT_UPDATE_FAILURE = 'REPORT_UPDATE_FAILURE';
 
 //Layers
 export const ADD_SET = 'ADD_SET';

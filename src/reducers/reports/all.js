@@ -59,6 +59,34 @@ const all = (state = initState, action) => {
         reportsById: omit(state.reportsById, action.id)
       }
 
+    case actionTypes.REPORT_RENAME:
+      return {
+        ...state,
+        reportsById: {
+          ...state.reportsById,
+          [action.id]: {
+            ...state.reportsById[action.id],
+            version: action.version,
+            ui: {
+              ...state.reportsById[action.id].ui,
+              spaceName: action.name
+            }
+          }
+        }
+      }
+
+    case actionTypes.REPORT_UPDATE_SUCCESS:
+      return {
+        ...state,
+        reportsById: {
+          ...state.reportsById,
+          [action.id]: {
+            ...state.reportsById[action.id],
+            version: action.version
+          }
+        }
+      }
+
     default:
       return state;
   }

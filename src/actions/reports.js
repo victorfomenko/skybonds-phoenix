@@ -26,6 +26,19 @@ export const selectReport = (id) => (dispatch, getState) => {
   dispatch({type: actionTypes.MARKET_REPORT_UPDATE, report});
 }
 
+export const renameReport = (id, name) => async (dispatch, getState) => {
+  // update report
+  try {
+    const state = getState();
+    const { version, orderVersion } = await SpacesProvider.update(state.reports.all.reportsById[id], state.summary.today);
+    dispatch({ type: actionTypes.REPORT_RENAME, id, name, version });
+    dispatch({ type: actionTypes.REPORTS_UPDATE_ORDER_VERSION, orderVersion });
+  } catch(error) {
+    console.warn(error);
+    dispatch({ type: actionTypes.REPORT_UPDATE_FAILURE, data: error });
+  }
+}
+
 export const removeReport = (id) => async (dispatch, getState) => {
   let state = getState();
   const activeReportId = state.reports.market.id;

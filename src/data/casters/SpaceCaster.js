@@ -1,9 +1,11 @@
 import { getEmptyLayer } from '../helpers/defaultStructures';
+import DateDayCaster from './DateDayCaster';
 
 export default {
 
-  format:  (value)=> {
-    const { layers, UILayers } = formatLayers(value.layers.ids, value.layers.layersById)
+  format:  (value, date)=> {
+    if(!date){ console.warn('date is not defined'); return }
+    const { layers, UILayers } = formatLayers(value.layers.ids, value.layers.layersById, date)
     return {
       id: value.id,
       version: value.version,
@@ -26,7 +28,7 @@ export default {
     }
   },
 
-  cast:  (value)=> {
+  cast: (value)=> {
     const { ids, layersById } = castLayers(value.source.layers || [], value.ui.extensions.web.layers || [], value.ui.extensions.web.activeLayerId)
     return {
       id: value.id,
@@ -49,12 +51,12 @@ export default {
   }
 };
 
-const formatLayers = (ids, layersById) => {
+const formatLayers = (ids, layersById, date) => {
   let layers = [];
   let UILayers = [];
 
   ids.forEach(id => {
-    const layer = formatLayer(layersById[id], id);
+    const layer = formatLayer(layersById[id], id, date);
     const UILayer = formatUILayer(layersById[id], id);
     layers.push(layer);
     UILayers.push(UILayer);
@@ -64,14 +66,81 @@ const formatLayers = (ids, layersById) => {
 }
 
 
-const formatLayer = (value, id) => {
-  console.log(value)
-  return {
+const formatLayer = (value, id, date) => {
+  let layer = {
     id,
-    method: value.source.method,
-    //functions:
+    method: value.source.method
   }
+  if(value.source.method === 'set') {
+    layer.functions = []
+
+    if(value.source.filters != null) {
+      const filtersArgs = formatReportLayerFilters(value.source.filters, date)
+      if(filtersArgs.filters.length){
+        layer.functions.push({
+          name: 'filters',
+          args: filtersArgs
+        })
+      }
+    }
+    if(value.source.search != null && value.source.search.query){
+      layer.functions.push({
+        name: 'search',
+        args: {
+          query: value.source.search.query,
+          type: 'custom'
+        }
+      })
+    }
+    if(value.source.search != null && value.source.search.peersFor){
+      layer.functions.push({
+        name: 'peersFor',
+        args: value.source.search.peersFor
+      })
+    }
+    if(value.source.include != null){
+      layer.functions.push({
+        name: 'include',
+        args: value.source.include
+      })
+    }
+    if(value.source.exclude != null){
+      layer.functions.push({
+        name: 'exclude',
+        args: value.source.exclude
+      })
+    }
+  }
+
+  return layer
 }
+
+const formatReportLayerFilters = (filters, date) => {
+  let newFilters = [];
+  let response = {};
+  date = DateDayCaster.format(date);
+  for(let name in filters) {
+    let value = filters[name];
+    if( name === 'liquidity' ||
+        name === 'yield' ||
+        name === 'duration' ||
+        name === 'discount' ||
+        name === 'price' ||
+        name === 'spread' ||
+        name === 'maturity') {
+      if(name === 'discount') { name = 'haircut'}
+      if(name === 'spread') { name = 'spreadToBMK'}
+      if(name === 'maturity') { name = 'yearsToPutCallMaturity'}
+
+      response['date'] = date
+      value = value.map(item => { return String(item)})
+    }
+    newFilters.push({ name, value })
+  }
+  response['filters'] = newFilters
+  return response
+}
+
 
 const formatUILayer = (value, id) => {
   return {
