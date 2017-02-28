@@ -6,6 +6,7 @@ import BondInfoChart from './BondInfoChart';
 import BondInfoCalculator from './BondInfoCalculator';
 import BondInfoPeers from './BondInfoPeers';
 import BondInfoContent from './BondInfoContent';
+import BondInfoBidAsk from './BondInfoBidAsk';
 import LoadingCover from '../LoadingCover';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
@@ -83,6 +84,7 @@ class BondInfo extends Component {
               <BondInfoChart bond={this.state.bond}/>
               <BondInfoCalculator bond={this.state.bond} date={this.props.date}/>
               <BondInfoPeers bond={this.state.bond}/>
+              <BondInfoBidAsk bond={this.state.bond}/>
               <BondInfoContent bond={this.state.bond}/>
 
               <div className={styles.reportAsideBondContent_section}>
