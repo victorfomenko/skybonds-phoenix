@@ -1,0 +1,85 @@
+@import '~@skybonds/ui-styles/vars'
+
+.reportAsideBondPeers
+  display: block
+  position: relative
+
+.reportAsideBondPeers
+  margin: 20px 0
+  min-height: 94px
+  &.__empty
+    min-height: 0
+
+.reportAsideBondPeers_table
+  table-layout: fixed
+  width: 100%
+
+.reportAsideBondPeers_thead
+  .reportAsideBondPeers_row
+    border-bottom: 1px solid $colorBorder
+
+.reportAsideBondPeers_cell
+  padding: 3px 0 3px 1em
+  vertical-align: baseline
+  &:first-child
+    padding-left: 0
+  &.__number
+    text-align: right
+  &.__name
+    width: 27%
+  &.__yield
+    width: 11%
+  &.__price
+    width: 12%
+  &.__duration
+    width: 12%
+  &.__industry
+    width: 15%
+  &.__rating
+    width: 10%
+  &.__country
+    width: 13%
+
+.reportAsideBondPeers_thead
+  .reportAsideBondPeers_cell
+    font-size: 10px
+    font-weight: normal
+    color: $colorMuted
+    white-space: nowrap
+    &:first-child
+      font-size: 12px
+      color: $colorText
+    &.__name
+      font-weight: bold
+
+.reportAsideBondPeers_tbody
+  .reportAsideBondPeers_cell
+    font-size: 10px
+    &:first-child
+      font-size: 12px
+    &.__text
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+    &.__number
+      font-size: 12px
+    &:empty:before
+      content: "—"
+      color: $colorMuted
+
+.reportAsideBondPeers_unit
+  display: inline-block
+  padding: 0 0 0 .15em
+  color: $colorMuted
+  font-weight: normal
+  font-size: 9px
+
+.reportAsideBondPeers_empty
+  font-weight: bold
+
+.reportAsideBondPeers_link
+  &.__na
+    cursor: not-allowed
+
+.reportAsideBondPeers_more
+  margin-top: 6px

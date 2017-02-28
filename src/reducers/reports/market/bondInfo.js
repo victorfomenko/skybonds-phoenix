@@ -21,6 +21,12 @@ const bondInfo = (state = initialState, action) => {
         loading: true
       };
 
+    case actionTypes.GET_PEERS_DATA:
+      return {
+        ...state,
+        peersBonds: action.peersBonds
+      }
+
     case actionTypes.GET_BOND_INFO:
       return {
         ...state,
