@@ -4,7 +4,6 @@ import DateDayCaster from './DateDayCaster';
 export default {
 
   format:  (value, date)=> {
-    if(!date){ console.warn('date is not defined'); return }
     const { layers, UILayers } = formatLayers(value.layers.ids, value.layers.layersById, date)
     return {
       id: value.id,
@@ -116,9 +115,10 @@ const formatLayer = (value, id, date) => {
 }
 
 const formatReportLayerFilters = (filters, date) => {
+
   let newFilters = [];
   let response = {};
-  date = DateDayCaster.format(date);
+  if(date) { date = DateDayCaster.format(date); }
   for(let name in filters) {
     let value = filters[name];
     if( name === 'liquidity' ||

@@ -8,5 +8,5 @@ class PromiseQueue {
     return this.queue;
   }
 }
-//
+
 export default PromiseQueue
