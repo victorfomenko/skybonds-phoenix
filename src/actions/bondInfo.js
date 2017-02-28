@@ -19,8 +19,8 @@ export const openBondInfo = (isin, date) => async (dispatch, getState) => {
 
 export const getBondInfo = (isin, date) => async (dispatch, getState) => {
   try {
-    let dailyAttrs = ['coupon', 'spreadToBMK'];
-    let infoAttrs = ['isin', 'standardName', 'maturityDate', 'issuerId', 'issuer', 'sector', 'outlook', 'ratingGroup'];
+    let dailyAttrs = ['coupon', 'spreadToBMK', 'yearsToPutCallMaturity', 'duration', 'price', 'yield', 'rollDown', 'tr'];
+    let infoAttrs = ['isin', 'standardName', 'maturityDate', 'issuerId', 'issuer', 'sector', 'outlook', 'ratingGroup', 'isFloater', 'floatingRateFormula', 'ccy'];
 
     let info = await DataProvider.getBondsInfo([isin], infoAttrs);
     let daily = await DataProvider.getBondsDaily([isin], date, dailyAttrs);

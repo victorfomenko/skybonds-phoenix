@@ -3,6 +3,7 @@ import { getColor } from '../../helpers/BondRating';
 import { connect } from 'react-redux';
 import BondInfoHeader from './BondInfoHeader';
 import BondInfoChart from './BondInfoChart';
+import BondInfoCalculator from './BondInfoCalculator';
 import LoadingCover from '../LoadingCover';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
@@ -59,7 +60,7 @@ class BondInfo extends Component {
         <div className={styles.reportAsideBond}>
           <span className={styles.reportAsideBond_link + ' ' + styles.reportAsideBond_close}
                 onClick={ () => this.onClickClose()}>
-          <Icon glyph={GLYPHS.CLOSE}
+            <Icon glyph={GLYPHS.CLOSE}
                 width="30" height="30" />
           </span>
           { (this.bond && this.bond.info ) &&
@@ -71,6 +72,7 @@ class BondInfo extends Component {
             <div className={styles.reportAsideBondContent}>
               <div className={styles.reportAsideBondContent_wrap}>
                 <BondInfoChart bond={this.bond}/>
+                <BondInfoCalculator bond={this.bond} date={this.props.date}/>
               </div>
             </div>
           }
