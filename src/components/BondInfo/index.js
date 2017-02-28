@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import BondInfoHeader from './BondInfoHeader';
 import BondInfoChart from './BondInfoChart';
 import BondInfoCalculator from './BondInfoCalculator';
+import BondInfoPeers from './BondInfoPeers';
 import LoadingCover from '../LoadingCover';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
@@ -73,6 +74,7 @@ class BondInfo extends Component {
               <div className={styles.reportAsideBondContent_wrap}>
                 <BondInfoChart bond={this.bond}/>
                 <BondInfoCalculator bond={this.bond} date={this.props.date}/>
+                <BondInfoPeers bond={this.bond}/>
               </div>
             </div>
           }

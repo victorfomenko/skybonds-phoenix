@@ -334,5 +334,9 @@ class BondInfoCalculator extends Component {
 
 };
 
+BondInfoCalculator.propTypes = {
+  bond: React.PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => ({ user: state.user });
 export default connect(mapStateToProps)(BondInfoCalculator);

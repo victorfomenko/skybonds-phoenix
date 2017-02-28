@@ -49,7 +49,6 @@ class BondPeersTable extends Component {
   }
 
   getPeersBonds() {
-    const colorGenerator = d3.scale.category10();
     let limitedPeersIsins = this.props.peersIsins.slice(0, this.peersPerPage + this.peersPerPage * this._peersPage);
     this.props.getPeersData(limitedPeersIsins, this.props.date);
   }
