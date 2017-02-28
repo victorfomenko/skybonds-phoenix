@@ -1,5 +1,7 @@
 import { actionTypes } from './actionTypes';
 import * as DataProvider from '../data/providers/Data';
+import * as SearchProvider from '../data/providers/Search';
+import { omitBy } from 'lodash';
 
 
 export const addSet = () => (dispatch, getState) => {
@@ -68,3 +70,42 @@ export const changeLayersBonds = (id, isins, date) => async (dispatch) => {
     bonds: layerBonds
   });
 };
+
+export const initLayers = () => async (dispatch, getState) => {
+  const state = getState();
+  const date = state.summary.today;
+  const report = state.reports.market;
+  preformLayers(report, date, dispatch);
+};
+
+const preformLayers = async (report, date, dispatch) => {
+  let setsToPreform = omitBy(report.layers.layersById, layer => {
+    return layer.source.method !== 'set'
+  });
+  let promises = [];
+
+  for(const key in setsToPreform) {
+    dispatch({type: actionTypes.LAYER_AUTO_NAME_UPDATE, id: key });
+    const layerSet = setsToPreform[key];
+    const id = key;
+
+    if(Object.keys(layerSet.source.filters).length !== 0 ) {
+      const filters = {
+        filters: layerSet.source.filters,
+        date: date
+      }
+      let { result, stats } = await DataProvider.filtersApply(filters, true);
+      dispatch({ type: actionTypes.LAYER_FILTERS_ISINS_CHANGE, id, isins: result, stats: stats });
+    }
+    if(layerSet.source.search.query.length >= 3) {
+      const query = layerSet.source.search.query
+      let searchBonds = await SearchProvider.searchBonds(query, date);
+      let isins = searchBonds.map((bond)=>{return bond.isin});
+
+      dispatch({ type: actionTypes.LAYER_SEARCH_ISINS_CHANGE, id, isins });
+    }
+
+    dispatch({ type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE, id });
+    dispatch({ type: actionTypes.ALL_LAYERS_ISINS_UPDATE });
+    }
+}

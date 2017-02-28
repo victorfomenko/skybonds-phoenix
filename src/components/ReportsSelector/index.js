@@ -37,7 +37,8 @@ class ReportsSelector extends Component {
   onSelectReport(id){
     if (id !== this.state.activeReportId){
       this.props.push(`/reports/market/${id}`)
-      this.props.selectReport(id);
+      window.location.reload();
+      // this.props.selectReport(id);
     }
   }
 

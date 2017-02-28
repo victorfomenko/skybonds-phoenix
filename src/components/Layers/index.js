@@ -10,6 +10,7 @@ import layersStyle from './styles.sass';
 import {
   addSet,
   addSpread,
+  initLayers,
   removeLayer,
   activateLayer,
   renameLayer,
@@ -23,8 +24,19 @@ class Layers extends Component {
     this.state = {'loaded': false};
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   console.log(nextProps.data.allLayersIsins.length == 0)
+  //   // if(nextProps.data.allLayersIsins.length == 0) {
+  //   //   this.props.initLayers();
+  //   // }
+  // }
+
   componentDidMount() {
     this.setState({'loaded': true});
+  }
+
+  componentWillMount() {
+    this.props.initLayers();
   }
 
   onNewSet() {
@@ -116,7 +128,11 @@ Layers.propTypes = {
   changeLayerViewMode: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ layers: state.reports.market.layers, activeLayerId: state.reports.market.activeLayerId });
+const mapStateToProps = state => ({
+  layers: state.reports.market.layers,
+  data: state.reports.market.data,
+  activeLayerId: state.reports.market.activeLayerId
+});
 export default connect(mapStateToProps, {
-    addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerViewMode
+    addSet, addSpread, removeLayer, activateLayer, renameLayer, changeLayerViewMode, initLayers
   })(Layers);
