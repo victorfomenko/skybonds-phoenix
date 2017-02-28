@@ -124,13 +124,21 @@ class BondInfoCalculator extends Component {
   };
 
   _getPortfolioData() {
-    if (this.bondDailyPortfolio == null) {return}
+    if (this.bondDailyPortfolio != null) {
     return {
       mtr: this.bondDailyPortfolio.mtr,
       mtrFromTr: this.bondDailyPortfolio.mtrFromTr,
       roe: this.bondDailyPortfolio.roe*100,
       roeFromTr:  this.bondDailyPortfolio.roeFromTr*100
-    };
+    }
+    } else {
+      return {
+        mtr: null,
+        mtrFromTr: null,
+        roe: null,
+        roeFromTr: null
+      }
+    }
   }
 
   async _refreshCalculator() {
@@ -163,6 +171,7 @@ class BondInfoCalculator extends Component {
   }
 
   _calculatePortfolioData(yieldValue) {
+    if (this.bondDailyPortfolio == null) { return {} }
     let fundingCost = this.bondDailyPortfolio.fundingCost*100;
     let equityPart = this.bondDailyPortfolio.equityPart;
     let depositPart = this.bondDailyPortfolio.depositPart;
