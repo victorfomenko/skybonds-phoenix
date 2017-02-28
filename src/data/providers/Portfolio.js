@@ -7,3 +7,7 @@ export const getIsinsByDate = async (date) => {
 		return item.isin;
 	})
 };
+
+export const getDailyData = async (isins, date, attrs) => {
+  return PortfolioApi.getDailyData(isins, date, attrs);
+};

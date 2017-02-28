@@ -12,6 +12,9 @@
   background-color: $colorWhite
   border: 1px solid $colorBorder
   border-radius: 3px
+
+  overflow: scroll
+
   @include dropdownShadow
   transition: transform 200ms ease-out
   will-change: transform
@@ -138,3 +141,14 @@
     color: $colorLimit0-20
     fill: $colorLimit0-20
     stroke: $colorLimit0-20
+
+.reportAsideBond_link
+  color: $colorLink
+  border-bottom: 1px solid transparentize($colorLink,0.75)
+  text-decoration: none
+  cursor: pointer
+  &:hover
+    color: $colorLoudHover
+
+.reportAsideBondContent_item
+  padding: 3px 0 3px
