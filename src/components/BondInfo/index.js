@@ -5,6 +5,7 @@ import BondInfoHeader from './BondInfoHeader';
 import BondInfoChart from './BondInfoChart';
 import BondInfoCalculator from './BondInfoCalculator';
 import BondInfoPeers from './BondInfoPeers';
+import BondInfoContent from './BondInfoContent';
 import LoadingCover from '../LoadingCover';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
@@ -82,6 +83,39 @@ class BondInfo extends Component {
               <BondInfoChart bond={this.state.bond}/>
               <BondInfoCalculator bond={this.state.bond} date={this.props.date}/>
               <BondInfoPeers bond={this.state.bond}/>
+              <BondInfoContent bond={this.state.bond}/>
+
+              <div className={styles.reportAsideBondContent_section}>
+                <ul className={styles.reportAsideBondContent_list}>
+                  { this.state.bond.info.issuerWebsite != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a href={ this.state.bond.info.issuerWebsite } target="_blank" className={styles.reportAsideBond_link}>Issuer's
+                      homepage</a>
+                  </li>
+                  }
+                  { this.state.bond.info.linkCbondsIssue != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a href={ this.state.bond.info.linkCbondsIssue } className={styles.reportAsideBond_link} target="_blank">Issuer on
+                      Cbonds</a>
+                  </li>
+                  }
+                  { this.state.bond.info.linkCbondsTS != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a href={ this.state.bond.info.linkCbondsTS } className={styles.reportAsideBond_link} target="_blank">TS on Cbonds</a>
+                  </li>
+                  }
+                  { this.state.bond.info.link139 != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a title={ this.state.bond.info.link139 } className={styles.reportAsideBond_link + ' ' + styles.reportAsideBondContent_tooltip} target="_blank">139-I instruction</a>
+                  </li>
+                  }
+                  { this.state.bond.info.quoteType != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    {this.state.bond.info.quoteType}
+                  </li>
+                  }
+                </ul>
+              </div>
             </div>
           </div>
           }
