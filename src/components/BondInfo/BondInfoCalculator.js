@@ -6,7 +6,7 @@ import * as PortfolioData from '../../data/providers/Portfolio';
 import * as Data from '../../data/providers/Data';
 import { Icon, GLYPHS } from '../../components/Icon';
 import DateDayCaster from '../../data/casters/DateDayCaster';
-import styles from './bondInfoCalculator.sass';
+import styles from './_bondInfoCalculator.sass';
 
 
 class BondInfoCalculator extends Component {
