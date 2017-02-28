@@ -51,7 +51,7 @@ class BondInfoBidAsk extends Component {
 
   _prepareData(marketData) {
     marketData.sort(function(first, second) {
-      return (new Date(first.timestamp).getTime()) < (new Date(second.timestamp).getTime());
+      return (new Date(second.timestamp).getTime()) - (new Date(first.timestamp).getTime());
     });
 
     let _quotes = getQuotes(marketData, this.principal, this.currencyRate, this.type);
@@ -67,12 +67,6 @@ class BondInfoBidAsk extends Component {
     let priceBidMax = this.priceBidMax;
     let priceAskMin = this.priceAskMin;
     let timestamp = this.timestamp;
-
-    console.log('quotes', quotes);
-    console.log('this.state', this.state);
-    console.log('priceBidMax', priceBidMax);
-    console.log('priceAskMin', priceAskMin);
-    console.log('timestamp', timestamp);
 
     let valueDecimal = null;
     if (this.type == 'full' ) {

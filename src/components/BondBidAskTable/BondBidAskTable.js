@@ -49,10 +49,11 @@ class BondBidAskTable extends Component {
   }
 
   _prepareData(marketData) {
-
     marketData.sort(function(first, second) {
-      return (new Date(first.timestamp).getTime()) < (new Date(second.timestamp).getTime());
+      return (new Date(second.timestamp).getTime()) - (new Date(first.timestamp).getTime());
     });
+
+    console.log('marketData 2', marketData);
 
     let _quotes = getQuotes(marketData, this.principal, this.currencyRate, this.type);
     this.quotes = _quotes;
