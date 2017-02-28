@@ -15,24 +15,31 @@ import styles from './styles.sass';
 class BondInfo extends Component {
   constructor(props) {
     super(props);
-    this.bond = null;
+    this.state = {
+      bond: null
+    };
     this.onClickClose = this.onClickClose.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.bond = nextProps.bondInfo;
+    let bondInfo = nextProps.bondInfo;
     let putDate = this.getPutCallDate(nextProps.bondInfo.putDates);
     if (putDate != null){
       putDate = DateDayCaster.cast(putDate)
     }
-    this.bond.putDate = putDate;
+    bondInfo.putDate = putDate;
+
+    this.setState({
+      bond: bondInfo
+    });
+
   }
 
   componentWillUpdate(nextProps) {
-    if (this.bond.loading && this.props.bondInfo.isin != nextProps.bondInfo.isin ) {
-      this.props.getBondInfo(this.bond.isin, this.bond.date)
+    if (this.props.bondInfo.isin != nextProps.bondInfo.isin ) {
+      this.props.getBondInfo(nextProps.bondInfo.isin, nextProps.bondInfo.date)
     }
-  };
+  }
 
   getPutCallDate(dates) {
     if (dates == null || dates.length == 0) {
@@ -41,7 +48,7 @@ class BondInfo extends Component {
 
     let date =  dates.find((function (_this) {
       return function (date) {
-        return DateDayCaster.cast(date) > _this.bond.date
+        return DateDayCaster.cast(date) > _this.state.bond.date
       };
     })(this));
 
@@ -57,36 +64,36 @@ class BondInfo extends Component {
 
   render(){
     return (
-    <div className={styles.reportAsideBondGeneral + ' ' + ( ( this.bond != null && this.bond.show) ? styles.__active : '')}>
+      <div className={styles.reportAsideBondGeneral + ' ' + ( ( this.state.bond != null && this.state.bond.show) ? styles.__active : '')}>
         <div className={styles.reportAsideBond}>
           <span className={styles.reportAsideBond_link + ' ' + styles.reportAsideBond_close}
                 onClick={ () => this.onClickClose()}>
             <Icon glyph={GLYPHS.CLOSE}
-                width="30" height="30" />
+                  width="30" height="30" />
           </span>
-          { (this.bond && this.bond.info ) &&
+          { (this.state.bond && this.state.bond.info ) &&
           <BondInfoHeader
-            bond={this.bond}
+            bond={this.state.bond}
           />
           }
-          { ( ( this.bond && this.bond.daily) != null) &&
-            <div className={styles.reportAsideBondContent}>
-              <div className={styles.reportAsideBondContent_wrap}>
-                <BondInfoChart bond={this.bond}/>
-                <BondInfoCalculator bond={this.bond} date={this.props.date}/>
-                <BondInfoPeers bond={this.bond}/>
-              </div>
+          { ( ( this.state.bond && this.state.bond.daily) != null) &&
+          <div className={styles.reportAsideBondContent}>
+            <div className={styles.reportAsideBondContent_wrap}>
+              <BondInfoChart bond={this.state.bond}/>
+              <BondInfoCalculator bond={this.state.bond} date={this.props.date}/>
+              <BondInfoPeers bond={this.state.bond}/>
             </div>
+          </div>
           }
-          <LoadingCover isLoading={ this.bond == null || this.bond.loading } />
+          <LoadingCover isLoading={ this.state.bond == null || this.state.bond.loading } />
         </div>
-    </div>
+      </div>
     )
   }
 }
 
 BondInfo.propTypes = {
-  date: React.PropTypes.string.isRequired,
+  date: React.PropTypes.object.isRequired,
   closeBondInfo: React.PropTypes.func.isRequired
 };
 
