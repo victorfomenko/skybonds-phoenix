@@ -12,7 +12,7 @@ import { Icon, GLYPHS } from '../../components/Icon';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import { MARKET_REPORT_VIEW_MODES } from '../../data/constants';
 import { getSpaces } from '../../data/providers/Spaces';
-import { loadReports } from '../../actions';
+import { prepareMarketReports } from '../../actions';
 
 import styles from './styles.sass';
 
@@ -56,7 +56,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    this.props.loadReports(this.state.reportID, this.state.date);
+    this.props.prepareMarketReports(this.state.reportID);
   }
 
   onActiveIsinChange(isin) {
@@ -82,7 +82,6 @@ class Market extends Component {
     const { market } = this.state;
     return (
       <div className='skybondsWrap'>
-        <Header firstName={this.props.user.firstName} lastName={this.props.user.lastName} />
         { market ?
           <div className={styles.reportWrap}>
             <div className={styles.reportHeader}>
@@ -132,9 +131,16 @@ class Market extends Component {
 
 Market.propTypes = {
   user: React.PropTypes.shape({}).isRequired,
+  allReports: React.PropTypes.object.isRequired,
   market: React.PropTypes.object.isRequired,
-  loadReports: React.PropTypes.func.isRequired
+  prepareMarketReports: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({ user: state.user, summary: state.summary, market: state.reports.market });
-export default connect(mapStateToProps, { loadReports })(Market);
+const mapStateToProps = state => ({
+  user: state.user,
+  summary: state.summary,
+  market: state.reports.market,
+  allReports: state.reports.all
+});
+
+export default connect(mapStateToProps, { prepareMarketReports })(Market);

@@ -2,29 +2,29 @@ import { actionTypes } from './actionTypes';
 import * as SpacesProvider from '../data/providers/Spaces';
 import { getEmptyMarketReport } from '../data/helpers';
 
-export const loadReports = (reportID, date) => async (dispatch) => {
+import { mapValues, omitBy } from 'lodash';
 
-  dispatch({ type: actionTypes.MARKET_REPORTS_FETCH_REQUEST });
+export const prepareMarketReports = (reportID) => async (dispatch, getState) => {
+  const state = getState();
+  const date = state.summary.today;
+  const allReports = state.reports.all;
+  let report = {};
 
-  try {
-    let { orderVersion, spaces } = await SpacesProvider.getList();
-    let ids = spaces.map(item => { return item.id });
-    dispatch({type: actionTypes.REPORTS_UPDATE_ORDER_VERSION, orderVersion});
+  const marketReportsIds = allReports.ids.filter(id => {
+    return allReports.reportsById[id].ui.type === 'market'
+  })
 
-    let reports = await SpacesProvider.getMarketSpacesByIds(ids);
-
-    if(reports.length === 0) {
-      let { id, orderVersion } = await addDefaultMarketSpace(date);
-      dispatch({type: actionTypes.REPORTS_UPDATE_ORDER_VERSION, orderVersion});
-      reports = await SpacesProvider.getSpaceById(id).then(space => {return [space] })
-    }
-    console.log(reports, reportID)
-    dispatch({type: actionTypes.MARKET_REPORTS_FETCH_SUCCESS, reports, reportID});
+  if(!marketReportsIds.length) {
+    let { id, orderVersion } = await addDefaultMarketSpace();
+    report = await SpacesProvider.getSpaceById(id);
+    dispatch({type: actionTypes.REPORT_ADD, report});
   }
-  catch(error) {
-  	console.log('catch', error)
-    dispatch({ type: actionTypes.MARKET_REPORTS_FETCH_FAILED, data: error });
+  else {
+    const lastReportId = marketReportsIds[marketReportsIds.length-1];
+    report = allReports.reportsById[reportID] ? allReports.reportsById[reportID] : allReports.reportsById[lastReportId]
   }
+  dispatch({type: actionTypes.MARKET_REPORT_UPDATE, report});
+
 };
 
 const addDefaultMarketSpace = (date) => {

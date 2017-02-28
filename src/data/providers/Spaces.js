@@ -6,6 +6,11 @@ export const getList = () => {
   return SpacesApi.getList()
 }
 
+export const getSpacesByIds = (ids) => {
+  if(!ids){console.warn('getSpacesByIds: ids is not defined.')}
+  return SpacesApi.getSpacesByIds(ids)
+}
+
 export const getMarketSpacesByIds = (ids) => {
   if(!ids){console.warn('getMarketSpacesByIds: ids is not defined.')}
   return SpacesApi.getSpacesByIds(ids)
@@ -30,5 +35,9 @@ export const getSpaceById = (spaceId) => {
 
 export const add = (report) => {
   const space = SpaceCaster.format(report);
-	return SpacesApi.add(space);
+  return SpacesApi.add(space);
+};
+
+export const remove = (spaceId) => {
+	return SpacesApi.remove(spaceId);
 };

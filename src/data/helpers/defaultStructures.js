@@ -308,3 +308,11 @@ export const getEmptyMarketReport = () => {
     }
   }
 }
+
+export const getEmptyReports = () => {
+  return {
+    ids: [],
+    reportsById: {},
+    orderVersion: ''
+  }
+}

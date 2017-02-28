@@ -55,7 +55,11 @@ class BondPeersBox extends Component {
               <div className={style.bondPeersDiagrams_now}>Now
               </div>
               <div className={style.bondPeersScatterPlot}>
-                <BondPeersScatterPlot bond={this.props.bond} />
+                <BondPeersScatterPlot
+                parentBond={this.props.bond.parentBond}
+                selectedPeersIsins={this.props.bond.selectedPeersIsins}
+                peersBonds={this.props.bond.peersBonds}
+                showBenchmark={this.props.bond.showBenchmark} />
               </div>
             </div>
           </div>
