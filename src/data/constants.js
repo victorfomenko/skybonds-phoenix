@@ -11,6 +11,6 @@ export const MARKET_REPORT_VIEW_MODES = {
 export const LAYER_SET_VIEW_MODES = {
   BONDS: 'bonds',
   CURVES: 'curves',
-  BONDS_AND_CURVES: 'bonds_and_curves',
+  BONDS_AND_CURVES: 'bondsAndCurves',
   HIDDEN: 'hidden'
 };

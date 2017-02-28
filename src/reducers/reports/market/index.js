@@ -59,6 +59,24 @@ const market = (state = initState, action) => {
         }
       };
 
+    case actionTypes.REPORT_UPDATE_SUCCESS:
+      return {
+        ...state,
+        version: action.version
+      };
+
+    case actionTypes.REPORT_RENAME:
+      if(state.id === action.id) {
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            spaceName: action.name
+          },
+          version: action.version
+        }
+      };
+
     default:
       return {
         ...state,

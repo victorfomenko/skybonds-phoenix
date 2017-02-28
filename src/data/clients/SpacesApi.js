@@ -59,12 +59,12 @@ export const remove = (spaceId) => {
 	});
 };
 
-export const update = (space={}) => {
+export const update = (space={}, date) => {
 	const USER_ID = getUserId();
 	if(!USER_ID) { return Promise.reject('spacesApi.update: USER_ID is undefined.') }
 	return requestProvider.post({
 		url: `${API_V1}/${USER_ID}/update`,
-		body: space
+		body: SpaceCaster.format(space, date)
 	});
 };
 
