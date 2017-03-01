@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import BondInfoHeader from './BondInfoHeader';
 import BondInfoChart from './BondInfoChart';
 import BondInfoCalculator from './BondInfoCalculator';
+import BondInfoPeers from './BondInfoPeers';
+import BondInfoContent from './BondInfoContent';
+import BondInfoBidAsk from './BondInfoBidAsk';
 import LoadingCover from '../LoadingCover';
 import DateDayCaster from '../../data/casters/DateDayCaster';
 import { getLabel } from '../../helpers/BondOutlook';
@@ -14,24 +17,31 @@ import styles from './styles.sass';
 class BondInfo extends Component {
   constructor(props) {
     super(props);
-    this.bond = null;
+    this.state = {
+      bond: null
+    };
     this.onClickClose = this.onClickClose.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.bond = nextProps.bondInfo;
+    let bondInfo = nextProps.bondInfo;
     let putDate = this.getPutCallDate(nextProps.bondInfo.putDates);
     if (putDate != null){
       putDate = DateDayCaster.cast(putDate)
     }
-    this.bond.putDate = putDate;
+    bondInfo.putDate = putDate;
+
+    this.setState({
+      bond: bondInfo
+    });
+
   }
 
   componentWillUpdate(nextProps) {
-    if (this.bond.loading && this.props.bondInfo.isin != nextProps.bondInfo.isin ) {
-      this.props.getBondInfo(this.bond.isin, this.bond.date)
+    if (this.props.bondInfo.isin != nextProps.bondInfo.isin ) {
+      this.props.getBondInfo(nextProps.bondInfo.isin, nextProps.bondInfo.date)
     }
-  };
+  }
 
   getPutCallDate(dates) {
     if (dates == null || dates.length == 0) {
@@ -40,7 +50,7 @@ class BondInfo extends Component {
 
     let date =  dates.find((function (_this) {
       return function (date) {
-        return DateDayCaster.cast(date) > _this.bond.date
+        return DateDayCaster.cast(date) > _this.state.bond.date
       };
     })(this));
 
@@ -56,35 +66,70 @@ class BondInfo extends Component {
 
   render(){
     return (
-    <div className={styles.reportAsideBondGeneral + ' ' + ( ( this.bond != null && this.bond.show) ? styles.__active : '')}>
+      <div className={styles.reportAsideBondGeneral + ' ' + ( ( this.state.bond != null && this.state.bond.show) ? styles.__active : '')}>
         <div className={styles.reportAsideBond}>
           <span className={styles.reportAsideBond_link + ' ' + styles.reportAsideBond_close}
                 onClick={ () => this.onClickClose()}>
             <Icon glyph={GLYPHS.CLOSE}
-                width="30" height="30" />
+                  width="30" height="30" />
           </span>
-          { (this.bond && this.bond.info ) &&
+          { (this.state.bond && this.state.bond.info ) &&
           <BondInfoHeader
-            bond={this.bond}
+            bond={this.state.bond}
           />
           }
-          { ( ( this.bond && this.bond.daily) != null) &&
-            <div className={styles.reportAsideBondContent}>
-              <div className={styles.reportAsideBondContent_wrap}>
-                <BondInfoChart bond={this.bond}/>
-                <BondInfoCalculator bond={this.bond} date={this.props.date}/>
+          { ( ( this.state.bond && this.state.bond.daily) != null) &&
+          <div className={styles.reportAsideBondContent}>
+            <div className={styles.reportAsideBondContent_wrap}>
+              <BondInfoChart bond={this.state.bond}/>
+              <BondInfoCalculator bond={this.state.bond} date={this.props.date}/>
+              <BondInfoPeers bond={this.state.bond}/>
+              <BondInfoBidAsk bond={this.state.bond}/>
+              <BondInfoContent bond={this.state.bond}/>
+
+              <div className={styles.reportAsideBondContent_section}>
+                <ul className={styles.reportAsideBondContent_list}>
+                  { this.state.bond.info.issuerWebsite != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a href={ this.state.bond.info.issuerWebsite } target="_blank" className={styles.reportAsideBond_link}>Issuer's
+                      homepage</a>
+                  </li>
+                  }
+                  { this.state.bond.info.linkCbondsIssue != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a href={ this.state.bond.info.linkCbondsIssue } className={styles.reportAsideBond_link} target="_blank">Issuer on
+                      Cbonds</a>
+                  </li>
+                  }
+                  { this.state.bond.info.linkCbondsTS != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a href={ this.state.bond.info.linkCbondsTS } className={styles.reportAsideBond_link} target="_blank">TS on Cbonds</a>
+                  </li>
+                  }
+                  { this.state.bond.info.link139 != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    <a title={ this.state.bond.info.link139 } className={styles.reportAsideBond_link + ' ' + styles.reportAsideBondContent_tooltip} target="_blank">139-I instruction</a>
+                  </li>
+                  }
+                  { this.state.bond.info.quoteType != null &&
+                  <li className={styles.reportAsideBondContent_item}>
+                    {this.state.bond.info.quoteType}
+                  </li>
+                  }
+                </ul>
               </div>
             </div>
+          </div>
           }
-          <LoadingCover isLoading={ this.bond == null || this.bond.loading } />
+          <LoadingCover isLoading={ this.state.bond == null || this.state.bond.loading } />
         </div>
-    </div>
+      </div>
     )
   }
 }
 
 BondInfo.propTypes = {
-  date: React.PropTypes.string.isRequired,
+  date: React.PropTypes.object.isRequired,
   closeBondInfo: React.PropTypes.func.isRequired
 };
 

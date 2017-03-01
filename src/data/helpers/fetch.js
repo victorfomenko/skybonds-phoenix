@@ -40,6 +40,7 @@ export const post = async ({ url, body, qs={} }) => {
     },
     body: JSON.stringify(body),
   });
+  if(res.status !== 200) {throw res}
   return await res.json();
 };
 
@@ -57,5 +58,6 @@ export const get = async ({ url, qs={} }) => {
       'X-Access-Token': load(ACCESS_TOKEN)
     },
   });
+  if(res.status !== 200) {throw res}
   return await res.json();
 };

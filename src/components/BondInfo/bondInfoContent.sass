@@ -1,0 +1,37 @@
+@import '~@skybonds/ui-styles/vars'
+.reportAsideBondContent
+  display: flex
+  position: relative
+  overflow: hidden
+.reportAsideBondContent_wrap
+  padding: 0 20px
+  overflow: auto
+.reportAsideBondContent_section
+  margin: 20px 0
+.reportAsideBondContent_table
+  & + .reportAsideBondContent_table
+    margin-top: 10px
+.reportAsideBondContent_row
+.reportAsideBondContent_cell
+  padding: 3px 0 3px 1em
+  &:first-child
+    padding-left: 0
+  &.__header
+    font-weight: bold
+  &.__number
+    text-align: right
+    &:empty:before
+      content: "NA"
+      color: $colorBorder
+      font-size: 10px
+  &.__unit
+    vertical-align: middle
+    padding-left: 4px
+    color: $colorMuted
+    font-size: 10px
+.reportAsideBondContent_list
+.reportAsideBondContent_item
+  padding: 3px 0 3px
+.reportAsideBondContent_tooltip
+  border-bottom: 1px dashed transparentize($colorLink,0.75)
+  cursor: help

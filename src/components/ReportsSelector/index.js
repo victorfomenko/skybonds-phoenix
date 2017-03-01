@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import UIReportsNav from '@skybonds/ui-reports-nav';
 import { withRouter } from 'react-router-dom'
 
-import { selectReport, removeReport } from '../../actions';
+import { selectReport, removeReport, renameReport } from '../../actions';
 
 
 class ReportsSelector extends Component {
@@ -31,7 +31,7 @@ class ReportsSelector extends Component {
   }
 
   onRenameReport(id, name){
-   console.log('onRenameReport', id, name)
+   this.props.renameReport(id,name);
   }
 
   onSelectReport(id){
@@ -80,4 +80,4 @@ const mapStateToProps = state => ({
 });
 
 ReportsSelector = withRouter(ReportsSelector)
-export default connect(mapStateToProps, { selectReport, removeReport })(ReportsSelector);
+export default connect(mapStateToProps, { selectReport, removeReport, renameReport })(ReportsSelector);

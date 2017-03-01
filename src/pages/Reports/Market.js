@@ -117,7 +117,7 @@ class Market extends Component {
                     dateToday={this.state.dateToday}
                     onActiveIsinChange={this.onActiveIsinChange.bind(this)} />
                   <BondInfo
-                    date={'2017/02/17'}
+                    date={this.state.dateToday}
                   />
                 </div>
               </div>
