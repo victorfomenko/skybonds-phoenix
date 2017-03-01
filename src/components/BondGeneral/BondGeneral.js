@@ -71,7 +71,7 @@ class BondGeneral extends Component {
 
       let totalOutstandingLC = bond.info.amountOutstandingLC * currencyRate;
 
-      let yearsToMaturity = Math.abs(this.yearsDiff(this.parseDate(bond.info.maturityDate), new Date()));
+      let yearsToMaturity = Math.abs(this.yearsDiff((bond.info.maturityDate) ? this.parseDate(bond.info.maturityDate) : new Date(), new Date()));
       let putDate = null;
       let callDate = null;
 
