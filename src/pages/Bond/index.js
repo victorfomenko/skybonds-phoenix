@@ -36,23 +36,27 @@ class Bond extends Component {
       return (
         <div className='skybondsWrap'>
           <div className={style.bondPage_content}>
-            <BondHeader
-              bond={parentBond}
-            />
-            <BondGeneral
-              bond={parentBond}
-            />
-            <BondPeersBox
-              bond={this.props.bond}
-              date={date}
-            />
-            <BondBidAskTable
-              bond={parentBond}
-            />
-            <BondRepaymentTable
-              bond={parentBond}
-              date={date}
-            />
+            <div className={style.bondHeader}>
+              <BondHeader
+                bond={parentBond}
+              />
+            </div>
+            <div className={style.bondGeneral}>
+              <BondGeneral
+                bond={parentBond}
+              />
+              <BondPeersBox
+                bond={this.props.bond}
+                date={date}
+              />
+              <BondBidAskTable
+                bond={parentBond}
+              />
+              <BondRepaymentTable
+                bond={parentBond}
+                date={date}
+              />
+            </div>
           </div>
         </div>
       );

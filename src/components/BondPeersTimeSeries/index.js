@@ -131,8 +131,7 @@ class BondPeersTimeSeries extends Component {
     } else {
       startDate = getStartDateByPeriod(this.props.summary.today, period);
     }
-    let endDate = new Date();
-    endDate.setDate(endDate.getDate() - 1);
+    let endDate = this.props.summary.today;
     startDate = DateDayCaster.format(startDate);
     endDate = DateDayCaster.format(endDate);
     return { startDate, endDate };
