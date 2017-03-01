@@ -1,6 +1,8 @@
 import { actionTypes } from './actionTypes';
 import * as SpacesProvider from '../data/providers/Spaces';
 import { getEmptyMarketReport } from '../data/helpers';
+import * as DataProvider from '../data/providers/Data';
+import { omitBy } from 'lodash';
 
 export const loadAllReports = () => async (dispatch) => {
 
@@ -44,6 +46,7 @@ export const removeReport = (id) => async (dispatch, getState) => {
   const activeReportId = state.reports.market.id;
   const date = state.summary.today;
   let report = state.reports.all.reportsById[id];
+  let toPreform = false;
 
   try {
     const { orderVersion, status } = await SpacesProvider.remove(id);
@@ -67,9 +70,13 @@ export const removeReport = (id) => async (dispatch, getState) => {
   else {
     const lastReportId = state.reports.all.ids[state.reports.all.ids.length-1];
     report = state.reports.all.reportsById[lastReportId]
+    toPreform = true;
   }
 
   dispatch({type: actionTypes.MARKET_REPORT_UPDATE, report});
+  if(toPreform){
+    preformLayers(getState().reports.market, date, dispatch);
+  }
   return report.id
 }
 
@@ -78,4 +85,42 @@ const addDefaultMarketSpace = (date) => {
   const report = getEmptyMarketReport();
   report.ui.extensions.calendar.date = date;
   return SpacesProvider.add(report)
+}
+
+const preformLayers = async (report, date, dispatch) => {
+  let setsToPreform = omitBy(report.layers.layersById, layer => {
+    return layer.source.method !== 'set'
+  });
+  let promises = [];
+
+  for(const key in setsToPreform) {
+    dispatch({type: actionTypes.LAYER_AUTO_NAME_UPDATE, id: key });
+
+    ((layerSet, id) => {
+      if(Object.keys(layerSet.source.filters).length !== 0 ) {
+        const filters = {
+          filters: layerSet.source.filters,
+          date: date
+        }
+        const applyPromise = DataProvider.filtersApply(filters, true).then(({ result, stats }) => {
+          dispatch({ type: actionTypes.LAYER_FILTERS_ISINS_CHANGE, id, isins: result, stats: stats });
+          dispatch({ type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE, id });
+        })
+        promises.push(applyPromise);
+      }
+      if(layerSet.source.search.query.length >= 3) {
+        const query = layerSet.source.search.query
+        const searchPromise = SearchProvider.searchBonds(query, date).then(searchBonds=>{
+          let isins = searchBonds.map((bond)=>{return bond.isin});
+          dispatch({ type: actionTypes.LAYER_SEARCH_ISINS_CHANGE, id, isins });
+          dispatch({ type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE, id });
+        })
+        promises.push(searchPromise);
+      }
+    })(setsToPreform[key], key)
+  }
+  Promise.all(promises).then(()=>{
+    dispatch({ type: actionTypes.ALL_LAYERS_ISINS_UPDATE });
+  })
+
 }
