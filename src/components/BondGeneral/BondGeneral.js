@@ -3,6 +3,7 @@ import * as Data from '../../data/providers/Data';
 import { connect } from 'react-redux';
 import Promise from 'rsvp';
 import style from './style.sass';
+import ButtonGroup from '../ButtonGroup';
 import { getColor, getSynonym } from '../../helpers/BondRating';
 import DateFormatter from '../../helpers/formatters/DateFormatter';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
@@ -12,9 +13,18 @@ import { isPortfolioScb } from '../../helpers/portfolio';
 class BondGeneral extends Component {
   constructor(props) {
     super(props);
+    const periodList = [{label: '7D', value: '7d'},
+      {label: 'M', value: '1m'},
+      {label: '3M', value: '3m'},
+      {label: '6M', value: '6m'},
+      {label: 'Y', value: '1y'},
+      {label: 'Past', value: 'max'}];
+
     this.state = {
       'loaded': false,
-      'issuer': null
+      'issuer': null,
+      periodList,
+      selectedPeriod: '1m'
     };
     this.localCurrency = 'RUB';
 
@@ -23,7 +33,6 @@ class BondGeneral extends Component {
   componentWillMount() {
     this.initData(this.props.bond);
   }
-
 
   async initData(bond = null) {
     if(bond.info.issuerId != null) {
@@ -74,7 +83,6 @@ class BondGeneral extends Component {
         callDate =  this.getPutCallDate(callDates.data)
       }
 
-
       if (repayment.data != null && repayment.data.length) {
         let monthsDiff = Math.round(this.monthsDiff(this.parseDate(repayment.data[0].date), this.parseDate(repayment.data[1].date)));
         let daysDiff = this.daysDiff(this.parseDate(repayment.data[0].date), this.parseDate(repayment.data[1].date))
@@ -89,7 +97,6 @@ class BondGeneral extends Component {
         }
 
       }
-
       this.setState({
         'loaded': true,
         'issuer': issuerInfo[0].data,
@@ -103,7 +110,6 @@ class BondGeneral extends Component {
   }
 
   getPutCallDate(dates) {
-
     let date =  dates.find((function (_this) {
       return function (date) {
         return _this.parseDate(date) > _this.props.bond.date
@@ -115,6 +121,7 @@ class BondGeneral extends Component {
     }
     return date
   }
+
   getOutlookLabel(outlook) {
     if ( typeof outlook === 'string') {
       switch (outlook.toLowerCase()) {
@@ -172,6 +179,12 @@ class BondGeneral extends Component {
     if (link != null) {
       return link.replace(/https?\:\/\/|\/$/ig, '')
     }
+  }
+
+  onPeriodChange(period) {
+    this.setState({
+      selectedPeriod: period
+    })
   }
 
   render(){
@@ -434,17 +447,22 @@ class BondGeneral extends Component {
             </li>
           </ul>
           <div className={style.bondTimeseries}>
+            <ButtonGroup
+              buttons={this.state.periodList}
+              onButtonClick={this.onPeriodChange.bind(this)}
+              selectedButton={this.state.selectedPeriod}
+            />
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Price</div>
-              <BondTimeSeries bond={this.props.bond} yAxis='price' />
+              <BondTimeSeries bond={this.props.bond} yAxis='price' period={this.state.selectedPeriod} />
             </div>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Yield</div>
-              <BondTimeSeries bond={this.props.bond} yAxis='yield' />
+              <BondTimeSeries bond={this.props.bond} yAxis='yield' period={this.state.selectedPeriod} />
             </div>
             <div className={style.bondTimeseries_item}>
               <div className={style.bondRimeseries_title}>Spread to benchmark curve</div>
-              <BondTimeSeries bond={this.props.bond} yAxis='spreadToBMK' />
+              <BondTimeSeries bond={this.props.bond} yAxis='spreadToBMK' period={this.state.selectedPeriod} />
             </div>
           </div>
         </div>

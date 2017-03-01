@@ -72,11 +72,15 @@ class BondPeersScatterPlot extends Component {
 
   initChart() {
     this.dotsSetsPlugin = new ChartPlugins.DotsSetsPlugin;
+    this.curvesPlugin = new ChartPlugins.CurvesPlugin();
+
     this.dotsSetsPlugin.update({ dotsSets: [] });
+    this.curvesPlugin.update({ curves: [] });
 
     let chartDocumentConfig = _.clone(DEFAULT_CONFIG);
     chartDocumentConfig.plugins = [
-      this.dotsSetsPlugin
+      this.dotsSetsPlugin,
+      this.curvesPlugin
     ];
     this.chartDocument = new ChartDocument(chartDocumentConfig);
 
@@ -127,6 +131,22 @@ class BondPeersScatterPlot extends Component {
   }
 
   refreshChart(dimmedIsins, highlightedIsins, config) {
+    let curves = [];
+    if(this.props.showBenchmark) {
+      curves.push({
+        label: 'Benchmark curve',
+        isins: dimmedIsins,
+        date: config.date,
+        width: 2,
+        color: '#999',
+        applyRegression: true,
+        extrapolation: {
+          left: true,
+          right: true
+        }
+      });
+    }
+    this.curvesPlugin.update({ curves: curves });
     this.dotsSetsPlugin.update( this.getDotsSetsConfig(dimmedIsins, highlightedIsins, config.date) );
     this.chartDocument.update( this.getChartConfig(config.data, config.axes) );
   }
