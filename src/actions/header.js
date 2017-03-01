@@ -7,8 +7,9 @@ import { isMarketReportEmpty } from '../helpers/isReportEmpty';
 export const addReport = () => async (dispatch, getState) => {
   const state = getState();
   const date = state.summary.today;
-  const currentReport = state.market;
-  if(isMarketReportEmpty(state.reports.market)){ return }
+  const report = state.reports.market;
+  if(isMarketReportEmpty(report)){ return }
+
   try {
     let { id, orderVersion } = await addDefaultMarketSpace(date);
     dispatch({type: actionTypes.REPORTS_UPDATE_ORDER_VERSION, orderVersion});

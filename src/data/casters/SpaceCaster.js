@@ -45,7 +45,12 @@ export default {
           calendar: value.ui.extensions.web.calendar
         },
       },
-      addons: value.addons
+      addons: value.addons,
+      data: {
+        allLayersIsinsAll: [],
+        allLayersIsinsByQuota: [],
+        allLayersIsinsByQuotaVisible: []
+      }
     }
   }
 };

@@ -46,7 +46,6 @@ export const removeLayer = (id) => async (dispatch, getState) => {
     let newActiveLayerId = getState().reports.market.layers.ids[0];
     dispatch({ type: actionTypes.ACTIVATE_LAYER, id: newActiveLayerId });
   }
-  dispatch({ type: actionTypes.ALL_LAYERS_ISINS_UPDATE });
 
   // update report
   try {
