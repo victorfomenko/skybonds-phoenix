@@ -175,7 +175,8 @@ const castUiLayer = ({ id, name, viewMode }, activeLayerId) => {
 const castSourceLayer = ({ id, method, functions }) => {
   let source = {
     search: {
-      query: ''
+      query: '',
+      peersFor: []
     },
     filters: {}
   }

@@ -12,6 +12,7 @@ export const getEmptyLayer = ()=> {
         peersFor: []
       },
       filters: {},
+      peersFor: [],
       include: [],
       exclude: []
     },
@@ -294,8 +295,12 @@ export const getEmptyMarketReport = () => {
       type: 'market',
       spaceName: 'New report',
       viewMode: 'scatterPlot',
+      viewModeSettings: null,
       extensions: {
-        calendar: {}
+        calendar: {
+          dates: null,
+          labels: null
+        }
       }
     },
     exclude: [],
