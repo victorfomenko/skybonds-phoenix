@@ -109,25 +109,32 @@ const preformLayers = async (report, date, dispatch) => {
 
   for(const key in setsToPreform) {
     dispatch({type: actionTypes.LAYER_AUTO_NAME_UPDATE, id: key });
-    const layerSet = setsToPreform[key];
-    const id = key;
 
-    if(Object.keys(layerSet.source.filters).length !== 0 ) {
-      const filters = {
-        filters: layerSet.source.filters,
-        date: date
+    ((layerSet, id) => {
+      if(Object.keys(layerSet.source.filters).length !== 0 ) {
+        const filters = {
+          filters: layerSet.source.filters,
+          date: date
+        }
+        const applyPromise = DataProvider.filtersApply(filters, true).then(({ result, stats }) => {
+          dispatch({ type: actionTypes.LAYER_FILTERS_ISINS_CHANGE, id, isins: result, stats: stats });
+          dispatch({ type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE, id });
+        })
+        promises.push(applyPromise);
       }
-      let { result, stats } = await DataProvider.filtersApply(filters, true);
-      dispatch({ type: actionTypes.LAYER_FILTERS_ISINS_CHANGE, id, isins: result, stats: stats });
-    }
-    if(layerSet.source.search.query.length >= 3) {
-      const query = layerSet.source.search.query
-      let searchBonds = await SearchProvider.searchBonds(query, date);
-      let isins = searchBonds.map((bond)=>{return bond.isin});
-
-      dispatch({ type: actionTypes.LAYER_SEARCH_ISINS_CHANGE, id, isins });
-    }
-    dispatch({ type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE, id });
+      if(layerSet.source.search.query.length >= 3) {
+        const query = layerSet.source.search.query
+        const searchPromise = SearchProvider.searchBonds(query, date).then(searchBonds=>{
+          let isins = searchBonds.map((bond)=>{return bond.isin});
+          dispatch({ type: actionTypes.LAYER_SEARCH_ISINS_CHANGE, id, isins });
+          dispatch({ type: actionTypes.LAYER_ISINS_BY_QUOTA_UPDATE, id });
+        })
+        promises.push(searchPromise);
+      }
+    })(setsToPreform[key], key)
   }
-  dispatch({ type: actionTypes.ALL_LAYERS_ISINS_UPDATE });
+  Promise.all(promises).then(()=>{
+    dispatch({ type: actionTypes.ALL_LAYERS_ISINS_UPDATE });
+  })
+
 }
