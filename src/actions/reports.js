@@ -2,6 +2,7 @@ import { actionTypes } from './actionTypes';
 import * as SpacesProvider from '../data/providers/Spaces';
 import { getEmptyMarketReport } from '../data/helpers';
 import * as DataProvider from '../data/providers/Data';
+import * as SearchProvider from '../data/providers/Search';
 import { omitBy } from 'lodash';
 
 export const loadAllReports = () => async (dispatch) => {
