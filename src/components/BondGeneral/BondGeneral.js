@@ -71,7 +71,7 @@ class BondGeneral extends Component {
 
       let totalOutstandingLC = bond.info.amountOutstandingLC * currencyRate;
 
-      let yearsToMaturity = Math.abs(this.yearsDiff(this.parseDate(bond.info.maturityDate), new Date()));
+      let yearsToMaturity = Math.abs(this.yearsDiff((bond.info.maturityDate) ? this.parseDate(bond.info.maturityDate) : new Date(), new Date()));
       let putDate = null;
       let callDate = null;
 
@@ -461,7 +461,7 @@ class BondGeneral extends Component {
               <BondTimeSeries bond={this.props.bond} yAxis='yield' period={this.state.selectedPeriod} />
             </div>
             <div className={style.bondTimeseries_item}>
-              <div className={style.bondRimeseries_title}>Spread to benchmark curve</div>
+              <div className={style.bondRimeseries_title}>Spread to sovereign and to UST</div>
               <BondTimeSeries bond={this.props.bond} yAxis='spreadToBMK' period={this.state.selectedPeriod} />
             </div>
           </div>
