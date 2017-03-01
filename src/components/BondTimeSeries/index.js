@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ChartTimeSeries from '../ChartTimeSeries';
 import * as DataProvider from '../../data/providers/Data';
 import NumberFormatter from '../../helpers/formatters/NumberFormatter';
 import DateDayCaster from '../../data/casters/DateDayCaster';
+import { getStartDateByPeriod } from '../../helpers/BondDatePeriod';
 import { getColor } from '../../helpers/BondRating';
 import moment from 'moment'
 import styles from './styles.sass';
@@ -18,13 +20,17 @@ class BondTimeSeries extends Component {
   }
 
   componentWillMount() {
-    this.initChart();
+    this.refreshChart(this.props.period);
   }
 
-  initChart() {
-    let dates = this.getDates('YYYYMMDD');
+  componentWillReceiveProps(nextProps) {
+    this.refreshChart(nextProps.period);
+  }
+
+  refreshChart(period = null) {
+    let dates = this.getDates(period, 'YYYYMMDD');
     let timeSeries = [];
-    timeSeries.push(this.getTimeSeriesConfig());
+    timeSeries.push(this.getTimeSeriesConfig(period));
 
     Promise.all([DataProvider.getTimeSeries(this.props.bond.isin, dates)])
     .then((response)=> {
@@ -32,28 +38,32 @@ class BondTimeSeries extends Component {
     });
   }
 
-  getDates(format) {
-    //TODO Need to make it work with period buttons
-    const endDate = this.props.bond.date;
-    let startDate = new Date();
-    startDate.setDate(startDate.getDate() - 365);
+
+  getDates(period, format) {
+    let startDate = null;
+    if (period == 'max') {
+      startDate = this.props.summary.dataSince
+    } else {
+      startDate = getStartDateByPeriod(this.props.summary.today, period);
+    }
+
     var dateArray = [];
     var currentDate = moment(startDate);
     var stopDate = moment(stopDate);
     while (currentDate <= stopDate) {
-        dateArray.push( moment(currentDate).format(format) )
-        currentDate = moment(currentDate).add(1, 'days');
+      dateArray.push( moment(currentDate).format(format) );
+      currentDate = moment(currentDate).add(1, 'days');
     }
     return dateArray;
   }
 
-  getTimeSeriesConfig() {
+  getTimeSeriesConfig(period) {
     return {
-        isin: this.props.bond.isin,
-        dates: this.getDates('YYYY-MM-DD'),
-        color: getColor(this.props.bond.info.ratingGroup),
-        isActive: true
-      };
+      isin: this.props.bond.isin,
+      dates: this.getDates(period, 'YYYY-MM-DD'),
+      color: getColor(this.props.bond.info.ratingGroup),
+      isActive: true
+    };
   }
 
   getChartConfig(data, yAxis) {
@@ -105,4 +115,5 @@ BondTimeSeries.propTypes = {
     yAxis: React.PropTypes.string.isRequired,
 };
 
-export default BondTimeSeries;
+const mapStateToProps = state => ({ summary: state.summary });
+export default connect(mapStateToProps)(BondTimeSeries);

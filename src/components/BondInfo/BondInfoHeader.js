@@ -25,7 +25,7 @@ class BondInfoHeader extends Component {
         <div className={style.reportAsideBondHeader}>
           <ul className={style.reportAsideBondHeader_rows}>
             <li className={style.reportAsideBondHeader_line}>
-              <a href={'/bond/' + bond.info.isin } target="_blank"
+              <a href={'/bond/' + bond.isin } target="_blank"
                  className={style.reportAsideBond_link + ' ' + style.reportAsideBondHeader_title}>{bond.info.standardName}</a>
               {/*<input type="checkbox" className={style.reportAsideBondHeader_excluded + ' ' + style.__bond}
                onClick={this.toggleExclude()}/>

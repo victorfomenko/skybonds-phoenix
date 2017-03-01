@@ -387,6 +387,165 @@ export const getPeers = (isin, date, peersFilters, peersLimit = 20) => {
   });
 };
 
+export const getBenchmarkPeers = (isin, date, peersFilters, peersLimit = 20) => {
+
+  let _preformParentBondData = function(isin, date) {
+    return Promise.all([
+      getBondsInfo([isin]),
+      getBondsDaily([isin], date)
+    ])
+  };
+
+  let _getBenchmarkPeersSlices = function(parentBond, date) {
+    let bondTypes, country, currency, duration, durationDelta, durationFrom, durationTo, isConvertible, isFloater, isSubordinated, issuer, promises, rating, ref, sector, type, value;
+    isFloater = parentBond["info"].isFloater;
+    isConvertible = parentBond["info"].isConvertible;
+    isSubordinated = parentBond["info"].isSubordinated;
+    bondTypes = !isFloater && !isConvertible && !isSubordinated ? {
+        "Regular": true
+      } : isFloater ? {
+        "Floaters": true
+      } : isConvertible && !isFloater && !isSubordinated ? {
+        "Convertibles": true,
+        "Regular": true
+      } : isSubordinated ? {
+        "Subord": true
+      } : void 0;
+    currency = parentBond["info"].ccy;
+    country = parentBond["info"].country;
+    rating = parentBond["info"].ratingGroup;
+    sector = parentBond["info"].sector;
+    issuer = parentBond["info"].issuerId;
+    promises = [];
+    for (type in bondTypes) {
+      value = bondTypes[type];
+      let typeFilters = {
+        date: date,
+        filters: {}
+      };
+      typeFilters.filters[ 'type' ] = [] ;
+      typeFilters.filters[ 'type' ].push({
+        name: type.toLowerCase()
+      });
+
+      promises.push(filtersApply(typeFilters, false));
+    }
+
+    let maturityFilters = {
+      date: date,
+      filters: {
+        'maturity': [ 0, Infinity ]
+      }
+    };
+
+    promises.push(filtersApply(maturityFilters, false));
+
+    let currencyFilters = {
+      date: date,
+      filters: {
+        'currency': [currency]
+      }
+    };
+
+    promises.push(filtersApply(currencyFilters, false));
+
+    let countryFilters = {
+      date: date,
+      filters: {
+        'country': [country]
+      }
+    };
+
+    promises.push(filtersApply(countryFilters, false));
+
+    let ratingArray = BondRatingHelper.getCloseRatings(rating);
+    let ratingNames = []
+    for (let i = 0, len = ratingArray.length; i < len; i++) {
+      let item = ratingArray[i];
+      ratingNames.push(item)
+    }
+
+    let ratingFilters = {
+      date: date,
+      filters: {
+        'rating': ratingNames
+      }
+    };
+
+    promises.push(filtersApply(ratingFilters, false));
+
+    let sectorFilters = {
+      date: date,
+      filters: {
+        sector: [sector]
+      }
+    };
+
+    promises.push(filtersApply(sectorFilters, false));
+
+    if (isSubordinated) {
+
+      let issuerFilters = {
+        date: date,
+        filters: {
+          issuer: [{
+            name: issuer
+          }]
+        }
+      };
+
+      promises.push(filtersApply(issuerFilters, false));
+    }
+    return Promise.all(promises);
+  };
+
+
+  let _applyBenchmarkPeersSlices = function(parentBond, date, peersSlices, peersFilters, peersLimit) {
+    let filtersResult, i, len, parentBondPos, peersOptionalSlices, peersResult, peersSlice, sliceIntersection;
+    peersResult = peersSlices['type'];
+    if (peersSlices['issuer'] != null) {
+      peersResult = _.union(peersResult, peersSlices['issuer']);
+    }
+    peersResult = _.intersection(peersResult, peersSlices['maturityRange']);
+    peersResult = _.intersection(peersResult, peersSlices['currency']);
+    peersResult = _.intersection(peersResult, peersSlices['country']);
+    peersResult = _.intersection(peersResult, peersSlices['ratingAdjacent']);
+    peersResult = _.uniq(peersResult);
+    parentBondPos = peersResult.indexOf(parentBond.isin);
+    if (parentBondPos !== -1) {
+      peersResult.splice(parentBondPos, 1);
+    }
+    sliceIntersection = _.intersection(peersResult, peersSlices['industrySimilar']);
+    if (sliceIntersection.length > peersLimit) {
+      peersResult = sliceIntersection;
+    }
+    return peersResult;
+  };
+
+
+  return _preformParentBondData(isin, date).then((response) => {
+    let parentBond = {
+      isin: isin,
+      'info': response[0][0].data,
+      'daily': response[1][0].data,
+    };
+    return _getBenchmarkPeersSlices(parentBond, date).then((response) => {
+      let peersSlices = {
+        type: response[0].result,
+        maturityRange: response[1].result,
+        currency: response[2].result,
+        country: response[3].result,
+        ratingAdjacent: response[4].result,
+        industrySimilar: response[5].result
+      };
+      if (parentBond.info.isSubordinated) {
+        peersSlices['issuer'] = response[6].industrySimilar
+      }
+      return _applyBenchmarkPeersSlices(parentBond, date, peersSlices, peersFilters, peersLimit)
+    })
+  });
+};
+
 export const getSummary = () => {
   return DataApi.getSummary()
 }

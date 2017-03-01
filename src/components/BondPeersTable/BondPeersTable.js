@@ -22,7 +22,8 @@ class BondPeersTable extends Component {
     super(props);
     this._initValues()
     this.state = {
-      'benchmarkChecked': true
+      'benchmarkChecked': true,
+      peersBonds: props.peersBonds
     };
   }
 
@@ -45,23 +46,12 @@ class BondPeersTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
+    this.setState({ peersBonds: nextProps.peersBonds });
   }
 
   getPeersBonds() {
     let limitedPeersIsins = this.props.peersIsins.slice(0, this.peersPerPage + this.peersPerPage * this._peersPage);
     this.props.getPeersData(limitedPeersIsins, this.props.date);
-  }
-
-  _sortBonds(bonds) {
-    //TODO: need to implement sorting on table header click
-    if (this._sortSettings.column) {
-      return bonds.sortBy((function(_this) {
-        return function(bond) {
-          return _this._getBondValue(bond, _this._sortSettings.column);
-        };
-      })(this), this._sortSettings.asc);
-    }
   }
 
   _getBondValue(bond, valueName) {
@@ -78,6 +68,7 @@ class BondPeersTable extends Component {
       case 'duration':
       case 'coupon':
       case 'haircut':
+      case 'delta':
         return (ref = bond.daily) != null ? ref[valueName] : void 0;
       case 'tr':
       case 'roe':
@@ -114,9 +105,46 @@ class BondPeersTable extends Component {
     this.getPeersBonds()
   }
 
+  sortBonds() {
+    if (this._sortSettings.column) {
+      let bonds = this.state.peersBonds;
+      let sortingColumn = this._sortSettings.column;
+      bonds.sort((a, b) => {
+        let valA = this._getBondValue(a, this._sortSettings.column);
+        let valB = this._getBondValue(b, this._sortSettings.column);
+        if (valA < valB) return -1;
+        if (valA > valB) return 1;
+        return 0;
+      });
+      if(!this._sortSettings.asc) {
+        bonds.reverse();
+      }
+      this.setState({ peersBonds: bonds });
+    }
+  }
+
+  getAscDescClass (columnName) {
+    let result = ''
+    if (this._sortSettings.column === columnName) {
+      result = this._sortSettings.asc ? style.__ascending : style.__descending;
+    }
+    return result;
+  }
+
+  onSortByColumn(columnName) {
+    if (this._sortSettings.column === columnName) {
+      this._sortSettings.asc = !this._sortSettings.asc;
+    } else {
+      this._sortSettings.column = columnName;
+      this._sortSettings.asc = Defaults.Sort.Asc;
+    }
+    this._sortSettings.column = columnName;
+    this.sortBonds();
+  }
+
   render(){
     let parentBond = this.props.parentBond;
-    let peersBonds = this.props.peersBonds;
+    let peersBonds = this.state.peersBonds;
     if(parentBond != null) {
 
       var peersList = peersBonds.map((bond, index) => {
@@ -175,8 +203,8 @@ class BondPeersTable extends Component {
             <thead className={style.bondPeersTable_thead}>
               <tr className={style.bondPeersTable_row}>
                 <th className={style.bondPeersTable_cell + ' ' + style.__check}></th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' +  style.__sortable + ' ' + style.__text + ' ' + style.__name}>
+                <th onClick={this.onSortByColumn.bind(this, 'name')}
+                  className={style.bondPeersTable_cell + ' ' +  style.__sortable + ' ' + style.__text + ' ' + style.__name + ' ' + this.getAscDescClass('name')}>
                   Bonds
                   <span className={style.bondPeersTable_unit}>
                     <span>in </span>
@@ -184,56 +212,58 @@ class BondPeersTable extends Component {
                   </span>
                 </th>
                 <th className={style.bondPeersTable_cell + ' ' + style.__text + ' ' + style.__liquidity}></th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__country + ' ' + this.getMutedClass('country')}>
+                <th onClick={this.onSortByColumn.bind(this, 'country')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__country + ' ' + this.getMutedClass('country') + ' ' + this.getAscDescClass('country')}>
                   Country
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__rating  + ' ' + this.getMutedClass('ratingGroup')}>
+                <th onClick={this.onSortByColumn.bind(this, 'ratingGroup')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__rating  + ' ' + this.getMutedClass('ratingGroup') + ' ' + this.getAscDescClass('ratingGroup')}>
                   Rating
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__coupon + ' ' + this.getMutedClass('coupon')}>
+                <th onClick={this.onSortByColumn.bind(this, 'coupon')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__coupon + ' ' + this.getMutedClass('coupon') + ' ' + this.getAscDescClass('coupon')}>
                   Coupon
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__price }>
+                <th onClick={this.onSortByColumn.bind(this, 'price')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__price  + ' ' + this.getAscDescClass('price')}>
                   Price
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__yield}>
+                <th onClick={this.onSortByColumn.bind(this, 'yield')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__yield + ' ' + this.getAscDescClass('yield')}>
                   Yield
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__delta}>
+                <th onClick={this.onSortByColumn.bind(this, 'delta')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__delta + ' ' + this.getAscDescClass('delta')}>
                   Δ to
                   <div>benchmark</div>
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__duration + ' ' + this.getMutedClass('durationRange')}>
+                <th onClick={this.onSortByColumn.bind(this, 'duration')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__duration + ' ' + this.getMutedClass('durationRange') + ' ' + this.getAscDescClass('duration')}>
                   Duration
                   <span className={style.bondPeersTable_unit}>yrs</span>
                 </th>
-                <th className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__tr}>
+                <th onClick={this.onSortByColumn.bind(this, 'tr')}
+                className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__tr + ' ' + this.getAscDescClass('tr')}>
                   Total
                   <div>Return</div>
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__discount}>
+                <th onClick={this.onSortByColumn.bind(this, 'haircut')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__discount + ' ' + this.getAscDescClass('haircut')}>
                   Discount
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__roe}>
+                <th onClick={this.onSortByColumn.bind(this, 'roe')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__roe + ' ' + this.getAscDescClass('roe')}>
                   ROE
                   <span className={style.bondPeersTable_unit}>%</span>
                 </th>
-                <th
-                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__industry + ' ' + this.getMutedClass('industrySimilar')}>
+                <th onClick={this.onSortByColumn.bind(this, 'sector')}
+                  className={style.bondPeersTable_cell + ' ' + style.__sortable + ' ' + style.__text + ' ' + style.__industry + ' ' + this.getMutedClass('industrySimilar') + ' ' + this.getAscDescClass('sector')}>
                   Industry
                 </th>
               </tr>

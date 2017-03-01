@@ -24,6 +24,7 @@ class BondPeersBox extends Component {
 
   componentWillMount() {
     this._getPeers(this.props.bond);
+    // this._getBenchmarkPeers(this.props.bond);
   }
 
   async _getPeers(bond = null) {
@@ -31,6 +32,13 @@ class BondPeersBox extends Component {
     this.setState({
       'peersIsins': peersData.peers,
       'peersFilters': peersData.filters
+    });
+  }
+
+  async _getBenchmarkPeers(bond = null) {
+    const benchmarkPeersIsins = await Data.getBenchmarkPeers(this.parentIsin, this.props.date);
+    this.setState({
+      'benchmarkPeersIsins': benchmarkPeersIsins
     });
   }
 
